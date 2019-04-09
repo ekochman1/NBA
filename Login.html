@@ -11,8 +11,9 @@
 <form class ="register-form">
     <h1 style="font-size:30px;">Let's start</h1>
     <input type = "text" placeholder="username"/>
-    <input type = "text" placeholder="password"/>
+    <input type="password" placeholder="password" id="myInput1">
     <input type = "text" placeholder="email"/>
+    <input type="checkbox" onclick="myFunction1()">
     <button onclick="Create_account()">Create account</button>
     <p class="message">Already have an account? <a href="#"> Login</a>
     </p>
@@ -20,7 +21,8 @@
         <form class="login-form">
             <h1 style="font-size:30px;">Welcome!</h1>
         <input type="text" placeholder="username"/>
-            <input type = "text" placeholder="password"/>
+            <input type="password" placeholder="password" id="myInput">
+            <input type="checkbox" onclick="myFunction()">
             <button onclick="Login()">Login</button>
             <p class="message">Don't have an account? <a href="#"> Create account</a></p>
         </form>
@@ -36,6 +38,28 @@
             $('.message a').click(function() {
                 $('form').animate( {height: "toggle", opacity: "toggle"}, "slow");})
         </script>
+        <script>
+            function myFunction() {
+                var x = document.getElementById("myInput");
+                if (x.type === "password") {
+                    x.type = "text";
+                } else {
+                    x.type = "password";
+                }
+            }
+        </script>
+        <script>
+            function myFunction1() {
+                var y = document.getElementById("myInput1");
+                if (y.type === "password") {
+                    y.type = "text";
+                } else {
+                    y.type = "password";
+                }
+            }
+        </script>
+
+
 
 
 
