@@ -10,6 +10,7 @@ body {
     wdith:360px;
     padding:10% 0 0;
     margin: auto;
+    font-family: "Roboto", "Arial";
 }
 
 .form{
@@ -24,6 +25,13 @@ body {
 
 
 }
+
+.login-form {
+
+    font-family: "Roboto", "Arial";
+
+}
+
 
 .form input{
     font-family: "Roboto", "Arial";
@@ -50,6 +58,7 @@ body {
     font-size: 14px;
     border-radius: 30px;
 }
+
 
 
 /* Add a background color on hover */
