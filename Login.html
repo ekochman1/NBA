@@ -1,23 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet"href="style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class = "login page">
+<div class = "login-page">
     <div class = "form">
-<form class ="register form">
+<form class ="register-form">
     <input type = "text" placeholder="username"/>
     <input type = "text" placeholder="password"/>
     <input type = "text" placeholder="email"/>
-    <button> Create account</button>
-    <button> Login</button>
+    <button onclick="Create_account()">Create account</button>
+    <p class="message">Already have an account? <a href="#"> Login</a>
+    </p>
 </form>
+        <form class="login-form">
+        <input type="text" placeholder="username"/>
+            <input type = "text" placeholder="password"/>
+            <button onclick="Login()">Login</button>
+            <p class="message">Don't have an account? <a href="#"> Create account</a></p>
+        </form>
+
+
         <div/>
 
         <div/>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js">
+            </script>
+
+        <script>
+            $('.message a').click(function() {
+                $('form').animate( {height: "toggle", opacity: "toggle"}, "slow");})
+        </script>
+
+
 
 </body>
 </html>

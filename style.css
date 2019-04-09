@@ -26,7 +26,7 @@ body {
 }
 
 .form input{
-    font-family: "Roboto", "SansSerif";
+    font-family: "Roboto", "Arial";
     outline: 0;
     background: #f2f2f2;
     width: 100%;
@@ -39,7 +39,7 @@ body {
 
 .form button {
 
-    font-family: "Roboto", "SansSerif";
+    font-family: "Roboto", "Arial";
     text-transform: uppercase;
     outline: 0;
     background-color: #ad0c25; /* Green background */
@@ -47,12 +47,26 @@ body {
     color: white; /* White text */
     padding: 10px 24px; /* Some padding */
     cursor: pointer; /* Pointer/hand icon */
-    float: left; /* Float the buttons side by side */
     font-size: 14px;
+    border-radius: 30px;
 }
 
 
 /* Add a background color on hover */
 .form button:hover {
     background-color: #3e8e41;
+}
+
+.form .message {
+    margin: 15px 0 0;
+    color: black;
+    font-size: 12px;
+}
+.form .message a {
+    text-decoration: none;
+    color: #ad0c25;
+}
+
+.form .register-form {
+    display: none;
 }
