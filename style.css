@@ -51,6 +51,10 @@ body {
     margin: -37px 10px 10px 110px ;
 }
 
+.data{
+    display: none;
+}
+
 .form button {
 
     font-family: "Roboto", "Arial";
