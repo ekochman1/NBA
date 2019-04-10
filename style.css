@@ -45,6 +45,12 @@ body {
     font-size: 14px;
 }
 
+.g-signin2 {
+
+    outline: 0;
+    margin: -37px 10px 10px 110px ;
+}
+
 .form button {
 
     font-family: "Roboto", "Arial";
