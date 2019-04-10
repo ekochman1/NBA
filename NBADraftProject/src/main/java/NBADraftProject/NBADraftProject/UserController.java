@@ -44,7 +44,7 @@ public class UserController {
 		try {
 		String nameToPull = request.getParameter("username");
 		Connection conn = DriverManager.getConnection("nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com" , "root", "Ethaneddie123");
-		String SearchQuery = "SELECT userid, firstName FROM users WHERE username=?";
+		String SearchQuery = "SELECT owners  FROM Users WHERE owners = ?";
 		PreparedStatement state = null;
 	    state = conn.prepareStatement(SearchQuery);
 	    state.setString(1, nameToPull);
@@ -65,7 +65,7 @@ public class UserController {
 	    	PreparedStatement stmt = null;
 	        stmt = conn.prepareStatement(transactionQuery);
 	        stmt.execute();
-	        String query = "INSERT VALUES INTO users("+username+", "+password+")";
+	        String query = "INSERT VALUES INTO Users("+username+", "+password+")";
 	        stmt = conn.prepareStatement(query);
 	        stmt.execute();
 	        
@@ -80,6 +80,8 @@ public class UserController {
 		responseObj.put("message", "user registered");
 		return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.OK); 
 	} catch (SQLException e ) {
+		
+		return new ResponseEntity("Doesn't Work", responseHeaders , HttpStatus.BAD_REQUEST);
     }
 		/*finally {
     	try {
@@ -88,7 +90,6 @@ public class UserController {
     	}catch(SQLException se) {
     		
     	} */
-		return null;
     	}
 		
 	@RequestMapping(value = "/login", method = RequestMethod.GET) // <-- setup the endpoint URL at /hello with the HTTP POST method
@@ -107,11 +108,13 @@ public class UserController {
 		
 		try {
 		String nameToPull = request.getParameter("username");
+		String passwordToPull = request.getParameter("password");
 		Connection conn = DriverManager.getConnection("nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com" , "root", "Ethaneddie123");
-		String searchQuery = "SELECT owner, password FROM users"; //fix query
+		String searchQuery = "SELECT owner, password FROM Users WHERE owner = ? AND password = ?"; //fix query
 		PreparedStatement state = null;
 	    state = conn.prepareStatement(searchQuery);
 	    state.setString(1, nameToPull);
+	    state.setString(2, passwordToPull);
 	    ResultSet rs = state.executeQuery();
 	    boolean notNew = false;
 	    boolean rightPassword = false;
