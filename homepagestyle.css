@@ -1,0 +1,46 @@
+body {
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(Zion_Williamson_s_best_plays_from_rousing_debut_for_Duke.jpg);
+    height: 100vh;
+    background-size:cover;
+    background-position: center;
+}
+
+.form{
+    position: relative;
+    z-index: 1;
+    background: rgba(195, 186, 190, 0.8);
+    max-width: 900px;
+    margin: 0 auto 1px;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    padding:35px;
+
+
+}
+.form button {
+
+    font-family: "Roboto", "Arial";
+    text-transform: uppercase;
+    outline: 0;
+    background-color: #ad0c25;
+    border: 1px black;
+    color: white; /* White text */
+    padding: 10px 24px; /* Some padding */
+    cursor: pointer; /* Pointer/hand icon */
+    font-size: 35px;
+    margin: 30px 10px 10px 65px;
+
+}
+
+
+
+/* Add a background color on hover */
+.form button:hover {
+    background-color: #3e8e41;
+}
+
+.form .button3 {
+    margin: 10px 50px 10px 280px;
+
+
+}
