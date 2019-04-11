@@ -1,11 +1,13 @@
 package NBADraftProject.NBADraftProject;
 
+import java.security.AccessControlContext;
 import java.security.MessageDigest;
 import org.springframework.web.bind.annotation.*; 
 import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.servlet.http.*;
+import javax.xml.ws.spi.http.HttpContext;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -15,7 +17,6 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 	static int count = 0; // this is bad cause this int is not thread safe, so it would not be consistence across multiple users
 	//same logic behind databases, imagine the wallet system, but you only have 5 dollars and you get charged 3 dollars at the same time, in theory you are capable to handling each one individually
@@ -23,7 +24,7 @@ public class UserController {
 	
 	//create a transaction
 	@RequestMapping(value = "/register", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
-	public ResponseEntity<String> register(@RequestBody String payload, HttpServletRequest request) { //springboot has a thread pool that handles the server with multiple users
+	public ResponseEntity<String> register(@RequestBody String payload, HttpServletRequest request) {//springboot has a thread pool that handles the server with multiple users
 		JSONObject payloadObj = new JSONObject(payload);
 		String username = payloadObj.getString("username"); //Grabbing name and age parameters from URL
 		String password = payloadObj.getString("password");
@@ -31,8 +32,9 @@ public class UserController {
 		/*Creating http headers object to place into response entity the server will return.
 		This is what allows us to set the content-type to application/json or any other content-type
 		we would want to return */
-		HttpHeaders responseHeaders = new HttpHeaders(); 
+		HttpHeaders responseHeaders = new HttpHeaders();
     	responseHeaders.set("Content-Type", "application/json");
+    	responseHeaders.set("Access-Control-Allow-Origin", "*");
 		
 		MessageDigest digest = null;
 		String hashedKey = null;
@@ -95,7 +97,7 @@ public class UserController {
     		
     	} */
 	}
-		
+
 	@RequestMapping(value = "/login", method = RequestMethod.GET) // <-- setup the endpoint URL at /hello with the HTTP POST method
 	public ResponseEntity<String> login(HttpServletRequest request) {
 		String username = request.getParameter("username"); //Grabbing name and age parameters from URL
@@ -106,6 +108,7 @@ public class UserController {
 		we would want to return */
 		HttpHeaders responseHeaders = new HttpHeaders(); 
     	responseHeaders.set("Content-Type", "application/json");
+    	responseHeaders.set("Access-Control-Allow-Origin", "*");
 		
 		MessageDigest digest = null;
 		String hashedKey = null;
