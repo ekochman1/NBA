@@ -9,16 +9,13 @@ import javax.servlet.http.*;
 
 import java.security.NoSuchAlgorithmException;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 	static int count = 0; // this is bad cause this int is not thread safe, so it would not be consistence across multiple users
 	//same logic behind databases, imagine the wallet system, but you only have 5 dollars and you get charged 3 dollars at the same time, in theory you are capable to handling each one individually
@@ -42,47 +39,54 @@ public class UserController {
 		
 		//hashedKey = BCrypt.hashpw(password, BCrypt.gensalt());
 		try {
-		String nameToPull = request.getParameter("username");
-		Connection conn = DriverManager.getConnection("nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com" , "root", "Ethaneddie123");
-		String SearchQuery = "SELECT owners  FROM Users WHERE owners = ?";
-		PreparedStatement state = null;
-	    state = conn.prepareStatement(SearchQuery);
-	    state.setString(1, nameToPull);
-	    ResultSet rs = state.executeQuery();
-	    boolean isNew = true;
-	        while (rs.next()) {
-	        	if(rs.getString("owner") == username) {
-	        		isNew = false;
-	        	} 
-	        }
+			Class.forName("com.mysql.jdbc.Driver");
+			String nameToPull = request.getParameter("username");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com:3306/NBAFantasy?user=root&password=Ethaneddie123");
+			String SearchQuery = "SELECT owner FROM Users WHERE owner = ?";
+			PreparedStatement state = conn.prepareStatement(SearchQuery);
+	    	state.setString(1, nameToPull);
+	    	ResultSet rs = state.executeQuery();
+	    	boolean isNew = true;
+	        	while (rs.next()) {
+	        		if(rs.getString("owner").equals(username)) {
+	        			isNew = false;
+	        		}
+	        	}
 		
 		
-    	if (isNew) {
-			MyServer.users.put(username, password); //we would use hashedkey once I understand it a bit better
-			//put the SQL connection in here
+    		if (isNew) {
+				MyServer.users.put(username, password); //we would use hashedkey once I understand it a bit better
+				//put the SQL connection in here
 			
-			String transactionQuery = "START TRANSACTION";
-	    	PreparedStatement stmt = null;
-	        stmt = conn.prepareStatement(transactionQuery);
-	        stmt.execute();
-	        String query = "INSERT VALUES INTO Users("+username+", "+password+")";
-	        stmt = conn.prepareStatement(query);
-	        stmt.execute();
-	        
-		}else {
+				String transactionQuery = "START TRANSACTION";
+	    		PreparedStatement stmt;
+	        	stmt = conn.prepareStatement(transactionQuery);
+	        	stmt.execute();
+	        	String query = "INSERT INTO Users (owner, hashedPassword, league, team, venmoID, email) VALUES (?, ?, ?, ?, ?, ?);";
+	        	stmt = conn.prepareStatement(query);
+	        	stmt.setString(1, username);
+	        	stmt.setString(2, password);
+	        	stmt.setNull(3, Types.VARCHAR);
+	        	stmt.setNull(4, Types.VARCHAR);
+	        	stmt.setNull(5, Types.VARCHAR);
+	        	stmt.setNull(6, Types.VARCHAR);
+	        	stmt.execute();
+				conn.close();
+			}else {
+				JSONObject responseObj = new JSONObject();
+				responseObj.put("message", "username taken");
+				conn.close();
+				return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.BAD_REQUEST);
+			}
+			//Returns the response with a String, headers, and HTTP status
 			JSONObject responseObj = new JSONObject();
-			responseObj.put("message", "username taken");
-			return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.BAD_REQUEST);
-		}
-		//Returns the response with a String, headers, and HTTP status
-		JSONObject responseObj = new JSONObject();
-		responseObj.put("username", username);
-		responseObj.put("message", "user registered");
-		return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.OK); 
-	} catch (SQLException e ) {
-		
-		return new ResponseEntity("Doesn't Work", responseHeaders , HttpStatus.BAD_REQUEST);
-    }
+			responseObj.put("username", username);
+			responseObj.put("message", "user registered");
+			return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.OK);
+		} catch (SQLException|ClassNotFoundException e ) {
+			e.printStackTrace();
+			return new ResponseEntity("Check console", responseHeaders , HttpStatus.BAD_REQUEST);
+    	}
 		/*finally {
     	try {
     		if (conn != null) {
@@ -90,7 +94,7 @@ public class UserController {
     	}catch(SQLException se) {
     		
     	} */
-    	}
+	}
 		
 	@RequestMapping(value = "/login", method = RequestMethod.GET) // <-- setup the endpoint URL at /hello with the HTTP POST method
 	public ResponseEntity<String> login(HttpServletRequest request) {
@@ -107,9 +111,10 @@ public class UserController {
 		String hashedKey = null;
 		
 		try {
+			Class.forName("com.mysql.jdbc.Driver");
 		String nameToPull = request.getParameter("username");
 		String passwordToPull = request.getParameter("password");
-		Connection conn = DriverManager.getConnection("nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com" , "root", "Ethaneddie123");
+		Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com:3306/NBAFantasy?user=root&password=Ethaneddie123");
 		String searchQuery = "SELECT owner, password FROM Users WHERE owner = ? AND password = ?"; //fix query
 		PreparedStatement state = null;
 	    state = conn.prepareStatement(searchQuery);
@@ -125,8 +130,8 @@ public class UserController {
 	        	if(rs.getString("password")== password) {
 	        		rightPassword = true;
 	        	}
-	        	}
-	        
+	        }
+	        conn.close();
     	if (notNew) {
 			return new ResponseEntity("{\"message\":\"username not registered\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}else {
@@ -138,8 +143,8 @@ public class UserController {
 				return new ResponseEntity("{\"message\":\"username/password combination is incorrect\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 			}
 		}
-	} catch (SQLException e ) {
-		
+	} catch (SQLException|ClassNotFoundException e ) {
+			e.printStackTrace();
 	}
 	/* finally {
     	try {
@@ -148,11 +153,8 @@ public class UserController {
     	}
     	
 	}} */
-		return null;
-
-}
-	
-
+	return null;
+	}
 }
 	
 
