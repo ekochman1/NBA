@@ -15,7 +15,8 @@
     <input type = "text" placeholder="username"/>
     <input type="password" placeholder="password" id="myInput1">
     <input type = "text" placeholder="email"/>
-    <input type="checkbox" onclick="myFunction1()">
+    <label for="check">Show password</label>
+    <input id="check" type="checkbox"onclick="myFunction1()">
     <button onclick="Create_account()">Create account</button>
     <p class="message">Already have an account? <a href="#"> Login</a>
     </p>
@@ -24,8 +25,9 @@
             <h1 style="font-size:30px;">Welcome!</h1>
         <input type="text" placeholder="username"/>
             <input type="password" placeholder="password" id="myInput">
-            <input type="checkbox" onclick="myFunction()">
-            <button onclick="Login()">Login</button>
+            <label for="check1">Show password</label>
+            <input type="checkbox" onclick="myFunction()" id="check1">
+            <button class= onclick="Login()">Login</button>
             <p class="message">Don't have an account? <a href="#"> Create account</a></p>
         </form>
 
