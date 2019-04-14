@@ -1,0 +1,31 @@
+code,name,conference,division
+BOS,Boston Celtics,Eastern,Atlantic
+BKN,Brooklyn Nets,Eastern,Atlantic
+NYK,New York Knicks,Eastern,Atlantic
+PHI,Philadelphia Sixers,Eastern,Atlantic
+TOR,Toronto Raptors,Eastern,Atlantic
+CHI,Chicago Bulls,Eastern,Central
+CLE,Cleveland Cavaliers,Eastern,Central
+DET,Detroit Pistons,Eastern,Central
+IND,Indiana Pacers,Eastern,Central
+MIL,Milwaukee Bucks,Eastern,Central
+ATL,Atlanta Hawks,Eastern,Southeast
+CHA,Charlotte Hornets,Eastern,Southeast
+MIA,Miami Heat,Eastern,Southeast
+ORL,Orlando Magic,Eastern,Southeast
+WAS,Washington Wizards,Eastern,Southeast
+DEN,Denver Nuggets,Western,Northwest
+MIN,Minnesota Timberwolves,Western,Northwest
+OKC,Oklahoma City Thunder,Western,Northwest
+POR,Portland Trail Blazers,Western,Northwest
+UTA,Utah Jazz,Western,Northwest
+GSW,Golden State Warriors,Western,Pacific
+LAC,Los Angeles Clippers,Western,Pacific
+LAL,Los Angeles Lakers,Western,Pacific
+PHX,Phoenix Suns,Western,Pacific
+SAC,Sacramento Kings,Western,Pacific
+DAL,Dallas Mavericks,Western,Southwest
+HOU,Houston Rockets,Western,Southwest
+MEM,Memphis Grizzlies,Western,Southwest
+NOP,New Orleans Pelicans,Western,Southwest
+SAS,San Antonio Spurs,Western,Southwest
