@@ -66,8 +66,8 @@
 		obj.username=document.getElementById("username").value;
 		obj.password=document.getElementById("myInput").value;
 		$.ajax({
-            type: 'POST',
-            url: 'http://localhost:1234/login',
+            type: 'GET',
+            url: 'http://localhost:8080/login',
             data: JSON.stringify(obj),
             contentType: "application/json",
             crossDomain: true
@@ -95,7 +95,7 @@
 		obj.password=document.getElementById("myInput1").value
 		$.ajax({
             type: 'POST',
-            url: 'http://localhost:1234/register',
+            url: 'http://localhost:8080/register',
             data: JSON.stringify(obj),
             contentType: "application/json",
             crossDomain: true
