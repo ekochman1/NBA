@@ -34,7 +34,6 @@ public class UserController {
 		we would want to return */
 		HttpHeaders responseHeaders = new HttpHeaders();
     	responseHeaders.set("Content-Type", "application/json");
-    	responseHeaders.set("Access-Control-Allow-Origin", "*");
 		
 		MessageDigest digest = null;
 		String hashedKey = null;
@@ -108,7 +107,6 @@ public class UserController {
 		we would want to return */
 		HttpHeaders responseHeaders = new HttpHeaders(); 
     	responseHeaders.set("Content-Type", "application/json");
-    	responseHeaders.set("Access-Control-Allow-Origin", "*");
 		
 		MessageDigest digest = null;
 		String hashedKey = null;
@@ -127,15 +125,15 @@ public class UserController {
 	    boolean notNew = false;
 	    boolean rightPassword = false;
 	        while (rs.next()) {
-	        	if(rs.getString("owner") == username) {
+	        	if(rs.getString("owner").equals(username)) {
 	        		notNew = true;
 	        	}
-	        	if(rs.getString("password")== password) {
+	        	if(rs.getString("password").equals(password)) {
 	        		rightPassword = true;
 	        	}
 	        }
 	        conn.close();
-    	if (notNew) {
+    	if (!notNew) {
 			return new ResponseEntity("{\"message\":\"username not registered\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}else {
 			//String storedHashedKey = MyServer.users.get(username);

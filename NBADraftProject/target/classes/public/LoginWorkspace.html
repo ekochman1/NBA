@@ -28,9 +28,9 @@
             <button onclick="Login()">Login</button>
             <p class="message">Don't have an account? <a href="#"> Create account</a></p>
         </form>
-        <div/>
+        <div/></div>
 
-        <div/>
+        <div/></div>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js">
             </script>
 
@@ -66,19 +66,19 @@
 		obj.username=document.getElementById("username").value
 		obj.password=document.getElementById("myInput").value
 		$.ajax({
-            type: 'POST',
+            type: 'GET',
             url: 'http://localhost:1234/login',
             data: JSON.stringify(obj),
             contentType: "application/json",
             crossDomain: true
         })
         .done(function(data) {
-		sessionStorage.setItem("userID", obj.username);
-		window.alert("You're Logged In!");
+		    sessionStorage.setItem("userID", obj.username);
+		    window.alert("You're Logged In!");
             console.log(obj.username + " " + JSON.stringify(data));
         })
         .fail(function(data) {
-		window.alert("Login Failed");
+		    window.alert("Login Failed");
             console.log(data);
         });
     }
