@@ -70,7 +70,7 @@
 		obj.password=document.getElementById("myInput").value;
 		$.ajax({
             type: 'GET',
-            url: 'http://localhost:8080/login',
+            url: 'http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com/login',
             data: JSON.stringify(obj),
             contentType: "application/json",
             crossDomain: true
@@ -80,7 +80,7 @@
             console.log(obj.username + " " + JSON.stringify(data));
 			var r = confirm("You Successfully Logged In");
 			if (r == true){
-			location.replace("http://localhost:8080/homepage.html");}
+			location.replace("http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com/homepage.html");}
 			else{
 			
 			}	
@@ -101,7 +101,7 @@
 		obj.password=document.getElementById("myInput1").value
 		$.ajax({
             type: 'POST',
-            url: 'http://localhost:8080/register',
+            url: 'http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com/register',
             data: JSON.stringify(obj),
             contentType: "application/json",
             crossDomain: true
@@ -111,7 +111,7 @@
             console.log(obj.username + " " + JSON.stringify(data));
 			var r = confirm("You Successfully Registered");
 			if (r == true){
-			location.replace("http://localhost:8080/homepage.html");}
+			location.replace("http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com/homepage.html");}
 			else{
 			
 			}
