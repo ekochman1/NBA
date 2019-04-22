@@ -7,67 +7,64 @@
 </head>
 <body>
 
-<div class = "login-page">
-    <div class = "form">
-<form class ="register-form">
-    <h1 style="font-size:30px;">Let's start</h1>
-    <input type = "text" placeholder="username" id = "username1"/>
-    <input type="password" placeholder="password" id="myInput1">
-    <input type = "text" placeholder="email"/>
-    <input type="checkbox" onclick="myFunction1()">
-    <button onclick="Create_account()">Create account</button>
-    <p class="message">Already have an account? <a href="#"> Login</a>
-    </p>
-</form>
+<div class="login-page">
+    <div class="form">
+        <form class="register-form">
+            <h1 style="font-size:30px;">Let's start</h1>
+            <input type="text" placeholder="username" id="username1"/>
+            <input type="password" placeholder="password" id="password1">
+            <input type="text" placeholder="email"/>
+            <input type="checkbox" onclick="myFunction1()">
+            <button onclick="Create_account()">Create account</button>
+            <p class="message">Already have an account? <a href="#"> Login</a>
+            </p>
+        </form>
         <form class="login-form">
             <h1 style="font-size:30px;">Welcome!</h1>
-        <input type="text" placeholder="username" id = "username"/>
-            <input type="password" placeholder="password" id="myInput">
+            <input type="text" placeholder="username" id="username"/>
+            <input type="password" placeholder="password" id="password">
             <input type="checkbox" onclick="myFunction()">
             <button onclick="Login()">Login</button>
             <p class="message">Don't have an account? <a href="#"> Create account</a></p>
         </form>
-        </div>
+    </div>
 
-        </div>
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js">
-            </script>
-			
-			
-			
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
-        <script>
-            $('.message a').click(function() {
-                $('form').animate( {height: "toggle", opacity: "toggle"}, "slow");})
-        </script>
-        <script>
+<script>
+            $('.message a').click(function() {$('form').animate( {height: "toggle", opacity: "toggle"}, "slow");})
+</script>
+<script>
             function myFunction() {
-                var x = document.getElementById("myInput");
+                var x = document.getElementById("password");
                 if (x.type === "password") {
                     x.type = "text";
                 } else {
                     x.type = "password";
                 }
             }
-        </script>
-        <script>
+
+</script>
+<script>
             function myFunction1() {
-                var y = document.getElementById("myInput1");
+                var y = document.getElementById("password1");
                 if (y.type === "password") {
                     y.type = "text";
                 } else {
                     y.type = "password";
                 }
             }
-        </script>
+
+</script>
+
+<script>
 		
-		<script>
-		
-			function Login() {
+		function Login() {
 	
 		var obj = {}
 		obj.username=document.getElementById("username").value;
-		obj.password=document.getElementById("myInput").value;
+		obj.password=document.getElementById("password").value;
 		$.ajax({
             type: 'GET',
             url: 'http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com:8080/login',
@@ -90,15 +87,14 @@
 			alert("Login Failed");
         });
     }
+</script>
+
+<script>
 		
-		</script>
-		
-		<script>
-		
-			function Create_account() {
+		function Create_account() {
 		var obj = {}
 		obj.username=document.getElementById("username1").value
-		obj.password=document.getElementById("myInput1").value
+		obj.password=document.getElementById("password1").value
 		$.ajax({
             type: 'POST',
             url: 'http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com:8080/register',
@@ -122,7 +118,8 @@
         });
     }
 		
-		</script>
+
+</script>
 
 
 </body>

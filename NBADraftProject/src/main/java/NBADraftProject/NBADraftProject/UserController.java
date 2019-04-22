@@ -160,22 +160,20 @@ public class UserController {
         String hashedKey = null;
 
         try {
-            String nameToPull = username;
-            String passwordToPull = password;
             Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String searchQuery = "SELECT owner, password FROM Users WHERE owner = ? AND password = ?"; //fix query
+            String searchQuery = "SELECT owner, password FROM Users WHERE owner = ? AND hashedPassword = ?";
             PreparedStatement state = null;
             state = conn.prepareStatement(searchQuery);
-            state.setString(1, nameToPull);
-            state.setString(2, passwordToPull);
+            state.setString(1, username);
+            state.setString(2, password);
             ResultSet rs = state.executeQuery();
             boolean notNew = false;
             boolean rightPassword = false;
             while (rs.next()) {
-                if (rs.getString("owner") == username) {
+                if (rs.getString("owner").equals(username)) {
                     notNew = true;
                 }
-                if (rs.getString("password") == password) {
+                if (rs.getString("password").equals(password)) {
                     rightPassword = true;
                 }
             }
