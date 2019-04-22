@@ -91,31 +91,32 @@ public class UserController {
         //hashedKey = BCrypt.hashpw(password, BCrypt.gensalt());
         try {
             String nameToPull = request.getParameter("username");
-            Connection conn = DriverManager.getConnection("nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com", "root", "Ethaneddie123");
-            String SearchQuery = "SELECT owners  FROM Users WHERE owners = ?";
+            Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
+            String SearchQuery = "SELECT owner FROM Users WHERE owner = ?";
             PreparedStatement state = null;
             state = conn.prepareStatement(SearchQuery);
             state.setString(1, nameToPull);
             ResultSet rs = state.executeQuery();
             boolean isNew = true;
             while (rs.next()) {
-                if (rs.getString("owner") == username) {
+                if (rs.getString("owner").equals(username)) {
                     isNew = false;
                 }
             }
 
 
             if (isNew) {
-                MyServer.users.put(username, password); //we would use hashedkey once I understand it a bit better
                 //put the SQL connection in here
 
                 String transactionQuery = "START TRANSACTION";
                 PreparedStatement stmt = null;
                 stmt = conn.prepareStatement(transactionQuery);
                 stmt.execute();
-                String query = "INSERT VALUES INTO Users(" + username + ", " + password + ")";
+                String query = "INSERT INTO Users(owner, hashedPassword, league, team, venmoID, email) VALUES (?, ?, NULL, NULL, NULL, NULL)";
                 stmt = conn.prepareStatement(query);
-                stmt.execute();
+                stmt.setString(1, username);
+                stmt.setString(2, password);
+                stmt.executeUpdate();
 
             } else {
                 JSONObject responseObj = new JSONObject();
@@ -128,8 +129,9 @@ public class UserController {
             responseObj.put("message", "user registered");
             return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.OK);
         } catch (SQLException e) {
+            e.printStackTrace();
 
-            return new ResponseEntity("No connection to MyySQL", responseHeaders, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("Check status of server for stack trace.", responseHeaders, HttpStatus.BAD_REQUEST);
         }
 		/*finally {
     	try {
@@ -160,7 +162,7 @@ public class UserController {
         try {
             String nameToPull = username;
             String passwordToPull = password;
-            Connection conn = DriverManager.getConnection("nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com", "root", "Ethaneddie123");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
             String searchQuery = "SELECT owner, password FROM Users WHERE owner = ? AND password = ?"; //fix query
             PreparedStatement state = null;
             state = conn.prepareStatement(searchQuery);
