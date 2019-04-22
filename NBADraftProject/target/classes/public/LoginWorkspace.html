@@ -7,7 +7,6 @@
 </head>
 <body>
 
-
 <div class = "login-page">
     <div class = "form">
 <form class ="register-form">
@@ -33,6 +32,9 @@
         </div>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js">
             </script>
+			
+			
+			
 
         <script>
             $('.message a').click(function() {
@@ -62,26 +64,30 @@
 		<script>
 		
 			function Login() {
+	
 		var obj = {}
 		obj.username=document.getElementById("username").value;
 		obj.password=document.getElementById("myInput").value;
 		$.ajax({
-            type: 'POST',
-            url: 'http://localhost:1234/login',
+            type: 'GET',
+            url: 'http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com/login',
             data: JSON.stringify(obj),
             contentType: "application/json",
             crossDomain: true
         })
         .done(function(data) {
 		sessionStorage.setItem("userID", obj.username);
-		window.alert("You're Logged In!");
             console.log(obj.username + " " + JSON.stringify(data));
-			location.replace("homepage.html");
+			var r = confirm("You Successfully Logged In");
+			if (r == true){
+			location.replace("http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com/homepage.html");}
+			else{
 			
+			}	
         })
         .fail(function(data) {
-		window.alert("Login Failed");
             console.log(data);
+			alert("Login Failed");
         });
     }
 		
@@ -95,20 +101,24 @@
 		obj.password=document.getElementById("myInput1").value
 		$.ajax({
             type: 'POST',
-            url: 'http://localhost:1234/register',
+            url: 'http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com/register',
             data: JSON.stringify(obj),
             contentType: "application/json",
             crossDomain: true
         })
         .done(function(data) {
 		sessionStorage.setItem("userID", obj.username);
-		window.alert("You're Logged in and Registered!");
             console.log(obj.username + " " + JSON.stringify(data));
-			location.replace("homepage.html");
+			var r = confirm("You Successfully Registered");
+			if (r == true){
+			location.replace("http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com/homepage.html");}
+			else{
+			
+			}
         })
         .fail(function(data) {
-		window.alert("Code Failed");
             console.log(data);
+			alert("Registration Failed");
         });
     }
 		
