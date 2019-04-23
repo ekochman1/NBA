@@ -85,8 +85,8 @@ public class UserController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
 
-        MessageDigest digest = null;
-        String hashedKey = null;
+        //MessageDigest digest = null;
+        //String hashedKey = null;
 
         //hashedKey = BCrypt.hashpw(password, BCrypt.gensalt());
         try {
@@ -117,6 +117,8 @@ public class UserController {
                 stmt.setString(1, username);
                 stmt.setString(2, password);
                 stmt.executeUpdate();
+                stmt = conn.prepareStatement("COMMIT");
+                stmt.execute();
 
             } else {
                 JSONObject responseObj = new JSONObject();
@@ -144,11 +146,11 @@ public class UserController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     // <-- setup the endpoint URL at /hello with the HTTP POST method
-    public ResponseEntity<String> login(@RequestBody String payload, HttpServletRequest request) {
+    public ResponseEntity<String> login(HttpServletRequest request) {
 
-        JSONObject payloadObj = new JSONObject(payload);
-        String username = payloadObj.getString("username"); //Grabbing name and age parameters from URL
-        String password = payloadObj.getString("password");
+        
+        String username = request.getParameter("username"); //Grabbing name and age parameters from URL
+        String password = request.getParameter("password");
 
 		/*Creating http headers object to place into response entity the server will return.
 		This is what allows us to set the content-type to application/json or any other content-type
@@ -173,7 +175,7 @@ public class UserController {
                 if (rs.getString("owner").equals(username)) {
                     notNew = true;
                 }
-                if (rs.getString("password").equals(password)) {
+                if (rs.getString("hashedPassword").equals(password)) {
                     rightPassword = true;
                 }
             }
