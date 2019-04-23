@@ -3,11 +3,9 @@ this is a NBA fantasy app that will allow you to get access to all infomation ab
 # Currently Work in Progress
 We are still working on this, all features are not yet complete
 # Run the Springboot Server from the NBADraftProject-0.0.1 jar file
-# Have the MySQL server Up and running
-#for now# disable chrome security by going to the run window and typing "chrome.exe --user-data-dir="C:/Chrome dev session" --disable-web-security"
-and press enter
+open cmd and go to the directory where the NBADraftProject-0.0.1 jar file is stored and enter "java -jar NBADraftProject-0.0.1.jar"
 # Launch LoginNBA.html
-click on LoginNBA.html and run it on Google Chrome, and register or signin to the website
+open your browser and go to http://
 
 # features to add
 - On homepage maybe create a table that shows the top player right now (or some sort of information feed) 
