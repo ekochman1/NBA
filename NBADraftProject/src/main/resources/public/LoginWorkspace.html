@@ -67,7 +67,7 @@
 		obj.password=document.getElementById("password").value;
 		$.ajax({
             type: 'GET',
-            url: 'http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com:8080/login',
+            url: 'http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com:8080/login?username=' + obj.username + '&password='+ obj.password,
             data: JSON.stringify(obj),
             contentType: "application/json",
             crossDomain: true
@@ -97,7 +97,7 @@
 		obj.password=document.getElementById("password1").value
 		$.ajax({
             type: 'POST',
-            url: 'http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com:8080/register',
+             url: 'http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com:8080/register',
             data: JSON.stringify(obj),
             contentType: "application/json",
             crossDomain: true
