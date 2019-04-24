@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dot/1.1.0/doT.js"></script>
+
+    </head>
+    <body>
+            <div id="container"></div>
+
+            <script id="templateButtons" type="text/x-dot-template" >
+                {{~it.detalle :value:index}}
+                <button class='button' data-id="{{=value.id}}">Button {{=value.id}} </button>
+                {{~}}
+            </script>
+            <script>
+                $(function() {
+                    var json =  (function(){
+					var json = null;
+        $.ajax({
+            'async': false,
+            'global': false,
+            'url': "/content.json", //change this so it leads to the json file
+            'dataType': "json",
+            'success': function (data) {
+                json = data;
+            }
+        }
+					
+					}); //this fetches the json file
+                    var template = $("#templateButtons").html();
+          
+                    var html = doT.template(template)({detalle:data});
+    
+                    $("#container").html(html);
+                    $(".button").click(function() { //change these json files so that they fit the parameters in the actual json files
+                        var id = $(this).json("id");
+                        $.ajax({
+						type: 'POST',
+						url: 'http://localhost/login', //change to ec2
+						data: string,
+						crossDomain: true
+			})
+			.done(function(data) {
+				console.log(data)
+				alert("you have drafted "+ json[id].name);
+        })
+			.fail(function(data) {
+				console.log(data);
+				alert("you have failed to draft "+ json[id].name);
+        });
+                    });
+
+
+                });            
+            </script>
+    </body>
+
+
+</html>
