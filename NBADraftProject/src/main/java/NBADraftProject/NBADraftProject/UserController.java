@@ -163,7 +163,7 @@ public class UserController {
 
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String searchQuery = "SELECT owner, password FROM Users WHERE owner = ? AND hashedPassword = ?";
+            String searchQuery = "SELECT owner, hashedPassword FROM Users WHERE owner = ? AND hashedPassword = ?";
             PreparedStatement state = null;
             state = conn.prepareStatement(searchQuery);
             state.setString(1, username);
