@@ -105,7 +105,7 @@ public class UserController {
 
         try {
             conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String query = "SELECT playerId, position, Player_rankPos, Player_rankOverall, name, team FROM Player_Ranking";
+            String query = "SELECT playerID, position, playerRankPos, playerRankOverall, name, teamCode FROM Player_Ranking";
             PreparedStatement stmt = null;    //important for safety reasons
             /**String tester = "tester";
              return tester;**/
@@ -114,12 +114,12 @@ public class UserController {
             // stmt.setString(1, nameToPull);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {    //while there's something else next in the result set
-                playerId = rs.getInt("playerId");
+                playerId = rs.getInt("playerID");
                 position = rs.getString("position");
-                Player_rankPos = rs.getInt("Player_rankPos");
-                Player_rankOverall = rs.getInt("Player_rankOverall");
+                Player_rankPos = rs.getInt("playerRankPos");
+                Player_rankOverall = rs.getInt("playerRankOverall");
                 name = rs.getString("name");
-                team = rs.getString("team");
+                team = rs.getString("teamCode");
 
                 JSONObject obj = new JSONObject();
                 obj.put("leagueid", JSONID); //this way i can identify the master JSON file
@@ -239,14 +239,14 @@ public class UserController {
         try {
             String nameToPull = request.getParameter("username");
             Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String SearchQuery = "SELECT owner FROM Users WHERE owner = ?";
+            String SearchQuery = "SELECT username FROM Users WHERE username = ?";
             PreparedStatement state = null;
             state = conn.prepareStatement(SearchQuery);
             state.setString(1, nameToPull);
             ResultSet rs = state.executeQuery();
             boolean isNew = true;
             while (rs.next()) {
-                if (rs.getString("owner").equals(username)) {
+                if (rs.getString("username").equals(username)) {
                     isNew = false;
                 }
             }
@@ -259,7 +259,7 @@ public class UserController {
                 PreparedStatement stmt = null;
                 stmt = conn.prepareStatement(transactionQuery);
                 stmt.execute();
-                String query = "INSERT INTO Users(owner, hashedPassword, league, team, venmoID, email) VALUES (?, ?, NULL, NULL, NULL, NULL)";
+                String query = "INSERT INTO Users(username, hashedPassword) VALUES (?, ?)";
                 stmt = conn.prepareStatement(query);
                 stmt.setString(1, username);
                 stmt.setString(2, password);
@@ -310,7 +310,7 @@ public class UserController {
 
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String searchQuery = "SELECT owner, hashedPassword FROM Users WHERE owner = ? AND hashedPassword = ?";
+            String searchQuery = "SELECT username, hashedPassword FROM Users WHERE username = ? AND hashedPassword = ?";
             PreparedStatement state = null;
             state = conn.prepareStatement(searchQuery);
             state.setString(1, username);
@@ -319,7 +319,7 @@ public class UserController {
             boolean notNew = false;
             boolean rightPassword = false;
             while (rs.next()) {
-                if (rs.getString("owner").equals(username)) {
+                if (rs.getString("username").equals(username)) {
                     notNew = true;
                 }
                 if (rs.getString("hashedPassword").equals(password)) {
