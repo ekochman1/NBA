@@ -24,13 +24,13 @@ import org.json.JSONArray;
 
 @RestController
 public class UserController {
-	private static ArrayList<JSONArray> MasterJSON;
-	
-	
+    private static ArrayList<JSONArray> MasterJSON;
+
+
     //same logic behind databases, imagine the wallet system, but you only have 5 dollars and you get charged 3 dollars at the same time, in theory you are capable to handling each one individually
     //but not both
 
-    
+
     //create a transaction 
     /* this will be to finish the draft
     @RequestMapping(value = "/FinishDraft", method = RequestMethod.GET)
@@ -75,176 +75,149 @@ public class UserController {
         }
 
     }   */
-	
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public RedirectView landing() {
-		return new RedirectView("/LoginWorkspace.html");
-	}
-    
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public RedirectView landing() {
+        return new RedirectView("/LoginWorkspace.html");
+    }
+
     @RequestMapping(value = "/createDraft", method = RequestMethod.GET)
- // <-- setup the endpoint URL at /hello with the HTTP POST method
- public ResponseEntity<String> database(HttpServletRequest leagueID) {
-     //String nameToPull = request.getParameter("firstname");
-    	
-    	String JSONID = leagueID.getParameter("leagueID"); 
-    	
-     HttpHeaders responseHeaders = new HttpHeaders();
-     responseHeaders.set("Content-Type", "application/json");
-     
-     Connection conn = null;
-     ArrayList<String> listdata = new ArrayList<String>();
-     JSONArray nameArray = new JSONArray();
-     int playerId = 0;
-     String position = "";
-     int Player_rankPos = 0;
-     int Player_rankOverall = 0;
-     String name = "";
-     String team = "";
-     boolean taken = false;
-    // double Player_standDev = 0; never used?
+    // <-- setup the endpoint URL at /hello with the HTTP POST method
+    public ResponseEntity<String> database(HttpServletRequest leagueID) {
+        //String nameToPull = request.getParameter("firstname");
 
-     try {
-         conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-         String query = "SELECT playerId, position, Player_rankPos, Player_rankOverall, name, team FROM Player_Ranking";
-         PreparedStatement stmt = null;    //important for safety reasons
-         /**String tester = "tester";
-          return tester;**/
+        String JSONID = leagueID.getParameter("leagueID");
 
-         stmt = conn.prepareStatement(query);
-         // stmt.setString(1, nameToPull);
-         ResultSet rs = stmt.executeQuery();
-         while (rs.next()) {    //while there's something else next in the result set
-             playerId = rs.getInt("playerId");
-             position = rs.getString("position");
-             Player_rankPos = rs.getInt("Player_rankPos");
-             Player_rankOverall = rs.getInt("Player_rankOverall");
-             name = rs.getString("name");
-             team = rs.getString("team");
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
 
-             JSONObject obj= new JSONObject();
-             obj.put("leagueid", JSONID); //this way i can identify the master JSON file
-             obj.put("playerId", playerId);
-             obj.put("position", position);
-             obj.put("Player_rankPos", Player_rankPos);
-             obj.put("Player_rankOverall", Player_rankOverall);
-             obj.put("name", name);
-             obj.put("team", team);
-             obj.put("taken", taken);
-             
-             nameArray.put(obj);
+        Connection conn = null;
+        ArrayList<String> listdata = new ArrayList<String>();
+        JSONArray nameArray = new JSONArray();
+        int playerId = 0;
+        String position = "";
+        int Player_rankPos = 0;
+        int Player_rankOverall = 0;
+        String name = "";
+        String team = "";
+        boolean taken = false;
+        // double Player_standDev = 0; never used?
 
-             if (nameArray != null) {
-                 for (int i=0;i<nameArray.length();i++){
-                     listdata.add(nameArray.getString(i));
-                 }
-             }
-             
-            //puts the json array in the EC2 server
-         }
-         MasterJSON.add(nameArray); 
-     } catch (SQLException e) {
-         return new ResponseEntity(e.toString(), responseHeaders, HttpStatus.OK);
-     } finally {
-         try {
-             if (conn != null) {
-                 conn.close();
-             }
-         } catch (SQLException se) {
-         }
-     }
-     return new ResponseEntity(nameArray.toString(), responseHeaders, HttpStatus.OK);
-
- }
-
- /*
-    @RequestMapping(value = "/createDraft", method = RequestMethod.POST)
-    public ResponseEntity<String> createDraft(@RequestBody String userID, HttpServletRequest request){
-    	
-    	
         try {
-            Connection conn = DriverManager.getConnection("nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com" , "root", "Ethaneddie123");
-            String SearchQuery = "SELECT owners FROM Users WHERE owners = ?";
-            PreparedStatement state = null;
-            state = conn.prepareStatement(SearchQuery);
-            state.setString(1, userID);
-            ResultSet rs = state.executeQuery();
-            
+            conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
+            String query = "SELECT playerId, position, Player_rankPos, Player_rankOverall, name, team FROM Player_Ranking";
+            PreparedStatement stmt = null;    //important for safety reasons
+            /**String tester = "tester";
+             return tester;**/
 
-        }
+            stmt = conn.prepareStatement(query);
+            // stmt.setString(1, nameToPull);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {    //while there's something else next in the result set
+                playerId = rs.getInt("playerId");
+                position = rs.getString("position");
+                Player_rankPos = rs.getInt("Player_rankPos");
+                Player_rankOverall = rs.getInt("Player_rankOverall");
+                name = rs.getString("name");
+                team = rs.getString("team");
 
-        catch(SQLException e){
-            e.printStackTrace();
+                JSONObject obj = new JSONObject();
+                obj.put("leagueid", JSONID); //this way i can identify the master JSON file
+                obj.put("playerId", playerId);
+                obj.put("position", position);
+                obj.put("Player_rankPos", Player_rankPos);
+                obj.put("Player_rankOverall", Player_rankOverall);
+                obj.put("name", name);
+                obj.put("team", team);
+                obj.put("taken", taken);
 
+                nameArray.put(obj);
 
-        }
-
-    } */
-    
-    @RequestMapping(value = "/draft", method = RequestMethod.POST)  //THIS SHOULD BE ACTIVATED ON CLICK
-    public ResponseEntity<String> draft(@RequestBody String payload, HttpServletRequest request){
-    	JSONObject payloadObj = new JSONObject(payload);
-    	int leagueID = payloadObj.getInt("leagueID");
-    	int PlayerID = payloadObj.getInt("playerID");
-    	//String position = payloadObj.getString("position");
-    	//int Player_rankPos = payloadObj.getInt("Player_rankPos");
-    	//int Player_rankOverall = payloadObj.getInt("Plater_rankOverall");
-    	//String name = payloadObj.getString("name");
-    	//String team = payloadObj.getString("team");
-    	JSONArray newArray = new JSONArray();
-    	JSONArray nameArray = new JSONArray();
-    	
-    	  HttpHeaders responseHeaders = new HttpHeaders();
-    	  responseHeaders.set("Content-Type", "application/json");
-    	
-    	
-    	for(int i = 0; i < MasterJSON.size(); i++) {
-    		if(MasterJSON.get(i).getJSONObject(0).getInt("leagueid") == leagueID) {
-    			for(int j = 0; j <MasterJSON.get(i).length(); i++) {
-    				if(MasterJSON.get(i).getJSONObject(j).getInt("playerid") == PlayerID) {
-    			JSONObject obj = new JSONObject();
-    		    obj.put("leagueid", MasterJSON.get(i).getJSONObject(j).getInt("leagueid")); //this way i can identify the master JSON file
-                obj.put("playerId", MasterJSON.get(i).getJSONObject(j).getInt("playerID"));
-                obj.put("position", MasterJSON.get(i).getJSONObject(j).getString("position"));
-                obj.put("Player_rankPos", MasterJSON.get(i).getJSONObject(j).getInt("Player_rankPos"));
-                obj.put("Player_rankOverall", MasterJSON.get(i).getJSONObject(j).getInt("Player_rankOverall"));
-                obj.put("name", MasterJSON.get(i).getJSONObject(j).getString("name"));
-                obj.put("team", MasterJSON.get(i).getJSONObject(j).getString("team"));
-                obj.put("taken", true);
-                newArray.put(obj);
-    				}
-    			else {
-    					JSONObject obj = new JSONObject();
-    	    		    obj.put("leagueid", MasterJSON.get(i).getJSONObject(j).getInt("leagueid")); //this way i can identify the master JSON file
-    	                obj.put("playerId", MasterJSON.get(i).getJSONObject(j).getInt("playerID"));
-    	                obj.put("position", MasterJSON.get(i).getJSONObject(j).getString("position"));
-    	                obj.put("Player_rankPos", MasterJSON.get(i).getJSONObject(j).getInt("Player_rankPos"));
-    	                obj.put("Player_rankOverall", MasterJSON.get(i).getJSONObject(j).getInt("Player_rankOverall"));
-    	                obj.put("name", MasterJSON.get(i).getJSONObject(j).getString("name"));
-    	                obj.put("team", MasterJSON.get(i).getJSONObject(j).getString("team"));
-    	                obj.put("taken", MasterJSON.get(i).getJSONObject(j).getBoolean("taken"));
-    	                newArray.put(obj);
-    	    				}
-    				}
-    			
+                if (nameArray != null) {
+                    for (int i = 0; i < nameArray.length(); i++) {
+                        listdata.add(nameArray.getString(i));
+                    }
                 }
-    			MasterJSON.set(i, newArray);
-    			
-    			for(int k = 0; k < newArray.length(); k++ ) {
-    				if(!newArray.getJSONObject(k).getBoolean("taken")) {
-    					nameArray.put(newArray.getJSONObject(k));
-    				}
-    				
-    			}
-    			
-    			return new ResponseEntity(nameArray.toString(), responseHeaders, HttpStatus.OK); // MAKE SURE THAT WHEN THIS RETURNS THE OK STATUS, IT BROADCASTS THE NEW JSON OBJECT
-    			}
-		return new ResponseEntity("Something Went Wrong", responseHeaders, HttpStatus.OK);
-    		
-    		
-    	}
-    			
-    			
-    
+
+                //puts the json array in the EC2 server
+            }
+            MasterJSON.add(nameArray);
+        } catch (SQLException e) {
+            return new ResponseEntity(e.toString(), responseHeaders, HttpStatus.OK);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException se) {
+            }
+        }
+        return new ResponseEntity(nameArray.toString(), responseHeaders, HttpStatus.OK);
+
+    }
+
+    @RequestMapping(value = "/draft", method = RequestMethod.POST)  //THIS SHOULD BE ACTIVATED ON CLICK
+    public ResponseEntity<String> draft(@RequestBody String payload, HttpServletRequest request) {
+        JSONObject payloadObj = new JSONObject(payload);
+        int leagueID = payloadObj.getInt("leagueID");
+        int PlayerID = payloadObj.getInt("playerID");
+        //String position = payloadObj.getString("position");
+        //int Player_rankPos = payloadObj.getInt("Player_rankPos");
+        //int Player_rankOverall = payloadObj.getInt("Plater_rankOverall");
+        //String name = payloadObj.getString("name");
+        //String team = payloadObj.getString("team");
+        JSONArray newArray = new JSONArray();
+        JSONArray nameArray = new JSONArray();
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+
+
+        for (int i = 0; i < MasterJSON.size(); i++) {
+            if (MasterJSON.get(i).getJSONObject(0).getInt("leagueid") == leagueID) {
+                for (int j = 0; j < MasterJSON.get(i).length(); i++) {
+                    if (MasterJSON.get(i).getJSONObject(j).getInt("playerid") == PlayerID) {
+                        JSONObject obj = new JSONObject();
+                        obj.put("leagueid", MasterJSON.get(i).getJSONObject(j).getInt("leagueid")); //this way i can identify the master JSON file
+                        obj.put("playerId", MasterJSON.get(i).getJSONObject(j).getInt("playerID"));
+                        obj.put("position", MasterJSON.get(i).getJSONObject(j).getString("position"));
+                        obj.put("Player_rankPos", MasterJSON.get(i).getJSONObject(j).getInt("Player_rankPos"));
+                        obj.put("Player_rankOverall", MasterJSON.get(i).getJSONObject(j).getInt("Player_rankOverall"));
+                        obj.put("name", MasterJSON.get(i).getJSONObject(j).getString("name"));
+                        obj.put("team", MasterJSON.get(i).getJSONObject(j).getString("team"));
+                        obj.put("taken", true);
+                        newArray.put(obj);
+                    } else {
+                        JSONObject obj = new JSONObject();
+                        obj.put("leagueid", MasterJSON.get(i).getJSONObject(j).getInt("leagueid")); //this way i can identify the master JSON file
+                        obj.put("playerId", MasterJSON.get(i).getJSONObject(j).getInt("playerID"));
+                        obj.put("position", MasterJSON.get(i).getJSONObject(j).getString("position"));
+                        obj.put("Player_rankPos", MasterJSON.get(i).getJSONObject(j).getInt("Player_rankPos"));
+                        obj.put("Player_rankOverall", MasterJSON.get(i).getJSONObject(j).getInt("Player_rankOverall"));
+                        obj.put("name", MasterJSON.get(i).getJSONObject(j).getString("name"));
+                        obj.put("team", MasterJSON.get(i).getJSONObject(j).getString("team"));
+                        obj.put("taken", MasterJSON.get(i).getJSONObject(j).getBoolean("taken"));
+                        newArray.put(obj);
+                    }
+                }
+
+            }
+            MasterJSON.set(i, newArray);
+
+            for (int k = 0; k < newArray.length(); k++) {
+                if (!newArray.getJSONObject(k).getBoolean("taken")) {
+                    nameArray.put(newArray.getJSONObject(k));
+                }
+
+            }
+
+            return new ResponseEntity(nameArray.toString(), responseHeaders, HttpStatus.OK); // MAKE SURE THAT WHEN THIS RETURNS THE OK STATUS, IT BROADCASTS THE NEW JSON OBJECT
+        }
+        return new ResponseEntity("Something Went Wrong", responseHeaders, HttpStatus.OK);
+
+
+    }
+
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     // <-- setup the endpoint URL at /hello with the HTTP POST method
@@ -322,7 +295,7 @@ public class UserController {
     // <-- setup the endpoint URL at /hello with the HTTP POST method
     public ResponseEntity<String> login(HttpServletRequest request) {
 
-        
+
         String username = request.getParameter("username"); //Grabbing name and age parameters from URL
         String password = request.getParameter("password");
 
@@ -368,23 +341,5 @@ public class UserController {
         } catch (SQLException e) {
             return new ResponseEntity("{\"message\":\"No Connection to MySQL\"}", responseHeaders, HttpStatus.NOT_FOUND);
         }
-	/* finally {
-    	try {
-    		if (conn != null) { conn.close(); }
-    	}catch(SQLException se) {
-    	}
-    	
-	}} */
-
     }
 }
-	
-
-	 /*public static String bytesToHex(byte[] in) {
-		StringBuilder builder = new StringBuilder();
-		for(byte b: in) {
-			builder.append(String.format("%02x", b));
-		}
-		return builder.toString();
-	}
-}  */
