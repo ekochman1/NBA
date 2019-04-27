@@ -67,7 +67,7 @@
 		obj.password=document.getElementById("password").value;
 		$.ajax({
             type: 'GET',
-            url: 'http://http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com:8080/login?username=' + obj.username + '&password='+ obj.password,
+            url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com:8080/login?username=' + obj.username + '&password='+ obj.password,
             //data: JSON.stringify(obj),
             //contentType: "application/json",
             crossDomain: true
