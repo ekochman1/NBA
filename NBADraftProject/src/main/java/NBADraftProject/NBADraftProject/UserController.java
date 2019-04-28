@@ -107,8 +107,8 @@ public class UserController {
             conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
             String query = "SELECT playerID, position, playerRankPos, playerRankOverall, name, teamCode FROM Player_Ranking";
             PreparedStatement stmt = null;    //important for safety reasons
-            /**String tester = "tester";
-             return tester;**/
+            /*String tester = "tester";
+             return tester;*/
 
             stmt = conn.prepareStatement(query);
             // stmt.setString(1, nameToPull);
@@ -133,27 +133,48 @@ public class UserController {
 
                 nameArray.put(obj);
 
-                if (nameArray != null) {
-                    for (int i = 0; i < nameArray.length(); i++) {
-                        listdata.add(nameArray.getString(i));
-                    }
+                for (int i = 0; i < nameArray.length(); i++) {
+                    listdata.add(nameArray.getString(i));
                 }
 
                 //puts the json array in the EC2 server
             }
             MasterJSON.add(nameArray);
         } catch (SQLException e) {
-            return new ResponseEntity(e.toString(), responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.OK);
         } finally {
             try {
                 if (conn != null) {
                     conn.close();
                 }
             } catch (SQLException se) {
+                se.printStackTrace();
             }
         }
-        return new ResponseEntity(nameArray.toString(), responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(nameArray.toString(), responseHeaders, HttpStatus.OK);
 
+    }
+
+    @RequestMapping(value = "/joinDraft", method = RequestMethod.GET)
+    public ResponseEntity<String> joinDraft(@RequestParam String leagueID){
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+        JSONObject responseObj = new JSONObject();
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds." +
+                    "amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
+            String query = "SELECT leagueID, leagueName, leagueAllocation FROM League WHERE leagueID = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, Integer.parseInt(leagueID));
+            ResultSet rs = stmt.executeQuery();
+            conn.close();
+            responseObj.put("leagueID", rs.getInt("leagueID"));
+            responseObj.put("leagueName", rs.getString("leagueName"));
+            responseObj.put("leagueAllocation", rs.getFloat("leagueAllocation"));
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/draft", method = RequestMethod.POST)  //THIS SHOULD BE ACTIVATED ON CLICK
@@ -208,14 +229,9 @@ public class UserController {
                 if (!newArray.getJSONObject(k).getBoolean("taken")) {
                     nameArray.put(newArray.getJSONObject(k));
                 }
-
             }
-
-            return new ResponseEntity(nameArray.toString(), responseHeaders, HttpStatus.OK); // MAKE SURE THAT WHEN THIS RETURNS THE OK STATUS, IT BROADCASTS THE NEW JSON OBJECT
         }
-        return new ResponseEntity("Something Went Wrong", responseHeaders, HttpStatus.OK);
-
-
+        return new ResponseEntity<>(nameArray.toString(), responseHeaders, HttpStatus.OK); // MAKE SURE THAT WHEN THIS RETURNS THE OK STATUS, IT BROADCASTS THE NEW JSON OBJECT
     }
 
 
@@ -270,17 +286,17 @@ public class UserController {
             } else {
                 JSONObject responseObj = new JSONObject();
                 responseObj.put("message", "username taken");
-                return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.FORBIDDEN);
             }
             //Returns the response with a String, headers, and HTTP status
             JSONObject responseObj = new JSONObject();
             responseObj.put("username", username);
             responseObj.put("message", "user registered");
-            return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
         } catch (SQLException e) {
             e.printStackTrace();
 
-            return new ResponseEntity("Check status of server for stack trace.", responseHeaders, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Check status of server for stack trace.", responseHeaders, HttpStatus.BAD_REQUEST);
         }
 		/*finally {
     	try {
@@ -328,18 +344,18 @@ public class UserController {
             }
 
             if (!notNew) {
-                return new ResponseEntity("{\"message\":\"username not registered\"}", responseHeaders, HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>("{\"message\":\"username not registered\"}", responseHeaders, HttpStatus.FORBIDDEN);
             } else {
                 //String storedHashedKey = MyServer.users.get(username);
 
                 if (rightPassword) { //BCrypt.checkpw(password, storedHashedKey) when we get to it.
-                    return new ResponseEntity("{\"message\":\"user logged in\"}", responseHeaders, HttpStatus.OK);
+                    return new ResponseEntity<>("{\"message\":\"user logged in\"}", responseHeaders, HttpStatus.OK);
                 } else {
-                    return new ResponseEntity("{\"message\":\"username/password combination is incorrect\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>("{\"message\":\"username/password combination is incorrect\"}", responseHeaders, HttpStatus.BAD_REQUEST);
                 }
             }
         } catch (SQLException e) {
-            return new ResponseEntity("{\"message\":\"No Connection to MySQL\"}", responseHeaders, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("{\"message\":\"No Connection to MySQL\"}", responseHeaders, HttpStatus.NOT_FOUND);
         }
     }
 }
