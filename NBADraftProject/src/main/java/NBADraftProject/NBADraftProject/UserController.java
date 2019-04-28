@@ -167,10 +167,12 @@ public class UserController {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, Integer.parseInt(leagueID));
             ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                responseObj.put("leagueID", rs.getInt("leagueID"));
+                responseObj.put("leagueName", rs.getString("leagueName"));
+                responseObj.put("leagueAllocation", rs.getFloat("leagueAllocation"));
+            }
             conn.close();
-            responseObj.put("leagueID", rs.getInt("leagueID"));
-            responseObj.put("leagueName", rs.getString("leagueName"));
-            responseObj.put("leagueAllocation", rs.getFloat("leagueAllocation"));
         } catch (SQLException e){
             e.printStackTrace();
         }
