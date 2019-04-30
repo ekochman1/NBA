@@ -80,6 +80,68 @@ public class UserController {
     public RedirectView landing() {
         return new RedirectView("/LoginWorkspace.html");
     }
+    
+    @RequestMapping(value = "/createLeague", method = RequestMethod.POST)
+    public ResponseEntity<String> createLeague(@RequestBody String payload, HttpServletRequest request){
+    	  JSONObject payloadObj = new JSONObject(payload);
+          String leagueName = payloadObj.getString("leagueName");
+          int userID = payloadObj.getInt("userID");//Grabbing name and age parameters from URL
+          int maxTeam = payloadObj.getInt("maxTeam");
+          Double leagueAllocation = payloadObj.getDouble("leagueAllocation");
+          
+          
+          HttpHeaders responseHeaders = new HttpHeaders();
+          responseHeaders.set("Content-Type", "application/json");
+
+
+          try {
+              Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
+              String transactionQuery = "START TRANSACTION";
+              PreparedStatement stmt = null;
+              stmt = conn.prepareStatement(transactionQuery);
+              stmt.execute();
+              String query = "INSERT INTO League(leaugeName, maxTeam, leagueAllocation) VALUES (?, ?, ?, ?, ?)";
+              stmt = conn.prepareStatement(query);
+              stmt.setString(1, leagueName);
+              stmt.setInt(4, maxTeam);
+              stmt.setDouble(5, leagueAllocation);
+              stmt.executeUpdate();
+              stmt = conn.prepareStatement("COMMIT");
+              stmt.execute();
+              
+              int leagueID = 0;
+              
+              PreparedStatement stmt1 = null;
+              String query0 = "SELECT leagueName FROM League WHERE leagueName = ?";
+              stmt1 = conn.prepareStatement(query);
+              stmt1.setString(1, leagueName);
+              ResultSet rs = stmt1.executeQuery();
+              while(rs.next()) {
+            	  if(leagueName == rs.getString("leagueName")) {
+            		  leagueID = rs.getInt("leagueID");
+            	  }
+            	  else {
+            		  return new ResponseEntity<>("{\"message\":\"issue with pushing to MQSQL\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+            	  }
+              }
+              PreparedStatement state = null;
+              state = conn.prepareStatement(transactionQuery);
+              state.execute();
+              String query1 = "INSERT INTO Teams(userID, wallet, leagueID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+              state = conn.prepareStatement(query);
+              state.setInt(2, userID);
+              state.setDouble(3, leagueAllocation);
+              state.setInt(4, leagueID);
+              state.executeUpdate();
+              state = conn.prepareStatement("COMMIT");
+              state.execute();
+              
+              return new ResponseEntity<>("Successfully Created A League", responseHeaders, HttpStatus.OK);
+          }
+          catch(SQLException e) {
+        	  return new ResponseEntity<>("{\"message\":\"No Connection to MySQL\"}", responseHeaders, HttpStatus.NOT_FOUND);
+        	  }
+          }
 
     @RequestMapping(value = "/createDraft", method = RequestMethod.GET)
     // <-- setup the endpoint URL at /hello with the HTTP POST method
@@ -308,6 +370,7 @@ public class UserController {
     		
     	} */
     }
+  
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     // <-- setup the endpoint URL at /hello with the HTTP POST method
