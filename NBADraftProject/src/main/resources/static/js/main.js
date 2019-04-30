@@ -34,10 +34,11 @@ function connect(event) {
 
 function onConnected() {
     // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/public', onMessageReceived);
+    var leagueID = sessionStorage.getItem('leagueID');
+    stompClient.subscribe('/draft/'+leagueID, onMessageReceived);
 
     // Tell your username to the server
-    stompClient.send("/app/chat.addUser",
+    stompClient.send("/app/"+leagueID+"/chat.addUser",
         {},
         JSON.stringify({sender: username, type: 'JOIN'})
     )
@@ -52,6 +53,21 @@ function onError(error) {
 }
 
 
+function sendDraft(event) {
+    var messageContent = messageInput.value.trim();
+    if(messageContent && stompClient) {
+        var chatMessage = {
+            sender: username,
+            pick: messageInput.value,
+            type: 'DRAFT'
+        };
+        var leagueID = sessionStorage.getItem('leagueID');
+        stompClient.send("/app/"+leagueID+"/draft.sendMessage", {}, JSON.stringify(chatMessage));
+        messageInput.value = '';
+    }
+    event.preventDefault();
+}
+
 function sendMessage(event) {
     var messageContent = messageInput.value.trim();
     if(messageContent && stompClient) {
@@ -60,7 +76,8 @@ function sendMessage(event) {
             content: messageInput.value,
             type: 'CHAT'
         };
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+        var leagueID = sessionStorage.getItem('leagueID');
+        stompClient.send("/app/"+leagueID+"/chat.sendMessage", {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();

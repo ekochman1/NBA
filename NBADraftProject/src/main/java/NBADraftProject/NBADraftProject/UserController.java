@@ -76,6 +76,52 @@ public class UserController {
 
     }   */
 
+    @RequestMapping(value = "/createTeam", method = RequestMethod.POST)
+    public ResponseEntity<String> createTeam(@RequestBody String payload, HttpServletRequest request) {
+        JSONObject payloadObj = new JSONObject(payload);
+        int leagueID = payloadObj.getInt("leagueID");
+        int playerID = payloadObj.getInt("playerID");
+        String teamName = payloadObj.getString("teamName");
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+        JSONObject responseObj = new JSONObject();
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds." +
+                    "amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
+            String query = "SELECT teamID FROM Teams WHERE userID = ? AND leagueID = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, playerID);
+            stmt.setInt(2, leagueID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                if (rs.getInt("teamID") == 0){
+                    break;
+                }
+                responseObj.put("message", "You already have a team in this league.");
+                return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
+            }
+            query = "START TRANSACTION";
+            stmt = conn.prepareStatement(query);
+            stmt.execute();
+            query = "INSERT INTO Teams (userID, leagueID, teamName) VALUES (?, ?, ?)";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, playerID);
+            stmt.setInt(2, leagueID);
+            stmt.setString(3, teamName);
+            stmt.executeUpdate();
+            query = "COMMIT";
+            stmt = conn.prepareStatement(query);
+            stmt.execute();
+            conn.close();
+        } catch (SQLException e){
+            e.printStackTrace();
+            responseObj.put("message", "error - contact customer support and have them review the server log.");
+            return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        responseObj.put("message", "Team created!");
+        return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public RedirectView landing() {
         return new RedirectView("/LoginWorkspace.html");
@@ -333,7 +379,8 @@ public class UserController {
                 }
             }
 
-
+            JSONObject responseObj = new JSONObject();
+            int userID = 0;
             if (isNew) {
                 //put the SQL connection in here
 
@@ -349,19 +396,26 @@ public class UserController {
                 stmt = conn.prepareStatement("COMMIT");
                 stmt.execute();
 
+                query = "SELECT userID FROM Users WHERE username = ? AND hashedPassword = ?";
+                stmt = conn.prepareStatement(query);
+                stmt.setString(1, username);
+                stmt.setString(2, password);
+                rs = stmt.executeQuery();
+                while(rs.next()){
+                    userID = rs.getInt("userID");
+                }
+                responseObj.put("userID", String.valueOf(userID));
+
             } else {
-                JSONObject responseObj = new JSONObject();
                 responseObj.put("message", "username taken");
                 return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.FORBIDDEN);
             }
             //Returns the response with a String, headers, and HTTP status
-            JSONObject responseObj = new JSONObject();
             responseObj.put("username", username);
             responseObj.put("message", "user registered");
             return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
         } catch (SQLException e) {
             e.printStackTrace();
-
             return new ResponseEntity<>("Check status of server for stack trace.", responseHeaders, HttpStatus.BAD_REQUEST);
         }
 		/*finally {
@@ -393,7 +447,7 @@ public class UserController {
 
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String searchQuery = "SELECT username, hashedPassword FROM Users WHERE username = ? AND hashedPassword = ?";
+            String searchQuery = "SELECT userID, username, hashedPassword FROM Users WHERE username = ? AND hashedPassword = ?";
             PreparedStatement state = null;
             state = conn.prepareStatement(searchQuery);
             state.setString(1, username);
@@ -401,6 +455,7 @@ public class UserController {
             ResultSet rs = state.executeQuery();
             boolean notNew = false;
             boolean rightPassword = false;
+            int userID = 0;
             while (rs.next()) {
                 if (rs.getString("username").equals(username)) {
                     notNew = true;
@@ -408,6 +463,7 @@ public class UserController {
                 if (rs.getString("hashedPassword").equals(password)) {
                     rightPassword = true;
                 }
+                userID = rs.getInt("userID");
             }
 
             if (!notNew) {
@@ -416,7 +472,10 @@ public class UserController {
                 //String storedHashedKey = MyServer.users.get(username);
 
                 if (rightPassword) { //BCrypt.checkpw(password, storedHashedKey) when we get to it.
-                    return new ResponseEntity<>("{\"message\":\"user logged in\"}", responseHeaders, HttpStatus.OK);
+                    JSONObject responseObj = new JSONObject();
+                    responseObj.put("message", "user logged in.");
+                    responseObj.put("userID", String.valueOf(userID));
+                    return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
                 } else {
                     return new ResponseEntity<>("{\"message\":\"username/password combination is incorrect\"}", responseHeaders, HttpStatus.BAD_REQUEST);
                 }
