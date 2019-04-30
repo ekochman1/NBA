@@ -136,7 +136,9 @@ public class UserController {
               state = conn.prepareStatement("COMMIT");
               state.execute();
               
-              return new ResponseEntity<>("Successfully Created A League", responseHeaders, HttpStatus.OK);
+			  JSONObject responseObj = new JSONObject();
+			  responseObj.put("leagueID", leagueID);
+              return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
           }
           catch(SQLException e) {
         	  return new ResponseEntity<>("{\"message\":\"No Connection to MySQL\"}", responseHeaders, HttpStatus.NOT_FOUND);
