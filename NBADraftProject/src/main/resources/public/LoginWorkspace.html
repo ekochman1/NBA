@@ -73,7 +73,7 @@
             crossDomain: true
         })
         .done(function(data) {
-		sessionStorage.setItem("userID", obj.username);
+			sessionStorage.setItem("userID", data.userID);
             console.log(obj.username + " " + JSON.stringify(data));
 			var r = confirm("You Successfully Logged In");
 			if (r == true){
@@ -103,7 +103,7 @@
             crossDomain: true
         })
         .done(function(data) {
-		sessionStorage.setItem("userID", obj.username);
+			sessionStorage.setItem("userID", data.userID);
             console.log(obj.username + " " + JSON.stringify(data));
 			var r = confirm("You Successfully Registered");
 			if (r == true){
