@@ -17,7 +17,7 @@ var colors = [
 ];
 
 function connect(event) {
-    username = document.querySelector('#name').value.trim();
+    username = sessionStorage.getItem('username');
 
     if(username) {
         usernamePage.classList.add('hidden');
@@ -32,16 +32,24 @@ function connect(event) {
 }
 
 
-function onConnected() {
-    // Subscribe to the Public Topic
+function onConnectedLeague() {
+    // Subscribe to the league chat
     var leagueID = sessionStorage.getItem('leagueID');
     stompClient.subscribe('/draft/'+leagueID, onMessageReceived);
 
     // Tell your username to the server
-    stompClient.send("/app/"+leagueID+"/chat.addUser",
+    stompClient.send('/app/'+leagueID+'/chat.addUser',
         {},
         JSON.stringify({sender: username, type: 'JOIN'})
     )
+
+    connectingElement.classList.add('hidden');
+}
+
+function onConnected(){
+    stompClient.subscribe('/trash/public', onMessageReceived);
+
+    stompClient.send('/app/trash/chat.addUser', {}, JSON.stringify({sender: username, type: 'JOIN'}))
 
     connectingElement.classList.add('hidden');
 }
@@ -55,14 +63,31 @@ function onError(error) {
 
 function sendDraft(event) {
     var messageContent = messageInput.value.trim();
+    var leagueID = sessionStorage.getItem('leagueID');
+    if(messageContent && stompClient) {
+        var draftPick = {
+            sender: username,
+            pick: messageInput.value,
+            type: 'DRAFT',
+            lid: leagueID
+        };
+        stompClient.send('/app/'+leagueID+'/draft.sendPick', {}, JSON.stringify(draftPick));
+        messageInput.value = '';
+    }
+    event.preventDefault();
+}
+
+function sendDraftMessage(event) {
+    var messageContent = messageInput.value.trim();
+    var leagueID = sessionStorage.getItem('leagueID');
     if(messageContent && stompClient) {
         var chatMessage = {
             sender: username,
             pick: messageInput.value,
-            type: 'DRAFT'
+            type: 'CHAT',
+            lid: leagueID
         };
-        var leagueID = sessionStorage.getItem('leagueID');
-        stompClient.send("/app/"+leagueID+"/draft.sendMessage", {}, JSON.stringify(chatMessage));
+        stompClient.send('/app/'+leagueID+'/chat.sendMessage', {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();
@@ -76,8 +101,7 @@ function sendMessage(event) {
             content: messageInput.value,
             type: 'CHAT'
         };
-        var leagueID = sessionStorage.getItem('leagueID');
-        stompClient.send("/app/"+leagueID+"/chat.sendMessage", {}, JSON.stringify(chatMessage));
+        stompClient.send('/app/trash/chat.sendMessage', {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();

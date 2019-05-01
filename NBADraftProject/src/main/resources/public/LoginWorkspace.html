@@ -74,10 +74,11 @@
         })
         .done(function(data) {
 			sessionStorage.setItem("userID", data.userID);
+			sessionStorage.setItem("username", data.username);
             console.log(obj.username + " " + JSON.stringify(data));
 			var r = confirm("You Successfully Logged In");
 			if (r == true){
-			location.replace("http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/homepage.html");}
+			location.replace("http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/homepage2.html");}
 			else{
 			
 			}	
@@ -104,10 +105,11 @@
         })
         .done(function(data) {
 			sessionStorage.setItem("userID", data.userID);
+			sessionStorage.setItem("username", data.username);
             console.log(obj.username + " " + JSON.stringify(data));
 			var r = confirm("You Successfully Registered");
 			if (r == true){
-			location.replace("http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/homepage.html");}
+			location.replace("http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/homepage2.html");}
 			else{
 			
 			}

@@ -11,14 +11,34 @@ import org.springframework.stereotype.Controller;
 public class ChatController {
     @MessageMapping("/{leagueID}/chat.sendMessage")
     @SendTo("/draft/{leagueID}")
-    public ChatMessage sendMessage(@Payload ChatMessage chatMessage,
-                                   SimpMessageHeaderAccessor headerAccessor) {
+    public ChatMessage sendDraftMessage(@Payload ChatMessage chatMessage) {
+        return chatMessage;
+    }
+
+    @MessageMapping("/{leagueID}/draft.sendPick")
+    @SendTo("/draft/{leagueID}")
+    public ChatMessage sendDraftPick(@Payload ChatMessage chatMessage) {
+        return chatMessage;
+    }
+
+    @MessageMapping("/trash/chat.sendMessage")
+    @SendTo("/trash/public")
+    public ChatMessage sendTrashMessage(@Payload ChatMessage chatMessage) {
         return chatMessage;
     }
 
     @MessageMapping("/{leagueID}/chat.addUser")
     @SendTo("/draft/{leagueID}")
-    public ChatMessage addUser(@Payload ChatMessage chatMessage,
+    public ChatMessage addDraftUser(@Payload ChatMessage chatMessage,
+                               SimpMessageHeaderAccessor headerAccessor) {
+        // Add username in web socket session
+        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+        return chatMessage;
+    }
+
+    @MessageMapping("/trash/chat.addUser")
+    @SendTo("/trash/public")
+    public ChatMessage addTrashUser(@Payload ChatMessage chatMessage,
                                SimpMessageHeaderAccessor headerAccessor) {
         // Add username in web socket session
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());

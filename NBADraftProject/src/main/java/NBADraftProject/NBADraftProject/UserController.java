@@ -475,6 +475,7 @@ public class UserController {
                     JSONObject responseObj = new JSONObject();
                     responseObj.put("message", "user logged in.");
                     responseObj.put("userID", String.valueOf(userID));
+                    responseObj.put("username", username);
                     return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
                 } else {
                     return new ResponseEntity<>("{\"message\":\"username/password combination is incorrect\"}", responseHeaders, HttpStatus.BAD_REQUEST);
