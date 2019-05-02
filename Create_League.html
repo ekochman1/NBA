@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create League</title>
+    <link rel="stylesheet" href="create.css">
+
+</head>
+<body>
+
+<div class="create-page">
+    <div class="form">
+        <form class="login-form">
+            <h1 style="font-size:30px;">Create League</h1>
+            <input type="text" placeholder="League Name" id="league_name"/>
+            <input type="text" placeholder="Max League Size (i.e. 10)" id="max_size">
+            <input type="text" placeholder="Starting Allocation Per Team (i.e. $10000000)" id="cap">
+            <input type="text" placeholder="Your Team Name" id="team_name">
+            <button onclick="CreateLeague()">Create A League</button>
+            <button onclick="CreateBack_Home()">Back</button>
+            <p class="message">Have friends? <a href = "mailto: abc@example.com">Send an Invite</a>
+            </p>
+        </form>
+    </div>
+
+</div>
+
+
+<script>
+
+		function Login() {
+
+		var obj = {}
+		obj.username=document.getElementById("username").value;
+		obj.password=document.getElementById("password").value;
+		$.ajax({
+            type: 'GET',
+            url: 'http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com:8080/login?username=' + obj.username + '&password='+ obj.password,
+            data: JSON.stringify(obj),
+            contentType: "application/json",
+            crossDomain: true
+        })
+        .done(function(data) {
+		sessionStorage.setItem("userID", obj.username);
+            console.log(obj.username + " " + JSON.stringify(data));
+			var r = confirm("You Successfully Logged In");
+			if (r == true){
+			location.replace("http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com:8080/homepage.html");}
+			else{
+
+			}
+        })
+        .fail(function(data) {
+            console.log(data);
+			alert("Login Failed");
+        });
+    }
+</script>
+
+<script>
+
+		function Create_account() {
+		var obj = {}
+		obj.username=document.getElementById("username1").value
+		obj.password=document.getElementById("password1").value
+		$.ajax({
+            type: 'POST',
+             url: 'http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com:8080/register',
+            data: JSON.stringify(obj),
+            contentType: "application/json",
+            crossDomain: true
+        })
+        .done(function(data) {
+		sessionStorage.setItem("userID", obj.username);
+            console.log(obj.username + " " + JSON.stringify(data));
+			var r = confirm("You Successfully Registered");
+			if (r == true){
+			location.replace("http://ec2-18-188-142-213.us-east-2.compute.amazonaws.com:8080/homepage.html");}
+			else{
+
+			}
+        })
+        .fail(function(data) {
+            console.log(data);
+			alert("Registration Failed");
+        });
+    }
+
+
+</script>
+
+
+</body>
+</html>
