@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
-	<title>Database</title>
+	<title>Available Leagues</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="league.css">
 </head>
-<body>
+<body onload="javascript:sampleQuery()">
+
 
 	<h1>Leagues</h1>
 	
@@ -13,9 +14,9 @@
 		<!--  <input type="text" id="searchbar" name="searchbar" placeholder="Type an Event Name">. -->
 
 		
-		<!--<button type="button" onclick="sampleQuery()">Run Query</button>  -->
-		<button type="button" onclick="sampleQuery()">Leagues</button>
-	
+		<!--<button type="button" onclick="sampleQuery()">Run Query</button>
+		<button type="button" onclick="sampleQuery()">Leagues</button>-->
+
 			<!--	<table id="queryTable" display="hide">
 				<CAPTION ALIGN="top">Find number of club members attending each event.</CAPTION>
 					<thead>
@@ -26,8 +27,8 @@
 				    	<tbody>
 				        </tbody>
 				</table>
-				
-				
+
+
 			-->
 
 			<table id="queryTable" display="hide">
@@ -62,12 +63,11 @@
 			})
 			.done(function(data) {
 			document.getElementById("queryTable").style.display="block";
-			console.log(JSON.stringify(data));		//shows the data in the developer tools
 
 			var tbody = $('#queryTable tbody'),
-			  props = ["leagueName", "maxTeam", "numTeams" ];
+			  props = ["leagueName", "maxTeam", "numTeams", "leagueID"];
 			$.each(data, function(i, data) {
-			  var tr = $('<tr><td class="nr">' + '<button type="button" class="use-address">Join</button>' + '</td></tr>');
+			  var tr = $('<tr><td class="nr">' + '<button type="button" id="'+data["leagueID"]+'" class="use-address" onclick="Click(this.id)">Join</button>' + '</td></tr>');
 			  $.each(props, function(i, prop) {
 			    $('<td>').html(data[prop]).appendTo(tr);
 			  });
@@ -82,14 +82,12 @@
 
 	</script>
 	<script>
-	$(".use-address").click(function() {
-	var $row = $(this).closest("tr");    // Find the row
-	var $text = $row.find(".nr").text(); // Find the text
+		function Click(buttonID){
+			sessionStorage.setItem("leagueID", buttonID);
+			location.replace("http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/Create_Team.html");
+		}
+	</script>
 
-	// Let's test it out
-	alert($text);
-
-</script>
 
 </body>
 </html>

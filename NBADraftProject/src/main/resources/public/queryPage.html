@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
-	<title>Database</title>
+	<title>Available Leagues</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="league.css">
 </head>
@@ -59,16 +59,15 @@
 		function sampleQuery(){
 			$.ajax({
 				type: 'GET',						//get data from server to the client
-				url: 'http://localhost:8080/loadleague',	//want to get info from here, it's in a JSONObject
+				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/loadleague',	//want to get info from here, it's in a JSONObject
 			})
 			.done(function(data) {
 			document.getElementById("queryTable").style.display="block";
-			console.log(JSON.stringify(data));		//shows the data in the developer tools
 
 			var tbody = $('#queryTable tbody'),
-			  props = ["leagueName", "maxTeam", "numTeams" ];
+			  props = ["leagueName", "maxTeam", "numTeams", "leagueID"];
 			$.each(data, function(i, data) {
-			  var tr = $('<tr><td class="nr">' + '<button type="button" class="use-address">Join</button>' + '</td></tr>');
+			  var tr = $('<tr><td class="nr">' + '<button type="button" id="'+data["leagueID"]+'" class="use-address" onclick="Click(this.id)">Join</button>' + '</td></tr>');
 			  $.each(props, function(i, prop) {
 			    $('<td>').html(data[prop]).appendTo(tr);
 			  });
@@ -81,6 +80,12 @@
 	        });
 		}
 
+	</script>
+	<script>
+		function Click(buttonID){
+			sessionStorage.setItem("leagueID", buttonID);
+			location.replace("http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/Create_Team.html");
+		}
 	</script>
 
 

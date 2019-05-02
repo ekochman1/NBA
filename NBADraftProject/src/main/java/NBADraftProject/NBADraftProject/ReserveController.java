@@ -24,13 +24,12 @@ public class ReserveController {
         JSONArray nameArray = new JSONArray();
         int leagueID = 0;
         String leagueName = "";
-        double leagueAllocation = 0;
         int maxTeam = 0;
         int numTeams = 0;
 
         try {
             conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String query = "select leagueName, maxTeam, numTeams from League where numTeams != maxTeam";
+            String query = "select leagueID, leagueName, maxTeam, numTeams from League where numTeams != maxTeam";
             PreparedStatement stmt = null;	//important for safety reasons
             
             stmt = conn.prepareStatement(query);
@@ -38,15 +37,13 @@ public class ReserveController {
             ResultSet rs = stmt.executeQuery();	
             while (rs.next()) {	//while there's something else next in the resultset
                 leagueName = rs.getString("leagueName");
-                //leagueID = rs.getInt("leagueID");
-                //leagueAllocation = rs.getDouble("leagueAllocation");
+                leagueID = rs.getInt("leagueID");
                 maxTeam = rs.getInt("maxTeam");
                 numTeams = rs.getInt("numTeams");
             	
             	JSONObject obj = new JSONObject();
             	obj.put("leagueName", leagueName);
-            	//obj.put("leagueID", leagueID);
-                //obj.put("leagueAllocation", leagueAllocation);
+            	obj.put("leagueID", leagueID);
                 obj.put("maxTeam", maxTeam);
                 obj.put("numTeams", numTeams);
       
