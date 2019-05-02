@@ -12,13 +12,11 @@
 </noscript>
 <div class = "home-page">
     <div class = "form">
-        <form class ="home-form">
             <div class="btn-group">
-                <button onclick="Join_league()">Join a league</button>
-                <button onclick="Create_league()">Create a league</button>
-                <button class="button button3" onclick="Your_Teams()">Your teams</button>
+                <button onclick="window.location = 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/queryPage.html'">Join a league</button>
+                <button onclick="window.location = 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/Create_League.html'">Create a league</button>
+                <button type="submit" onclick="Your_Teams()">Your teams</button>
             </div>
-        </form>
     </div>
 </div>
 <div id="username-page">
@@ -55,9 +53,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="/js/main.js"></script>
-
-
-
-
 </body>
 </html>

@@ -124,7 +124,7 @@ public class UserController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public RedirectView landing() {
-        return new RedirectView("/LoginWorkspace.html");
+        return new RedirectView("/LoginWorkspace.html?#");
     }
     
     @RequestMapping(value = "/createLeague", method = RequestMethod.POST)
@@ -134,7 +134,7 @@ public class UserController {
           int userID = payloadObj.getInt("userID");//Grabbing name and age parameters from URL
           int maxTeam = payloadObj.getInt("maxTeam");
           Double leagueAllocation = payloadObj.getDouble("leagueAllocation");
-          
+          String teamName = payloadObj.getString("teamName");
           
           HttpHeaders responseHeaders = new HttpHeaders();
           responseHeaders.set("Content-Type", "application/json");
@@ -146,48 +146,48 @@ public class UserController {
               PreparedStatement stmt = null;
               stmt = conn.prepareStatement(transactionQuery);
               stmt.execute();
-              String query = "INSERT INTO League(leaugeName, maxTeam, leagueAllocation) VALUES (?, ?, ?, ?, ?)";
+              String query = "INSERT INTO League(leagueName, maxTeam, leagueAllocation) VALUES (?, ?, ?)";
               stmt = conn.prepareStatement(query);
               stmt.setString(1, leagueName);
-              stmt.setInt(4, maxTeam);
-              stmt.setDouble(5, leagueAllocation);
+              stmt.setInt(2, maxTeam);
+              stmt.setDouble(3, leagueAllocation);
               stmt.executeUpdate();
               stmt = conn.prepareStatement("COMMIT");
               stmt.execute();
               
               int leagueID = 0;
-              
-              PreparedStatement stmt1 = null;
-              String query0 = "SELECT leagueName FROM League WHERE leagueName = ?";
-              stmt1 = conn.prepareStatement(query);
-              stmt1.setString(1, leagueName);
-              ResultSet rs = stmt1.executeQuery();
+
+              query = "SELECT leagueName, leagueID FROM League WHERE leagueName = ?";
+              stmt = conn.prepareStatement(query);
+              stmt.setString(1, leagueName);
+              ResultSet rs = stmt.executeQuery();
               while(rs.next()) {
-            	  if(leagueName == rs.getString("leagueName")) {
+            	  if(leagueName.equals(rs.getString("leagueName"))) {
             		  leagueID = rs.getInt("leagueID");
             	  }
             	  else {
             		  return new ResponseEntity<>("{\"message\":\"issue with pushing to MQSQL\"}", responseHeaders, HttpStatus.BAD_REQUEST);
             	  }
               }
-              PreparedStatement state = null;
-              state = conn.prepareStatement(transactionQuery);
-              state.execute();
-              String query1 = "INSERT INTO Teams(userID, wallet, leagueID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-              state = conn.prepareStatement(query);
-              state.setInt(2, userID);
-              state.setDouble(3, leagueAllocation);
-              state.setInt(4, leagueID);
-              state.executeUpdate();
-              state = conn.prepareStatement("COMMIT");
-              state.execute();
+
+              stmt = conn.prepareStatement(transactionQuery);
+              stmt.execute();
+              query = "INSERT INTO Teams(userID, leagueID, teamName) VALUES (?, ?, ?)";
+              stmt = conn.prepareStatement(query);
+              stmt.setInt(1, userID);
+              stmt.setInt(2, leagueID);
+              stmt.setString(3, teamName);
+              stmt.executeUpdate();
+              stmt = conn.prepareStatement("COMMIT");
+              stmt.execute();
               
 			  JSONObject responseObj = new JSONObject();
 			  responseObj.put("leagueID", leagueID);
               return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
           }
           catch(SQLException e) {
-        	  return new ResponseEntity<>("{\"message\":\"No Connection to MySQL\"}", responseHeaders, HttpStatus.NOT_FOUND);
+              e.printStackTrace();
+        	  return new ResponseEntity<>("An error occurred.", responseHeaders, HttpStatus.NOT_FOUND);
         	  }
           }
 

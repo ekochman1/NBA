@@ -31,7 +31,6 @@ function connect(event) {
     event.preventDefault();
 }
 
-
 function onConnectedLeague() {
     // Subscribe to the league chat
     var leagueID = sessionStorage.getItem('leagueID');

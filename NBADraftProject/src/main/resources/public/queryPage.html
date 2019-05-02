@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+	<title>Database</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="league.css">
+</head>
+<body>
+
+	<h1>Leagues</h1>
+	
+		
+		<!--  <input type="text" id="searchbar" name="searchbar" placeholder="Type an Event Name">. -->
+
+		
+		<!--<button type="button" onclick="sampleQuery()">Run Query</button>  -->
+		<button type="button" onclick="sampleQuery()">Leagues</button>
+	
+			<!--	<table id="queryTable" display="hide">
+				<CAPTION ALIGN="top">Find number of club members attending each event.</CAPTION>
+					<thead>
+				    	<tr>
+				        	<th>event_name</th><th>supplier</th><th>room_no</th>
+				        </tr>
+				    </thead>
+				    	<tbody>
+				        </tbody>
+				</table>
+				
+				
+			-->
+
+			<table id="queryTable" display="hide">
+				<CAPTION ALIGN="top">Choose a league to join</CAPTION>
+				<thead>
+				<tr>
+					<th>  </th><th>League Name</th><th>Max Number of Teams in League</th><th>Number of Teams Joined</th>
+				</tr>
+				</thead>
+				<tbody>
+
+				</tbody>
+			</table>
+
+
+
+
+
+				<!--  new search bar for room number search  -->
+				
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+			
+		
+	<script>
+
+		function sampleQuery(){
+			$.ajax({
+				type: 'GET',						//get data from server to the client
+				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/loadleague',	//want to get info from here, it's in a JSONObject
+			})
+			.done(function(data) {
+			document.getElementById("queryTable").style.display="block";
+			console.log(JSON.stringify(data));		//shows the data in the developer tools
+
+			var tbody = $('#queryTable tbody'),
+			  props = ["leagueName", "maxTeam", "numTeams" ];
+			$.each(data, function(i, data) {
+			  var tr = $('<tr><td class="nr">' + '<button type="button" class="use-address">Join</button>' + '</td></tr>');
+			  $.each(props, function(i, prop) {
+			    $('<td>').html(data[prop]).appendTo(tr);
+			  });
+			  tbody.append(tr);
+			});
+
+			})
+			.fail(function(data) {
+	            alert("Failed to load data.");
+	        });
+		}
+
+	</script>
+	<script>
+	$(".use-address").click(function() {
+	var $row = $(this).closest("tr");    // Find the row
+	var $text = $row.find(".nr").text(); // Find the text
+
+	// Let's test it out
+	alert($text);
+
+</script>
+
+</body>
+</html>

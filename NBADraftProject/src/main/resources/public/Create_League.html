@@ -3,9 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <title>Create League</title>
-    <link rel="stylesheet" href="public/create.css">
+    <link rel="stylesheet" href="create.css">
+
 </head>
 <body>
 
+<div class="create-page">
+    <div class="form">
+        <form class="login-form">
+            <h1 style="font-size:30px;">Create League</h1>
+            <input type="text" placeholder="League Name" id="leagueName"/>
+            <input type="text" placeholder="Maximum Number of Teams" id="maxTeam">
+            <input type="text" placeholder="Starting Allocation Per Team (i.e. $10000000)" id="cap">
+            <input type="text" placeholder="Your Team Name" id="teamName">
+            <button type="button" onclick="CreateLeague()">Create A League</button>
+            <button type="button" onclick="window.location = 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/homepage2.html'">Back</button>
+        </form>
+    </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+		function CreateLeague() {
+
+		var obj = {}
+		obj.leagueName=document.getElementById("leagueName").value;
+		obj.userID=sessionStorage.getItem("userID");
+		obj.maxTeam=document.getElementById("maxTeam").value;
+		obj.leagueAllocation=document.getElementById("cap").value.replace("\$", "");
+		obj.teamName=document.getElementById("teamName").value;
+		console.log("got all data and inserted into obj");
+		$.ajax({
+            type: 'POST',
+            url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/createLeague',
+            data: JSON.stringify(obj),
+            contentType: "application/json",
+            crossDomain: true
+        })
+        .done(function(data) {
+            alert("League Created Successfully");
+			location.replace("http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/homepage2.html");
+        })
+        .fail(function(data) {
+			alert("League Creation Failed");
+        });
+    }
+</script>
 </body>
 </html>
