@@ -26,6 +26,7 @@ public class ReserveController {
         String leagueName = "";
         int maxTeam = 0;
         int numTeams = 0;
+        double wallet = 0.0;
 
         try {
             conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
@@ -40,12 +41,14 @@ public class ReserveController {
                 leagueID = rs.getInt("leagueID");
                 maxTeam = rs.getInt("maxTeam");
                 numTeams = rs.getInt("numTeams");
+                wallet = rs.getDouble("leagueAllocation");
             	
             	JSONObject obj = new JSONObject();
             	obj.put("leagueName", leagueName);
             	obj.put("leagueID", leagueID);
                 obj.put("maxTeam", maxTeam);
                 obj.put("numTeams", numTeams);
+                obj.put("wallet", wallet);
       
             	
             	nameArray.put(obj);

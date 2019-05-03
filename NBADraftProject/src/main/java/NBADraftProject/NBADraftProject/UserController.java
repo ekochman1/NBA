@@ -25,6 +25,7 @@ import org.json.JSONArray;
 @RestController
 public class UserController {
     private static ArrayList<JSONArray> MasterJSON;
+    private static ArrayList<JSONObject> MasterWallet;
 
 
     //same logic behind databases, imagine the wallet system, but you only have 5 dollars and you get charged 3 dollars at the same time, in theory you are capable to handling each one individually
@@ -80,17 +81,25 @@ public class UserController {
     public ResponseEntity<String> createTeam(@RequestBody String payload, HttpServletRequest request) {
         JSONObject payloadObj = new JSONObject(payload);
         int leagueID = payloadObj.getInt("leagueID");
-        int playerID = payloadObj.getInt("playerID");
+        int userID = payloadObj.getInt("userID");
+        double wallet = payloadObj.getDouble("wallet");
         String teamName = payloadObj.getString("teamName");
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
         JSONObject responseObj = new JSONObject();
+        JSONObject walletObj = new JSONObject();
+        walletObj.put("userID", userID);
+        walletObj.put("leagueID", leagueID);
+        walletObj.put("wallet" , wallet);
+        
+        MasterWallet.add(walletObj);
+        
         try{
             Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds." +
                     "amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
             String query = "SELECT teamID FROM Teams WHERE userID = ? AND leagueID = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, playerID);
+            stmt.setInt(1, userID);
             stmt.setInt(2, leagueID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -105,7 +114,7 @@ public class UserController {
             stmt.execute();
             query = "INSERT INTO Teams (userID, leagueID, teamName) VALUES (?, ?, ?)";
             stmt = conn.prepareStatement(query);
-            stmt.setInt(1, playerID);
+            stmt.setInt(1, userID);
             stmt.setInt(2, leagueID);
             stmt.setString(3, teamName);
             stmt.executeUpdate();
@@ -210,12 +219,13 @@ public class UserController {
         int Player_rankOverall = 0;
         String name = "";
         String team = "";
+        Double salary = 0.0;
         boolean taken = false;
         // double Player_standDev = 0; never used?
 
         try {
             conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String query = "SELECT playerID, position, playerRankPos, playerRankOverall, name, teamCode FROM Player_Ranking";
+            String query = "SELECT playerID, position, playerRankPos, playerRankOverall, name, teamCode, salary FROM Player_Ranking, Players";
             PreparedStatement stmt = null;    //important for safety reasons
             /*String tester = "tester";
              return tester;*/
@@ -230,6 +240,7 @@ public class UserController {
                 Player_rankOverall = rs.getInt("playerRankOverall");
                 name = rs.getString("name");
                 team = rs.getString("teamCode");
+                salary = rs.getDouble("salary");
 
                 JSONObject obj = new JSONObject();
                 obj.put("leagueid", JSONID); //this way i can identify the master JSON file
@@ -239,7 +250,9 @@ public class UserController {
                 obj.put("Player_rankOverall", Player_rankOverall);
                 obj.put("name", name);
                 obj.put("team", team);
+                obj.put("salary", salary);
                 obj.put("taken", taken);
+                obj.put("userID", 0);
 
                 nameArray.put(obj);
 
@@ -292,8 +305,10 @@ public class UserController {
     @RequestMapping(value = "/draft", method = RequestMethod.POST)  //THIS SHOULD BE ACTIVATED ON CLICK
     public ResponseEntity<String> draft(@RequestBody String payload, HttpServletRequest request) {
         JSONObject payloadObj = new JSONObject(payload);
+        int userID = payloadObj.getInt("userID");
         int leagueID = payloadObj.getInt("leagueID");
         int PlayerID = payloadObj.getInt("playerID");
+        double wallet = payloadObj.getDouble("wallet");
         //String position = payloadObj.getString("position");
         //int Player_rankPos = payloadObj.getInt("Player_rankPos");
         //int Player_rankOverall = payloadObj.getInt("Plater_rankOverall");
@@ -301,6 +316,7 @@ public class UserController {
         //String team = payloadObj.getString("team");
         JSONArray newArray = new JSONArray();
         JSONArray nameArray = new JSONArray();
+        
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
@@ -310,6 +326,16 @@ public class UserController {
             if (MasterJSON.get(i).getJSONObject(0).getInt("leagueid") == leagueID) {
                 for (int j = 0; j < MasterJSON.get(i).length(); i++) {
                     if (MasterJSON.get(i).getJSONObject(j).getInt("playerid") == PlayerID) {
+                    	if (MasterJSON.get(i).getJSONObject(j).getDouble("salary") < wallet) {
+                    		return new ResponseEntity<>("{\"message\":\"You cannot afford to draft this player\"}", responseHeaders, HttpStatus.OK);
+                    	}
+                    	for(int p = 0; p < MasterWallet.size(); p++) {
+                    		if(MasterWallet.get(p).getInt("leagueID") == leagueID && MasterWallet.get(p).getInt("userID") == userID) {
+                    			wallet = wallet - MasterJSON.get(i).getJSONObject(j).getDouble("salary");
+                    			MasterWallet.get(p).put("wallet" , wallet);
+                    		}
+                    		
+                    	}
                         JSONObject obj = new JSONObject();
                         obj.put("leagueid", MasterJSON.get(i).getJSONObject(j).getInt("leagueid")); //this way i can identify the master JSON file
                         obj.put("playerId", MasterJSON.get(i).getJSONObject(j).getInt("playerID"));
@@ -319,6 +345,7 @@ public class UserController {
                         obj.put("name", MasterJSON.get(i).getJSONObject(j).getString("name"));
                         obj.put("team", MasterJSON.get(i).getJSONObject(j).getString("team"));
                         obj.put("taken", true);
+                        obj.put("userID", userID);
                         newArray.put(obj);
                     } else {
                         JSONObject obj = new JSONObject();
@@ -330,6 +357,7 @@ public class UserController {
                         obj.put("name", MasterJSON.get(i).getJSONObject(j).getString("name"));
                         obj.put("team", MasterJSON.get(i).getJSONObject(j).getString("team"));
                         obj.put("taken", MasterJSON.get(i).getJSONObject(j).getBoolean("taken"));
+                        obj.put("userID", MasterJSON.get(i).getJSONObject(j).getInt("userID"));
                         newArray.put(obj);
                     }
                 }
