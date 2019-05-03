@@ -61,9 +61,10 @@
 			.done(function(data) {
 			document.getElementById("queryTable").style.display="block";
 			var tbody = $('#queryTable tbody'),
-			  props = ["leagueName", "maxTeam", "numTeams", "leagueID"];
+			  props = ["leagueName", "maxTeam", "numTeams", "leagueID" , "wallet"];
 			$.each(data, function(i, data) {
 			  var tr = $('<tr><td class="nr">' + '<button type="button" id="'+data["leagueID"]+'" class="use-address" onclick="Click(this.id)">Join</button>' + '</td></tr>');
+			  var wallet = data["leagueAllocation"]
 			  $.each(props, function(i, prop) {
 			    $('<td>').html(data[prop]).appendTo(tr);
 			  });
@@ -78,6 +79,7 @@
 <script>
 		function Click(buttonID){
 			sessionStorage.setItem("leagueID", buttonID);
+			sessionStorage.setItem("wallet", wallet);
 			location.replace("http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/Create_Team.html");
 		}
 	</script>

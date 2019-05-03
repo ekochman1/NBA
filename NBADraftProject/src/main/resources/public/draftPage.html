@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+	<title>Available Leagues</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="league.css">
+</head>
+<body onload="javascript:draftQuery(); javascript:document.getElementById('draftTable').classList.toggle('hide2');">
+
+
+<h1>Players</h1>
+
+
+<table id="draftTable" display="hide">
+	<CAPTION ALIGN="top">Choose a NBA Player to Draft</CAPTION>
+	<thead>
+	<tr>
+		<th>  </th><th>Name</th><th>Position</th><th>team</th><th>Player Rank</th><th>Salary</th>
+	</tr>
+	</thead>
+	<tbody>
+
+	</tbody>
+</table>
+
+
+
+
+
+<!--  new search bar for room number search  -->
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+
+
+<script>
+		function draftQuery(){
+			$.ajax({
+				type: 'GET',						//get data from server to the client
+				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/createDraft',	//want to get info from here, it's in a JSONObject
+			})
+			.done(function(data) {
+			document.getElementById("draftTable").style.display="block";
+			var tbody = $('#draftTable tbody'),
+			  props = ["name", "position", "Player_rankPos", "salary"];
+			$.each(data, function(i, data) {
+			  var tr = $('<tr><td class="nr">' + '<button type="button" id="'+data["playerID"]+'" class="use-address" onclick="Click(this.id)">Draft</button>' + '</td></tr>');
+			  var wallet = data["leagueAllocation"]
+			  $.each(props, function(i, prop) {
+			    $('<td>').html(data[prop]).appendTo(tr);
+			  });
+			  tbody.append(tr);
+			});
+			})
+			.fail(function(data) {
+	            alert("Failed to load data.");
+	        });
+		}
+	</script>
+<script>
+		function Click(buttonID){
+		var obj = {};
+		obj.userID=sessionStorage.getItem("userID");
+		obj.leagueID=sessionStorage.getItem("leagueID");
+		obj.wallet=sessionStorage.getItem("wallet");
+		obj.playerID=buttonID;
+		$.ajax({
+				type: 'POST',						//get data from server to the client
+				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/draft',	//want to get info from here, it's in a JSONObject
+				data: JSON.stringify(obj),
+				contentType: "application/json",
+				crossDomain: true
+			})
+		.done(function(data) {
+			sessionStorage.setItem("wallet",data.wallet);
+			alert("You Successfully Drafted");
+			document.getElementById("draftTable").style.display="block";
+			var tbody = $('#draftTable tbody'),
+			  props = ["name", "position", "Player_rankPos", "salary"];
+			$.each(data, function(i, data) {
+			  var tr = $('<tr><td class="nr">' + '<button type="button" id="'+data["playerID"]+'" class="use-address" onclick="Click(this.id)">Join</button>' + '</td></tr>');
+			  var wallet = data["leagueAllocation"]
+			  $.each(props, function(i, prop) {
+			    $('<td>').html(data[prop]).appendTo(tr);
+			  });
+			  tbody.append(tr);
+			});
+			})
+			.fail(function(data) {
+	            alert("Failed to load data.");
+	        });
+			
+		}
+		
+	</script>
+
+
+</body>
+</html>
+

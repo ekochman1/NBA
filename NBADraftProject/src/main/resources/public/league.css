@@ -74,3 +74,7 @@ caption {
 #queryTable.hide2 tr > *:nth-child(5) {
     display: none;
 }
+
+#queryTable.hide2 tr > *:nth-child(6) {
+    display: none;
+}
