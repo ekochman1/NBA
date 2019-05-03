@@ -28,7 +28,7 @@
 
 		var obj = {}
 		obj.userID=sessionStorage.getItem("userID");
-		obj.leagueID=sessionStorage.getItem(leagueID);
+		obj.leagueID=sessionStorage.getItem("leagueID");
 		obj.teamName=document.getElementById("teamName").value;
 		console.log("got all data and inserted into obj");
 		$.ajax({
