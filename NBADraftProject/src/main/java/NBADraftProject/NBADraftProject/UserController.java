@@ -18,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -26,7 +27,7 @@ import org.json.JSONArray;
 @RestController
 public class UserController {
     private static ArrayList<JSONArray> MasterJSON = new ArrayList<>();
-    private static ArrayList<JSONObject> MasterWallet = new ArrayList<>();
+    private static HashMap<Integer, HashMap<Integer, Double>> MasterWallet = new HashMap<Integer, HashMap<Integer, Double>>();
 
     //same logic behind databases, imagine the wallet system, but you only have 5 dollars and you get charged 3 dollars at the same time, in theory you are capable to handling each one individually
     //but not both
@@ -88,7 +89,6 @@ public class UserController {
         responseHeaders.set("Content-Type", "application/json");
         
         JSONObject responseObj = new JSONObject();
-        JSONObject walletObj = new JSONObject();
         
        
 
@@ -107,11 +107,9 @@ public class UserController {
                  wallet = rs.getDouble("leagueAllocation");
             }
             
-            walletObj.put("userID", userID);
-            walletObj.put("leagueID", leagueID);
-            walletObj.put("wallet" , wallet);
-            
-            MasterWallet.add(walletObj);
+            HashMap<Integer, Double> tempMap = MasterWallet.get(leagueID);
+            tempMap.put(userID, wallet);
+            MasterWallet.put(leagueID, tempMap);
             
             query = "START TRANSACTION";
             stmt = conn.prepareStatement(query);
@@ -203,8 +201,11 @@ public class UserController {
 			  
 			  responseObj.put("leagueID", leagueID);
 			  responseObj.put("wallet", leagueAllocation);
-			  
-			  
+
+			  HashMap<Integer, Double> tempMap = new HashMap<Integer, Double>();
+			  tempMap.put(userID, leagueAllocation);
+			  MasterWallet.put(leagueID, tempMap);
+
               return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
           }
           catch(SQLException e) {

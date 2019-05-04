@@ -65,12 +65,12 @@
 	
 <script>
 		function Click(buttonID){
-		var obj = {};
-		obj.userID=sessionStorage.getItem("userID");
-		obj.leagueID=sessionStorage.getItem("leagueID");
-		//obj.wallet=sessionStorage.getItem("wallet").replace("\$", "");
-		obj.playerID=buttonID;
-		$.ajax({
+			var obj = {};
+			obj.userID=sessionStorage.getItem("userID");
+			obj.leagueID=sessionStorage.getItem("leagueID");
+			obj.playerID=buttonID;
+
+			$.ajax({
 				type: 'POST',						//get data from server to the client
 				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/draft',	//want to get info from here, it's in a JSONObject
 				data: JSON.stringify(obj),
@@ -83,9 +83,8 @@
 				$(row).remove();
 			})
 			.fail(function(data) {
-	            alert("Failed to load data.");
-	        });
-			
+	        	alert("Failed to load data.");
+	    	});
 		}
 		
 	</script>
