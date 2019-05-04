@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create League</title>
+    <title>Create Team</title>
     <link rel="stylesheet" href="create.css">
 
 </head>
@@ -15,6 +15,7 @@
             <input type="text" placeholder="Team Name" id="teamName"/>
             <button type="button" onclick="CreateTeam()">Create A Team</button>
             <button type="button" onclick="window.location = 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/queryPage.html'">Back</button>
+			<!--<p class="message">Can't think of a name? <a id="button" >Generate name</a> </p> -->
         </form>
     </div>
 
@@ -25,11 +26,10 @@
 <script>
 
 		function CreateTeam() {
-
 		var obj = {}
 		obj.userID=sessionStorage.getItem("userID");
 		obj.leagueID=sessionStorage.getItem("leagueID");
-		obj.wallet=sessionStorage.getItem("wallet");
+		//obj.wallet=sessionStorage.getItem("wallet").replace("\$", "");
 		obj.teamName=document.getElementById("teamName").value;
 		console.log("got all data and inserted into obj");
 		$.ajax({
@@ -49,7 +49,36 @@
     }
 </script>
 
+<script>
+/*
+  $(document).ready(function(){
+ $('#button').click( function () {
+  var text = $('input:text');
+    text.val(randomEl(adjectives)+' '+randomEl(nouns));
+   });
+   // selectElementContents($('h2')[0]);
+});
 
+function randomEl(list) {
+    var i = Math.floor(Math.random() * list.length);
+    return list[i];
+}
+
+function selectElementContents(el) {
+    var range = document.createRange();
+    range.selectNodeContents(el);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+}
+
+var adjectives = ["adamant", "damian", "adroit", "amatory", "animistic", "gametime", "slam", "dunk", "chicken", "clutch", "dirk", "carmelo", "chris", "paul", "pavel", "mirotic", "antic", "rose", "arcadian", "baleful", "dame", "bellicose", "bilious", "gasol", "marc", "george", "paul", "westy", "westbrook", "russell", "cupcake", "durant", "kevin", "boorish", "calamitous", "caustic", "tour", "bus", "playbook", "courtside", "pick", "smooth", "free throw", "shot", "nike", "money", "million", "cerulean", "james", "comely", "concomitant", "contumacious", "corpulent", "crapulous", "defamatory", "didactic", "dilatory", "dowdy", "efficacious", "effulgent", "egregious", "endemic", "equanimous", "execrable", "fastidious", "feckless", "fecund", "friable", "fulsome", "garrulous", "guileless", "gustatory", "heuristic", "histrionic", "hubristic", "incendiary", "insidious", "insolent", "intransigent", "inveterate", "invidious", "irksome", "jejune", "jocular", "judicious", "lachrymose", "limpid", "loquacious", "luminous", "mannered", "mendacious", "meretricious", "minatory", "mordant", "munificent", "nefarious", "noxious", "obtuse", "parsimonious", "pendulous", "pernicious", "pervasive", "petulant", "platitudinous", "precipitate", "propitious", "puckish", "querulous", "quiescent", "rebarbative", "recalcitant", "redolent", "rhadamanthine", "risible", "ruminative", "sagacious", "salubrious", "sartorial", "sclerotic", "serpentine", "spasmodic", "strident", "taciturn", "make", "net", "boo", "suck", "winner", "tenacious", "tremulous", "trenchant", "turbulent", "turgid", "ubiquitous", "uxorious", "verdant", "voluble", "voracious", "wheedling", "withering", "zealous"];
+var nouns = ["ninja", "chair", "pancake", "statue", "unicorn", "rainbows", "laser", "senor", "goat", "jordan", "unicorn", "barnes", "hands", "rocky", "giannis", "buck", "bryant", "baller", "loser", "bunny", "captain", "nibblets", "cupcake", "carrot", "james", "gnomes", "glitter", "potato", "salad", "toejam", "curtains", "beets", "toilet", "exorcism", "stick figures", "mermaid eggs", "sea barnacles", "dragons", "jellybeans", "snakes", "dolls", "bushes", "cookies", "apples", "ice cream", "ukulele", "kazoo", "banjo", "opera singer", "circus", "trampoline", "carousel", "carnival", "locomotive", "hot air balloon", "praying mantis", "animator", "artisan", "artist", "colorist", "inker", "coppersmith", "director", "designer", "flatter", "stylist", "leadman", "limner", "make-up artist", "model", "musician", "penciller", "producer", "scenographer", "set decorator", "silversmith", "teacher", "auto mechanic", "beader", "bobbin boy", "clerk of the chapel", "filling station attendant", "foreman", "maintenance engineering", "mechanic", "miller", "moldmaker", "panel beater", "patternmaker", "plant operator", "plumber", "sawfiler", "shop foreman", "soaper", "stationary engineer", "wheelwright", "woodworkers", "thibs", "beverly", "defend", "basket", "best", "curry", "green", "steph", "chosen", "alleyoop","brown","irving","injured",];
+
+$('button').click();
+
+ */
+</script>
 
 
 </body>

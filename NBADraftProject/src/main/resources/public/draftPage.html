@@ -15,7 +15,7 @@
 	<CAPTION ALIGN="top">Choose a NBA Player to Draft</CAPTION>
 	<thead>
 	<tr>
-		<th>  </th><th>Name</th><th>Position</th><th>Team</th><th>Player Rank</th><th>Salary</th>
+		<th>  </th><th>Name</th><th>Position</th><th>Team</th><th>Player Rank: Overall</th><th>Player Rank: Position</th><th>Salary</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -36,8 +36,8 @@
 
 <script>
 		function draftQuery(){
-			var obj = {};
-			obj.leagueID = sessionStorage.getItem("leagueID");
+		var obj = {};
+		obj.leagueID = sessionStorage.getItem("leagueID");
 			$.ajax({
 				type: 'GET',						//get data from server to the client
 				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/createDraft?leagueID='+obj.leagueID,	//want to get info from here, it's in a JSONObject
@@ -45,7 +45,7 @@
 			.done(function(data) {
 			document.getElementById("draftTable").style.display="block";
 			var tbody = $('#draftTable tbody'),
-			  props = ["name", "position", "teamCode", "playerRankOverall", "salary", "playerID"];
+			  props = ["name", "position", "teamCode", "playerRankOverall", "playerRankPos", "salary", "playerID"];
 			$.each(data, function(i, data) {
 			  var tr = $('<tr><td class="nr">' + '<button type="button" id="'+data["playerID"]+'" class="use-address" onclick="Click(this.id)">Draft</button>' + '</td></tr>');
 			  $.each(props, function(i, prop) {
@@ -55,8 +55,8 @@
 			});
 			})
 			.fail(function(data) {
-	    		alert("Failed to load data.");
-	    	});
+	            alert("Failed to load data.");
+	        });
 		}
 	</script>
 <script>
