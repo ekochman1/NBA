@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+	<title>All of Your Teams</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="league.css">
+</head>
+<body onload="javascript:teamQuery(); javascript:document.getElementById('queryTable').classList.toggle('hide2');">
+
+
+<h1>Choose a League</h1>
+
+
+<table id="teamTable" display="hide">
+	<CAPTION ALIGN="top">Select One of Your Teams</CAPTION>
+	<thead>
+	<tr>
+		<th>  </th><th>Team Name</th><th>League Name</th>
+	</tr>
+	</thead>
+	<tbody>
+
+	</tbody>
+</table>
+
+
+
+
+
+<!--  new search bar for room number search  -->
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+
+
+<script>
+		function teamQuery(){
+			var obj = {};
+			obj.userID = sessionStorage.getItem("userID");
+			$.ajax({
+				type: 'GET',						//get data from server to the client
+				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/getTeams'+obj.userID,	//want to get info from here, it's in a JSONObject
+			})
+			.done(function(data) {
+			document.getElementById("teamTable").style.display="block";
+			
+			var tbody = $('#teamTable tbody'),
+			  props = ["leagueName", "teamName" , "leagueID"];
+			$.each(data, function(i, data) {
+			  var tr = $('<tr><td class="nr">' + '<button type="button" id="'+data["leagueID"]+'" class="use-address" onclick="Click(this.id)">Go to Draft</button>' + '</td></tr>');
+			  $.each(props, function(i, prop) {
+			    $('<td>').html(data[prop]).appendTo(tr);
+			  });
+			  tbody.append(tr);
+			});
+			})
+			.fail(function(data) {
+	            alert("Failed to load data.");
+	        });
+		}
+	</script>
+<script>
+		function Click(buttonID){
+			sessionStorage.setItem("leagueID", buttonID);
+			location.replace("http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/draftPage.html");
+		}
+	</script>
+
+
+</body>
+</html>
+
