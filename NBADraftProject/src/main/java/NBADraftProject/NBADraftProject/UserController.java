@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.boot.SpringApplication;
 import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -24,9 +25,8 @@ import org.json.JSONArray;
 
 @RestController
 public class UserController {
-    private static ArrayList<JSONArray> MasterJSON;
-    private static ArrayList<JSONObject> MasterWallet;
-
+    private static ArrayList<JSONArray> MasterJSON = new ArrayList<>();
+    private static ArrayList<JSONObject> MasterWallet = new ArrayList<>();
 
     //same logic behind databases, imagine the wallet system, but you only have 5 dollars and you get charged 3 dollars at the same time, in theory you are capable to handling each one individually
     //but not both
@@ -89,15 +89,15 @@ public class UserController {
         
         JSONObject responseObj = new JSONObject();
         JSONObject walletObj = new JSONObject();
+        
         walletObj.put("userID", userID);
         walletObj.put("leagueID", leagueID);
         walletObj.put("wallet" , wallet);
         
         MasterWallet.add(walletObj);
-        
+
         try{
-            Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds." +
-                    "amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
+        	Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
             String query = "SELECT userID, leagueID FROM Teams";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, userID);
@@ -109,8 +109,14 @@ public class UserController {
                 return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
                 }
             }
+            
+            walletObj.put("userID", userID);
+            walletObj.put("leagueID", leagueID);
+            walletObj.put("wallet" , wallet);
+            
+            MasterWallet.add(walletObj);
+            
             query = "START TRANSACTION";
-            stmt = null;
             stmt = conn.prepareStatement(query);
             stmt.execute();
             query = "INSERT INTO Teams (userID, leagueID, teamName, wallet) VALUES (?, ?, ?, ?)";
@@ -123,11 +129,10 @@ public class UserController {
             query = "COMMIT";
             stmt = conn.prepareStatement(query);
             stmt.execute();
-            conn.close();
         } catch (SQLException e){
             e.printStackTrace();
             responseObj.put("message", "error - contact customer support and have them review the server log.");
-            return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.FORBIDDEN);
         }
         responseObj.put("message", "Team created!");
         return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
@@ -183,17 +188,19 @@ public class UserController {
 
               stmt = conn.prepareStatement(transactionQuery);
               stmt.execute();
-              query = "INSERT INTO Teams(userID, leagueID, teamName) VALUES (?, ?, ?)";
+              query = "INSERT INTO Teams(userID, leagueID, teamName, wallet) VALUES (?, ?, ?, ?)";
               stmt = conn.prepareStatement(query);
               stmt.setInt(1, userID);
               stmt.setInt(2, leagueID);
               stmt.setString(3, teamName);
+              stmt.setDouble(4, leagueAllocation);
               stmt.executeUpdate();
               stmt = conn.prepareStatement("COMMIT");
               stmt.execute();
               
 			  JSONObject responseObj = new JSONObject();
 			  responseObj.put("leagueID", leagueID);
+			  responseObj.put("wallet", leagueAllocation);
               return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
           }
           catch(SQLException e) {
@@ -213,9 +220,9 @@ public class UserController {
         responseHeaders.set("Content-Type", "application/json");
 
         Connection conn = null;
-        ArrayList<String> listdata = new ArrayList<String>();
+        //ArrayList<String> listdata = new ArrayList<String>();
         JSONArray nameArray = new JSONArray();
-        int playerId = 0;
+        int playerID = 0;
         String position = "";
         int Player_rankPos = 0;
         int Player_rankOverall = 0;
@@ -227,7 +234,8 @@ public class UserController {
 
         try {
             conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String query = "SELECT playerID, position, playerRankPos, playerRankOverall, name, teamCode, salary FROM Player_Ranking, Players";
+            String query = "select playerRankOverall, Player_Ranking.playerID, Player_Ranking.position, playerRankPos, Player_Ranking.name, Player_Ranking.teamCode, salary From Players, "
+            		+ "Player_Ranking where Players.playerID = Player_Ranking.playerID Order by Player_Ranking.playerRankOverall;";
             PreparedStatement stmt = null;    //important for safety reasons
             /*String tester = "tester";
              return tester;*/
@@ -236,7 +244,7 @@ public class UserController {
             // stmt.setString(1, nameToPull);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {    //while there's something else next in the result set
-                playerId = rs.getInt("playerID");
+                playerID = rs.getInt("playerID");
                 position = rs.getString("position");
                 Player_rankPos = rs.getInt("playerRankPos");
                 Player_rankOverall = rs.getInt("playerRankOverall");
@@ -245,26 +253,23 @@ public class UserController {
                 salary = rs.getDouble("salary");
 
                 JSONObject obj = new JSONObject();
-                obj.put("leagueid", JSONID); //this way i can identify the master JSON file
-                obj.put("playerId", playerId);
+                obj.put("leagueID", JSONID); //this way i can identify the master JSON file
+                obj.put("playerID", playerID);
                 obj.put("position", position);
-                obj.put("Player_rankPos", Player_rankPos);
-                obj.put("Player_rankOverall", Player_rankOverall);
+                obj.put("playerRankPos", Player_rankPos);
+                obj.put("playerRankOverall", Player_rankOverall);
                 obj.put("name", name);
-                obj.put("team", team);
+                obj.put("teamCode", team);
                 obj.put("salary", salary);
                 obj.put("taken", taken);
                 obj.put("userID", 0);
 
                 nameArray.put(obj);
 
-                for (int i = 0; i < nameArray.length(); i++) {
-                    listdata.add(nameArray.getString(i));
-                }
-
                 //puts the json array in the EC2 server
             }
             MasterJSON.add(nameArray);
+            return new ResponseEntity<>(nameArray.toString(), responseHeaders, HttpStatus.OK);
         } catch (SQLException e) {
             return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.OK);
         } finally {
@@ -276,7 +281,7 @@ public class UserController {
                 se.printStackTrace();
             }
         }
-        return new ResponseEntity<>(nameArray.toString(), responseHeaders, HttpStatus.OK);
+       
 
     }
 
