@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f5ecc464-0dad-498d-b0fd-81edd10c48cf" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/draftPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/draftPage.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -42,7 +41,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/resources/public/draftPage.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="389">
-              <caret line="78" column="14" lean-forward="true" selection-start-line="78" selection-start-column="14" selection-end-line="78" selection-end-column="14" />
+              <caret line="83" column="14" lean-forward="true" selection-start-line="83" selection-start-column="14" selection-end-line="83" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -86,11 +85,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/UserController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="348" column="25" lean-forward="true" selection-start-line="348" selection-start-column="25" selection-end-line="348" selection-end-column="25" />
+            <state relative-caret-position="153">
+              <caret line="337" column="8" selection-start-line="337" selection-start-column="8" selection-end-line="337" selection-end-column="8" />
               <folding>
                 <element signature="e#879#914#0" expanded="true" />
-                <element signature="e#8985#9002#0" expanded="true" />
+                <element signature="e#9142#9159#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -607,17 +606,17 @@
     <entry file="file://$PROJECT_DIR$/src/main/resources/public/draftPage.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="389">
-          <caret line="78" column="14" lean-forward="true" selection-start-line="78" selection-start-column="14" selection-end-line="78" selection-end-column="14" />
+          <caret line="83" column="14" lean-forward="true" selection-start-line="83" selection-start-column="14" selection-end-line="83" selection-end-column="14" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/UserController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="348" column="25" lean-forward="true" selection-start-line="348" selection-start-column="25" selection-end-line="348" selection-end-column="25" />
+        <state relative-caret-position="153">
+          <caret line="337" column="8" selection-start-line="337" selection-start-column="8" selection-end-line="337" selection-end-column="8" />
           <folding>
             <element signature="e#879#914#0" expanded="true" />
-            <element signature="e#8985#9002#0" expanded="true" />
+            <element signature="e#9142#9159#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -193,12 +193,6 @@ public class UserController {
               stmt.execute();
               
 			  JSONObject responseObj = new JSONObject();
-			  
-			  JSONObject obj = new JSONObject();
-			  obj.put("userID", userID);
-			  obj.put("leagueID", leagueID);
-			  obj.put("wallet", leagueAllocation);
-			  
 			  responseObj.put("leagueID", leagueID);
 			  responseObj.put("wallet", leagueAllocation);
 
@@ -320,16 +314,15 @@ public class UserController {
     	int userID = Integer.parseInt(request.getParameter("userID"));
     	HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
-        
-        for(int i = 0; i < MasterWallet.size(); i++) {
-        	if(MasterWallet.get(i).getInt("userID")==userID && MasterWallet.get(i).getInt("userID")==userID) {
-        		JSONObject obj = new JSONObject();
-        		return new ResponseEntity<>(obj.toString(), responseHeaders, HttpStatus.OK);
-        	}
-        }
-        JSONObject obj = new JSONObject();
-        obj.put("message", "Wallet not Found");
-        return new ResponseEntity<>(obj.toString(), responseHeaders, HttpStatus.OK);
+		JSONObject obj = new JSONObject();
+        try {
+        	obj.put("wallet", MasterWallet.get(leagueID).get(userID));
+        	return new ResponseEntity<>(obj.toString(), responseHeaders, HttpStatus.OK);
+		} catch (NullPointerException e){
+        	e.printStackTrace();
+			obj.put("message", "Wallet not Found");
+			return new ResponseEntity<>(obj.toString(), responseHeaders, HttpStatus.OK);
+		}
     }
     
 
@@ -339,36 +332,10 @@ public class UserController {
         int userID = payloadObj.getInt("userID");
         int leagueID = payloadObj.getInt("leagueID");
         int PlayerID = payloadObj.getInt("playerID");
-        //double wallet = payloadObj.getDouble("wallet");
-        //String position = payloadObj.getString("position");
-        //int Player_rankPos = payloadObj.getInt("Player_rankPos");
-        //int Player_rankOverall = payloadObj.getInt("Plater_rankOverall");
-        //String name = payloadObj.getString("name");
-        //String team = payloadObj.getString("team");
-        JSONArray newArray = new JSONArray();
-        //JSONArray nameArray = new JSONArray();
-        JSONObject wallet = new JSONObject();
+		Double wallet = MasterWallet.get(leagueID).get(userID);
         
         JSONObject obj = new JSONObject();
-        wallet.put("userID", 0);
-		wallet.put("leagueID", 0);
-		wallet.put("wallet", 0);
         
-        
-        for(int l = 0; l < MasterWallet.size(); l++) {
-        	if(MasterWallet.get(l).getInt("userID") == userID && MasterWallet.get(l).getInt("leagueID") == leagueID) {
-        		wallet.put("userID", MasterWallet.get(l).getInt("userID"));
-        		wallet.put("leagueID", MasterWallet.get(l).getInt("leagueID"));
-        		wallet.put("wallet", MasterWallet.get(l).getDouble("wallet"));
-        		break;
-        	}
-        }
-        
-        if(wallet.getInt("userID")==0 || wallet.getInt("leagueID")==0) {
-        	
-        }
-        
-
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
 
@@ -377,58 +344,19 @@ public class UserController {
             if (MasterJSON.get(i).getJSONObject(0).getInt("leagueID") == leagueID) {
                 for (int j = 0; j < MasterJSON.get(i).length(); j++) {
                     if (MasterJSON.get(i).getJSONObject(j).getInt("playerID") == PlayerID) {
-                    	if (MasterJSON.get(i).getJSONObject(j).getDouble("salary") > wallet.getDouble("wallet")) {
+                    	if (MasterJSON.get(i).getJSONObject(j).getDouble("salary") > wallet) {
                     		return new ResponseEntity<>("{\"message\":\"You cannot afford to draft this player\"}", responseHeaders, HttpStatus.OK);
                     	}
-                    	for(int p = 0; p < MasterWallet.size(); p++) {
-                    		if(MasterWallet.get(p).getInt("leagueID") == leagueID && MasterWallet.get(p).getInt("userID") == userID) {
-                    			wallet.put("wallet", wallet.getDouble("wallet") - MasterJSON.get(i).getJSONObject(j).getDouble("salary"));
-                    			MasterWallet.get(p).put("wallet" , wallet);
-                    			break;
-                    		}
-                    		
-                    	}
-                    	
+                    	wallet = wallet - MasterJSON.get(i).getJSONObject(j).getDouble("salary");
+						MasterWallet.get(leagueID).put(userID, wallet);
+
                     	MasterJSON.get(i).getJSONObject(j).put("userID",userID);
                     	MasterJSON.get(i).getJSONObject(j).put("taken",true);
                     	obj.put("playerRankOverall", MasterJSON.get(i).getJSONObject(j).getInt("playerRankOverall"));
                     	obj.put("name", MasterJSON.get(i).getJSONObject(j).getString("name"));
-                    	
-                    	/*
-                        JSONObject obj = new JSONObject();
-                        
-                        obj.put("leagueID", MasterJSON.get(i).getJSONObject(j).getInt("leagueID")); //this way i can identify the master JSON file
-                        obj.put("playerID", MasterJSON.get(i).getJSONObject(j).getInt("playerID"));
-                        obj.put("position", MasterJSON.get(i).getJSONObject(j).getString("position"));
-                        obj.put("playerRankPos", MasterJSON.get(i).getJSONObject(j).getInt("playerRankPos"));
-                        obj.put("playerRankOverall", MasterJSON.get(i).getJSONObject(j).getInt("playerRankOverall"));
-                        
-                        obj1.put("playerRankOverall", MasterJSON.get(i).getJSONObject(j).getInt("playerRankOverall"));
-                        
-                        
-                        obj.put("name", MasterJSON.get(i).getJSONObject(j).getString("name"));
-                        obj.put("teamCode", MasterJSON.get(i).getJSONObject(j).getString("teamCode"));
-                        obj.put("taken", true);
-                        obj.put("userID", userID);
-                        newArray.put(obj);  
-                        */
-                        
-                        
-                    }   /*else {
-                        JSONObject obj = new JSONObject();
-                        obj.put("leagueID", MasterJSON.get(i).getJSONObject(j).getInt("leagueID")); //this way i can identify the master JSON file
-                        obj.put("playerID", MasterJSON.get(i).getJSONObject(j).getInt("playerID"));
-                        obj.put("position", MasterJSON.get(i).getJSONObject(j).getString("position"));
-                        obj.put("playerRankPos", MasterJSON.get(i).getJSONObject(j).getInt("playerRankPos"));
-                        obj.put("playerRankOverall", MasterJSON.get(i).getJSONObject(j).getInt("playerRankOverall"));
-                        obj.put("name", MasterJSON.get(i).getJSONObject(j).getString("name"));
-                        obj.put("teamCode", MasterJSON.get(i).getJSONObject(j).getString("teamCode"));
-                        obj.put("taken", MasterJSON.get(i).getJSONObject(j).getBoolean("taken"));
-                        obj.put("userID", MasterJSON.get(i).getJSONObject(j).getInt("userID"));
-                        newArray.put(obj);
-                    } */
+                    	break;
+                    }
                 }
-                MasterJSON.set(i, newArray);
                 break;
             }
         }
