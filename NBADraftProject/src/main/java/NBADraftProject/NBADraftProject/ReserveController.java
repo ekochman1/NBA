@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 public class ReserveController {
 	
@@ -64,5 +66,43 @@ public class ReserveController {
         }
         return new ResponseEntity<>(nameArray.toString(), responseHeaders, HttpStatus.OK);
       
+    }
+
+    @RequestMapping(value="/getTeams", method = RequestMethod.GET)
+    public ResponseEntity<String> getTeams(HttpServletRequest request){
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+        Connection conn = null;
+        JSONArray nameArray = new JSONArray();
+        String userID = request.getParameter("userID");
+        int leagueID = 0;
+        String leagueName = "";
+        String teamName = "";
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
+            String query = "select Teams.leagueID, leagueName, teamName from Teams, League where Teams.leagueID = League.leagueID AND userID = ?";
+            PreparedStatement stmt = null;	//important for safety reasons
+
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, Integer.parseInt(userID));
+            // stmt.setString(1, nameToPull);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {	//while there's something else next in the resultset
+                leagueName = rs.getString("leagueName");
+                leagueID = rs.getInt("leagueID");
+                teamName = rs.getString("teamName");
+
+                JSONObject obj = new JSONObject();
+                obj.put("leagueName", leagueName);
+                obj.put("leagueID", leagueID);
+                obj.put("teamName", teamName);
+
+                nameArray.put(obj);
+            }
+        } catch (SQLException e ) {
+            e.printStackTrace();
+            return new ResponseEntity<>("An error occurred. Check server for details.", responseHeaders, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(nameArray.toString(), responseHeaders, HttpStatus.OK);
     }
 }
