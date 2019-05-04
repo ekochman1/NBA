@@ -60,8 +60,9 @@
 			})
 			.done(function(data) {
 			document.getElementById("queryTable").style.display="block";
+			
 			var tbody = $('#queryTable tbody'),
-			  props = ["leagueName", "maxTeam", "numTeams", "leagueID"];
+			  props = ["leagueName", "maxTeam", "numTeams", "leagueID" , "wallet"];
 			$.each(data, function(i, data) {
 			  var tr = $('<tr><td class="nr">' + '<button type="button" id="'+data["leagueID"]+'" class="use-address" onclick="Click(this.id)">Join</button>' + '</td></tr>');
 			  $.each(props, function(i, prop) {
@@ -74,10 +75,11 @@
 	            alert("Failed to load data.");
 	        });
 		}
-</script>
+	</script>
 <script>
 		function Click(buttonID){
 			sessionStorage.setItem("leagueID", buttonID);
+			//sessionStorage.setItem("wallet", buttonID.wallet);
 			location.replace("http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/Create_Team.html");
 		}
 	</script>

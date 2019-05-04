@@ -71,6 +71,6 @@ caption {
 
 }
 
-#queryTable.hide2 tr > *:nth-child(7) {
+#draftTable.hide2 tr > *:nth-child(8) {
     display: none;
 }

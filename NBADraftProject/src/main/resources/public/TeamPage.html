@@ -3,12 +3,12 @@
 <head>
 	<title>All of Your Teams</title>
 	<meta charset="utf-8">
-	<link rel="stylesheet" href="league.css">
+	<link rel="stylesheet" href="teams.css">
 </head>
-<body onload="javascript:teamQuery(); javascript:document.getElementById('queryTable').classList.toggle('hide2');">
+<body onload="javascript:teamQuery(); javascript:document.getElementById('teamTable').classList.toggle('hide2');">
 
 
-<h1>Choose a League</h1>
+<h1>Choose a Team</h1>
 
 
 <table id="teamTable" display="hide">
@@ -40,13 +40,13 @@
 			obj.userID = sessionStorage.getItem("userID");
 			$.ajax({
 				type: 'GET',						//get data from server to the client
-				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/getTeams'+obj.userID,	//want to get info from here, it's in a JSONObject
+				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/getTeams?userID='+obj.userID,	//want to get info from here, it's in a JSONObject
 			})
 			.done(function(data) {
 			document.getElementById("teamTable").style.display="block";
 			
 			var tbody = $('#teamTable tbody'),
-			  props = ["leagueName", "teamName" , "leagueID"];
+			  props = ["teamName", "leagueName" , "leagueID"];
 			$.each(data, function(i, data) {
 			  var tr = $('<tr><td class="nr">' + '<button type="button" id="'+data["leagueID"]+'" class="use-address" onclick="Click(this.id)">Go to Draft</button>' + '</td></tr>');
 			  $.each(props, function(i, prop) {
