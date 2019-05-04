@@ -82,25 +82,36 @@ public class UserController {
         JSONObject payloadObj = new JSONObject(payload);
         int leagueID = payloadObj.getInt("leagueID");
         int userID = payloadObj.getInt("userID");
+        double wallet = 0.0;
         String teamName = payloadObj.getString("teamName");
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
         
         JSONObject responseObj = new JSONObject();
+        JSONObject walletObj = new JSONObject();
         
+       
+
         try{
         	Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String query = "SELECT userID, leagueID, leagueAllocation FROM Teams, League WHERE Teams.leagueID = League.leagueID";
+            String query = "SELECT userID, Teams.leagueID, leagueAllocation FROM Teams, League WHERE Teams.leagueID = League.leagueID";
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, userID);
-            stmt.setInt(2, leagueID);
+           // stmt.setInt(1, userID);
+           // stmt.setInt(2, leagueID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 if (rs.getInt("userID") == userID && rs.getInt("leagueID")== leagueID){
                 responseObj.put("message", "You already have a team in this league.");
                 return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
                 }
+                 wallet = rs.getDouble("leagueAllocation");
             }
+            
+            walletObj.put("userID", userID);
+            walletObj.put("leagueID", leagueID);
+            walletObj.put("wallet" , wallet);
+            
+            MasterWallet.add(walletObj);
             
             query = "START TRANSACTION";
             stmt = conn.prepareStatement(query);
@@ -178,6 +189,7 @@ public class UserController {
               stmt.setInt(1, userID);
               stmt.setInt(2, leagueID);
               stmt.setString(3, teamName);
+              stmt.setDouble(4, leagueAllocation);
               stmt.executeUpdate();
               stmt = conn.prepareStatement("COMMIT");
               stmt.execute();
@@ -185,6 +197,8 @@ public class UserController {
 			  JSONObject responseObj = new JSONObject();
 			  responseObj.put("leagueID", leagueID);
 			  responseObj.put("wallet", leagueAllocation);
+			  
+			  
               return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
           }
           catch(SQLException e) {
@@ -204,6 +218,7 @@ public class UserController {
         responseHeaders.set("Content-Type", "application/json");
 
         Connection conn = null;
+        //ArrayList<String> listdata = new ArrayList<String>();
         JSONArray nameArray = new JSONArray();
         int playerID = 0;
         String position = "";
@@ -217,7 +232,8 @@ public class UserController {
 
         try {
             conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String query = "SELECT playerID, position, playerRankPos, playerRankOverall, name, teamCode, salary FROM Player_Ranking, Players WHERE Player_Ranking.playerID = Players.playerID";
+            String query = "select playerRankOverall, Player_Ranking.playerID, Player_Ranking.position, playerRankPos, Player_Ranking.name, Player_Ranking.teamCode, salary From Players, "
+            		+ "Player_Ranking where Players.playerID = Player_Ranking.playerID Order by Player_Ranking.playerRankOverall;";
             PreparedStatement stmt = null;    //important for safety reasons
             /*String tester = "tester";
              return tester;*/
@@ -247,6 +263,7 @@ public class UserController {
                 obj.put("userID", 0);
 
                 nameArray.put(obj);
+
                 //puts the json array in the EC2 server
             }
             MasterJSON.add(nameArray);
@@ -296,7 +313,7 @@ public class UserController {
         int userID = payloadObj.getInt("userID");
         int leagueID = payloadObj.getInt("leagueID");
         int PlayerID = payloadObj.getInt("playerID");
-        double wallet = payloadObj.getDouble("wallet");
+        //double wallet = payloadObj.getDouble("wallet");
         //String position = payloadObj.getString("position");
         //int Player_rankPos = payloadObj.getInt("Player_rankPos");
         //int Player_rankOverall = payloadObj.getInt("Plater_rankOverall");
@@ -305,45 +322,55 @@ public class UserController {
         JSONArray newArray = new JSONArray();
         JSONArray nameArray = new JSONArray();
         
+        JSONObject wallet = new JSONObject();
+        
+        for(int l = 0; l < MasterWallet.size(); l++) {
+        	if(MasterWallet.get(l).getInt("userID")== userID && MasterWallet.get(l).getInt("leagueID")== leagueID) {
+        		wallet = MasterWallet.get(l);
+        		break;
+        	}
+        }
+        
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
 
 
         for (int i = 0; i < MasterJSON.size(); i++) {
-            if (MasterJSON.get(i).getJSONObject(0).getInt("leagueid") == leagueID) {
-                for (int j = 0; j < MasterJSON.get(i).length(); i++) {
-                    if (MasterJSON.get(i).getJSONObject(j).getInt("playerid") == PlayerID) {
-                    	if (MasterJSON.get(i).getJSONObject(j).getDouble("salary") < wallet) {
+            if (MasterJSON.get(i).getJSONObject(0).getInt("leagueID") == leagueID) {
+                for (int j = 0; j < MasterJSON.get(i).length(); j++) {
+                    if (MasterJSON.get(i).getJSONObject(j).getInt("playerID") == PlayerID) {
+                    	if (MasterJSON.get(i).getJSONObject(j).getDouble("salary") < wallet.getDouble("wallet")) {
                     		return new ResponseEntity<>("{\"message\":\"You cannot afford to draft this player\"}", responseHeaders, HttpStatus.OK);
                     	}
                     	for(int p = 0; p < MasterWallet.size(); p++) {
                     		if(MasterWallet.get(p).getInt("leagueID") == leagueID && MasterWallet.get(p).getInt("userID") == userID) {
-                    			wallet = wallet - MasterJSON.get(i).getJSONObject(j).getDouble("salary");
+                    			wallet.put("wallet", wallet.getDouble("wallet") - MasterJSON.get(i).getJSONObject(j).getDouble("salary"));
                     			MasterWallet.get(p).put("wallet" , wallet);
+                    			break;
                     		}
                     		
                     	}
                         JSONObject obj = new JSONObject();
-                        obj.put("leagueid", MasterJSON.get(i).getJSONObject(j).getInt("leagueid")); //this way i can identify the master JSON file
-                        obj.put("playerId", MasterJSON.get(i).getJSONObject(j).getInt("playerID"));
+                        obj.put("leagueID", MasterJSON.get(i).getJSONObject(j).getInt("leagueID")); //this way i can identify the master JSON file
+                        obj.put("playerID", MasterJSON.get(i).getJSONObject(j).getInt("playerID"));
                         obj.put("position", MasterJSON.get(i).getJSONObject(j).getString("position"));
-                        obj.put("Player_rankPos", MasterJSON.get(i).getJSONObject(j).getInt("Player_rankPos"));
-                        obj.put("Player_rankOverall", MasterJSON.get(i).getJSONObject(j).getInt("Player_rankOverall"));
+                        obj.put("playerRankPos", MasterJSON.get(i).getJSONObject(j).getInt("playerRankPos"));
+                        obj.put("playerRankOverall", MasterJSON.get(i).getJSONObject(j).getInt("playerRankOverall"));
                         obj.put("name", MasterJSON.get(i).getJSONObject(j).getString("name"));
-                        obj.put("team", MasterJSON.get(i).getJSONObject(j).getString("team"));
+                        obj.put("teamCode", MasterJSON.get(i).getJSONObject(j).getString("teamCode"));
                         obj.put("taken", true);
                         obj.put("userID", userID);
                         newArray.put(obj);
                     } else {
                         JSONObject obj = new JSONObject();
-                        obj.put("leagueid", MasterJSON.get(i).getJSONObject(j).getInt("leagueid")); //this way i can identify the master JSON file
-                        obj.put("playerId", MasterJSON.get(i).getJSONObject(j).getInt("playerID"));
+                        obj.put("leagueID", MasterJSON.get(i).getJSONObject(j).getInt("leagueID")); //this way i can identify the master JSON file
+                        obj.put("playerID", MasterJSON.get(i).getJSONObject(j).getInt("playerID"));
                         obj.put("position", MasterJSON.get(i).getJSONObject(j).getString("position"));
-                        obj.put("Player_rankPos", MasterJSON.get(i).getJSONObject(j).getInt("Player_rankPos"));
-                        obj.put("Player_rankOverall", MasterJSON.get(i).getJSONObject(j).getInt("Player_rankOverall"));
+                        obj.put("playerRankPos", MasterJSON.get(i).getJSONObject(j).getInt("playerRankPos"));
+                        obj.put("playerRankOverall", MasterJSON.get(i).getJSONObject(j).getInt("playerRankOverall"));
                         obj.put("name", MasterJSON.get(i).getJSONObject(j).getString("name"));
-                        obj.put("team", MasterJSON.get(i).getJSONObject(j).getString("team"));
+                        obj.put("teamCode", MasterJSON.get(i).getJSONObject(j).getString("teamCode"));
                         obj.put("taken", MasterJSON.get(i).getJSONObject(j).getBoolean("taken"));
                         obj.put("userID", MasterJSON.get(i).getJSONObject(j).getInt("userID"));
                         newArray.put(obj);
@@ -357,7 +384,9 @@ public class UserController {
                 if (!newArray.getJSONObject(k).getBoolean("taken")) {
                     nameArray.put(newArray.getJSONObject(k));
                 }
-            }
+            } 
+            
+            
         }
         return new ResponseEntity<>(nameArray.toString(), responseHeaders, HttpStatus.OK); // MAKE SURE THAT WHEN THIS RETURNS THE OK STATUS, IT BROADCASTS THE NEW JSON OBJECT
     }
