@@ -90,7 +90,7 @@ public class UserController {
         
         try{
         	Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String query = "SELECT userID, leagueID FROM Teams";
+            String query = "SELECT userID, leagueID, leagueAllocation FROM Teams, League WHERE Teams.leagueID = League.leagueID";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, userID);
             stmt.setInt(2, leagueID);
@@ -102,16 +102,10 @@ public class UserController {
                 }
             }
             
-            walletObj.put("userID", userID);
-            walletObj.put("leagueID", leagueID);
-            walletObj.put("wallet" , wallet);
-            
-            MasterWallet.add(walletObj);
-            
             query = "START TRANSACTION";
             stmt = conn.prepareStatement(query);
             stmt.execute();
-            query = "INSERT INTO Teams (userID, leagueID, teamName, wallet) VALUES (?, ?, ?, ?)";
+            query = "INSERT INTO Teams (userID, leagueID, teamName) VALUES (?, ?, ?)";
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, userID);
             stmt.setInt(2, leagueID);
@@ -184,7 +178,6 @@ public class UserController {
               stmt.setInt(1, userID);
               stmt.setInt(2, leagueID);
               stmt.setString(3, teamName);
-              stmt.setDouble(4, leagueAllocation);
               stmt.executeUpdate();
               stmt = conn.prepareStatement("COMMIT");
               stmt.execute();
