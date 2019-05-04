@@ -45,7 +45,7 @@
 			.done(function(data) {
 			document.getElementById("draftTable").style.display="block";
 			var tbody = $('#draftTable tbody'),
-			  props = ["name", "position","team", "Player_rankPos", "salary", "playerID"];
+			  props = ["name", "position", "teamCode", "playerRankOverall", "salary", "playerID"];
 			$.each(data, function(i, data) {
 			  var tr = $('<tr><td class="nr">' + '<button type="button" id="'+data["playerID"]+'" class="use-address" onclick="Click(this.id)">Draft</button>' + '</td></tr>');
 			  $.each(props, function(i, prop) {
@@ -64,7 +64,7 @@
 		var obj = {};
 		obj.userID=sessionStorage.getItem("userID");
 		obj.leagueID=sessionStorage.getItem("leagueID");
-		obj.wallet=sessionStorage.getItem("wallet");
+		//obj.wallet=sessionStorage.getItem("wallet").replace("\$", "");
 		obj.playerID=buttonID;
 		$.ajax({
 				type: 'POST',						//get data from server to the client
@@ -78,10 +78,9 @@
 			alert("You Successfully Drafted");
 			document.getElementById("draftTable").style.display="block";
 			var tbody = $('#draftTable tbody'),
-			  props = ["name", "position", "Player_rankPos", "salary"];
+			  props = ["name", "position","team", "Player_rankPos", "salary", "playerID"];
 			$.each(data, function(i, data) {
-			  var tr = $('<tr><td class="nr">' + '<button type="button" id="'+data["playerID"]+'" class="use-address" onclick="Click(this.id)">Join</button>' + '</td></tr>');
-			  var wallet = data["leagueAllocation"]
+			  var tr = $('<tr><td class="nr">' + '<button type="button" id="'+data["playerID"]+'" class="use-address" onclick="Click(this.id)">Draft</button>' + '</td></tr>');
 			  $.each(props, function(i, prop) {
 			    $('<td>').html(data[prop]).appendTo(tr);
 			  });

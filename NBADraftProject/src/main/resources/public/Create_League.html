@@ -43,6 +43,8 @@
             crossDomain: true
         })
         .done(function(data) {
+			sessionStorage.setItem("leagueID", data.leagueID);
+			//sessionStorage.setItem("wallet", data.wallet);
             alert("League Created Successfully");
 			location.replace("http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/homepage2.html");
         })
