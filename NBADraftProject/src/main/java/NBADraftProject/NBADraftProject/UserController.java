@@ -195,6 +195,12 @@ public class UserController {
               stmt.execute();
               
 			  JSONObject responseObj = new JSONObject();
+			  
+			  JSONObject obj = new JSONObject();
+			  obj.put("userID", userID);
+			  obj.put("leagueID", leagueID);
+			  obj.put("wallet", leagueAllocation);
+			  
 			  responseObj.put("leagueID", leagueID);
 			  responseObj.put("wallet", leagueAllocation);
 			  
@@ -212,7 +218,7 @@ public class UserController {
     public ResponseEntity<String> database(HttpServletRequest leagueID) {
         //String nameToPull = request.getParameter("firstname");
 
-        String JSONID = leagueID.getParameter("leagueID");
+        int JSONID = Integer.parseInt(leagueID.getParameter("leagueID"));
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
@@ -306,6 +312,25 @@ public class UserController {
         }
         return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "/displayWallet", method = RequestMethod.GET)  //THIS SHOULD BE ACTIVATED ON CLICK
+    public ResponseEntity<String> displayWallet(HttpServletRequest request) {
+    	int leagueID = Integer.parseInt(request.getParameter("leagueID"));
+    	int userID = Integer.parseInt(request.getParameter("userID"));
+    	HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+        
+        for(int i = 0; i < MasterWallet.size(); i++) {
+        	if(MasterWallet.get(i).getInt("userID")==userID && MasterWallet.get(i).getInt("userID")==userID) {
+        		JSONObject obj = new JSONObject();
+        		return new ResponseEntity<>(obj.toString(), responseHeaders, HttpStatus.OK);
+        	}
+        }
+        JSONObject obj = new JSONObject();
+        obj.put("message", "Wallet not Found");
+        return new ResponseEntity<>(obj.toString(), responseHeaders, HttpStatus.OK);
+    }
+    
 
     @RequestMapping(value = "/draft", method = RequestMethod.POST)  //THIS SHOULD BE ACTIVATED ON CLICK
     public ResponseEntity<String> draft(@RequestBody String payload, HttpServletRequest request) {
@@ -320,15 +345,26 @@ public class UserController {
         //String name = payloadObj.getString("name");
         //String team = payloadObj.getString("team");
         JSONArray newArray = new JSONArray();
-        JSONArray nameArray = new JSONArray();
-        
+        //JSONArray nameArray = new JSONArray();
         JSONObject wallet = new JSONObject();
         
+        JSONObject obj = new JSONObject();
+        wallet.put("userID", 0);
+		wallet.put("leagueID", 0);
+		wallet.put("wallet", 0);
+        
+        
         for(int l = 0; l < MasterWallet.size(); l++) {
-        	if(MasterWallet.get(l).getInt("userID")== userID && MasterWallet.get(l).getInt("leagueID")== leagueID) {
-        		wallet = MasterWallet.get(l);
+        	if(MasterWallet.get(l).getInt("userID") == userID && MasterWallet.get(l).getInt("leagueID") == leagueID) {
+        		wallet.put("userID", MasterWallet.get(l).getInt("userID"));
+        		wallet.put("leagueID", MasterWallet.get(l).getInt("leagueID"));
+        		wallet.put("wallet", MasterWallet.get(l).getDouble("wallet"));
         		break;
         	}
+        }
+        
+        if(wallet.getInt("userID")==0 || wallet.getInt("leagueID")==0) {
+        	
         }
         
 
@@ -340,7 +376,7 @@ public class UserController {
             if (MasterJSON.get(i).getJSONObject(0).getInt("leagueID") == leagueID) {
                 for (int j = 0; j < MasterJSON.get(i).length(); j++) {
                     if (MasterJSON.get(i).getJSONObject(j).getInt("playerID") == PlayerID) {
-                    	if (MasterJSON.get(i).getJSONObject(j).getDouble("salary") < wallet.getDouble("wallet")) {
+                    	if (MasterJSON.get(i).getJSONObject(j).getDouble("salary") > wallet.getDouble("wallet")) {
                     		return new ResponseEntity<>("{\"message\":\"You cannot afford to draft this player\"}", responseHeaders, HttpStatus.OK);
                     	}
                     	for(int p = 0; p < MasterWallet.size(); p++) {
@@ -351,18 +387,33 @@ public class UserController {
                     		}
                     		
                     	}
+                    	
+                    	MasterJSON.get(i).getJSONObject(j).put("userID",userID);
+                    	MasterJSON.get(i).getJSONObject(j).put("taken",true);
+                    	obj.put("playerRankOverall", MasterJSON.get(i).getJSONObject(j).getInt("playerRankOverall"));
+                    	obj.put("name", MasterJSON.get(i).getJSONObject(j).getString("name"));
+                    	
+                    	/*
                         JSONObject obj = new JSONObject();
+                        
                         obj.put("leagueID", MasterJSON.get(i).getJSONObject(j).getInt("leagueID")); //this way i can identify the master JSON file
                         obj.put("playerID", MasterJSON.get(i).getJSONObject(j).getInt("playerID"));
                         obj.put("position", MasterJSON.get(i).getJSONObject(j).getString("position"));
                         obj.put("playerRankPos", MasterJSON.get(i).getJSONObject(j).getInt("playerRankPos"));
                         obj.put("playerRankOverall", MasterJSON.get(i).getJSONObject(j).getInt("playerRankOverall"));
+                        
+                        obj1.put("playerRankOverall", MasterJSON.get(i).getJSONObject(j).getInt("playerRankOverall"));
+                        
+                        
                         obj.put("name", MasterJSON.get(i).getJSONObject(j).getString("name"));
                         obj.put("teamCode", MasterJSON.get(i).getJSONObject(j).getString("teamCode"));
                         obj.put("taken", true);
                         obj.put("userID", userID);
-                        newArray.put(obj);
-                    } else {
+                        newArray.put(obj);  
+                        */
+                        
+                        
+                    }   /*else {
                         JSONObject obj = new JSONObject();
                         obj.put("leagueID", MasterJSON.get(i).getJSONObject(j).getInt("leagueID")); //this way i can identify the master JSON file
                         obj.put("playerID", MasterJSON.get(i).getJSONObject(j).getInt("playerID"));
@@ -374,21 +425,13 @@ public class UserController {
                         obj.put("taken", MasterJSON.get(i).getJSONObject(j).getBoolean("taken"));
                         obj.put("userID", MasterJSON.get(i).getJSONObject(j).getInt("userID"));
                         newArray.put(obj);
-                    }
+                    } */
                 }
-
+                MasterJSON.set(i, newArray);
+                break;
             }
-            MasterJSON.set(i, newArray);
-
-            for (int k = 0; k < newArray.length(); k++) {
-                if (!newArray.getJSONObject(k).getBoolean("taken")) {
-                    nameArray.put(newArray.getJSONObject(k));
-                }
-            } 
-            
-            
         }
-        return new ResponseEntity<>(nameArray.toString(), responseHeaders, HttpStatus.OK); // MAKE SURE THAT WHEN THIS RETURNS THE OK STATUS, IT BROADCASTS THE NEW JSON OBJECT
+        return new ResponseEntity<>(obj.toString(), responseHeaders, HttpStatus.OK); // MAKE SURE THAT WHEN THIS RETURNS THE OK STATUS, IT BROADCASTS THE NEW JSON OBJECT
     }
 
 
@@ -487,8 +530,8 @@ public class UserController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
 
-        MessageDigest digest = null;
-        String hashedKey = null;
+        //MessageDigest digest = null;
+        //String hashedKey = null;
 
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
