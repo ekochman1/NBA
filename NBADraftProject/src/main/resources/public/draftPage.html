@@ -3,7 +3,7 @@
 <head>
 	<title>Available Leagues</title>
 	<meta charset="utf-8">
-	<link rel="stylesheet" href="league.css">
+	<link rel="stylesheet" href="draft.css">
 </head>
 <body onload="javascript:draftQuery(); javascript:document.getElementById('draftTable').classList.toggle('hide2');">
 
@@ -15,7 +15,7 @@
 	<CAPTION ALIGN="top">Choose a NBA Player to Draft</CAPTION>
 	<thead>
 	<tr>
-		<th>  </th><th>Name</th><th>Position</th><th>team</th><th>Player Rank</th><th>Salary</th>
+		<th>  </th><th>Name</th><th>Position</th><th>Team</th><th>Player Rank</th><th>Salary</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -36,17 +36,18 @@
 
 <script>
 		function draftQuery(){
+		var obj = {};
+		obj.leagueID = sessionStorage.getItem("leagueID");
 			$.ajax({
 				type: 'GET',						//get data from server to the client
-				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/createDraft',	//want to get info from here, it's in a JSONObject
+				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/createDraft?leagueID='+obj.leagueID,	//want to get info from here, it's in a JSONObject
 			})
 			.done(function(data) {
 			document.getElementById("draftTable").style.display="block";
 			var tbody = $('#draftTable tbody'),
-			  props = ["name", "position", "Player_rankPos", "salary"];
+			  props = ["name", "position","team", "Player_rankPos", "salary", "playerID"];
 			$.each(data, function(i, data) {
 			  var tr = $('<tr><td class="nr">' + '<button type="button" id="'+data["playerID"]+'" class="use-address" onclick="Click(this.id)">Draft</button>' + '</td></tr>');
-			  var wallet = data["leagueAllocation"]
 			  $.each(props, function(i, prop) {
 			    $('<td>').html(data[prop]).appendTo(tr);
 			  });

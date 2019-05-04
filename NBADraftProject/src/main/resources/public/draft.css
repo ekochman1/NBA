@@ -1,0 +1,76 @@
+body {
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(Zion_Williamson_s_best_plays_from_rousing_debut_for_Duke.jpg);
+    height: 100vh;
+    background-size:cover;
+    background-position: center;
+}
+h1 {
+  color:  rgba(195, 186, 190, 0.8);
+}
+
+button {
+
+         box-shadow: none;
+       border: 1px solid #060606;
+       font-size: 12px;
+       outline: none;
+       line-height: 10%;
+       white-space: nowrap;
+       vertical-align: middle;
+       padding: 0.6rem 1rem;
+       border-radius: 2px;
+       transition: all 0.2s ease-in-out;
+       cursor: pointer;
+       background-color: #ad0c25;
+
+}
+
+CAPTION {
+
+color: rgba(195, 186, 190, 0.9);
+background-color: rgb(4, 0, 2);
+
+
+}
+
+
+html {
+    font-family: sans-serif;
+}
+
+table {
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin: 10px 20px 20px 330px;
+
+}
+
+td, th {
+    border: 1px solid rgba(195, 186, 190, 0.8);
+    padding: 10px 20px;
+}
+
+th {
+    background-color: rgba(195, 186, 190, 0.8);
+}
+
+td {
+    text-align: center;
+}
+
+tr:nth-child(even) td {
+    background-color: rgba(195, 186, 190, 0.8);
+}
+
+tr:nth-child(odd) td {
+    background-color: rgba(195, 186, 190, .9);
+}
+
+caption {
+    padding: 10px;
+
+}
+
+#queryTable.hide2 tr > *:nth-child(7) {
+    display: none;
+}
