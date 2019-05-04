@@ -86,6 +86,7 @@ public class UserController {
         String teamName = payloadObj.getString("teamName");
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
+        
         JSONObject responseObj = new JSONObject();
         JSONObject walletObj = new JSONObject();
         walletObj.put("userID", userID);
@@ -97,26 +98,27 @@ public class UserController {
         try{
             Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds." +
                     "amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String query = "SELECT teamID FROM Teams WHERE userID = ? AND leagueID = ?";
+            String query = "SELECT userID, leagueID FROM Teams";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, userID);
             stmt.setInt(2, leagueID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                if (rs.getInt("teamID") == 0){
-                    break;
-                }
+                if (rs.getInt("userID") == userID && rs.getInt("leagueID")== leagueID){
                 responseObj.put("message", "You already have a team in this league.");
                 return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
+                }
             }
             query = "START TRANSACTION";
+            stmt = null;
             stmt = conn.prepareStatement(query);
             stmt.execute();
-            query = "INSERT INTO Teams (userID, leagueID, teamName) VALUES (?, ?, ?)";
+            query = "INSERT INTO Teams (userID, leagueID, teamName, wallet) VALUES (?, ?, ?, ?)";
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, userID);
             stmt.setInt(2, leagueID);
             stmt.setString(3, teamName);
+            stmt.setDouble(4, wallet);
             stmt.executeUpdate();
             query = "COMMIT";
             stmt = conn.prepareStatement(query);

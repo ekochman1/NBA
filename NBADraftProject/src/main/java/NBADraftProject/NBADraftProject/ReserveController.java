@@ -30,7 +30,7 @@ public class ReserveController {
 
         try {
             conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String query = "select leagueID, leagueName, maxTeam, numTeams from League where numTeams != maxTeam";
+            String query = "select leagueID, leagueName, maxTeam, numTeams, leagueAllocation from League where numTeams != maxTeam";
             PreparedStatement stmt = null;	//important for safety reasons
             
             stmt = conn.prepareStatement(query);
