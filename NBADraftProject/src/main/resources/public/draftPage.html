@@ -78,9 +78,14 @@
 				crossDomain: true
 			})
 		.done(function(data) {
+				if(data.message != null)
+				{alert(data.message);
+				}
+				else{
 				alert("You drafted: "+ data.name);
 				var row = document.getElementById(data.playerRankOverall)
 				$(row).remove();
+				}
 			})
 			.fail(function(data) {
 	        	alert("Failed to load data.");
