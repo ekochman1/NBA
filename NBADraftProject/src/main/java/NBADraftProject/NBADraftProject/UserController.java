@@ -82,20 +82,12 @@ public class UserController {
         JSONObject payloadObj = new JSONObject(payload);
         int leagueID = payloadObj.getInt("leagueID");
         int userID = payloadObj.getInt("userID");
-        double wallet = payloadObj.getDouble("wallet");
         String teamName = payloadObj.getString("teamName");
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
         
         JSONObject responseObj = new JSONObject();
-        JSONObject walletObj = new JSONObject();
         
-        walletObj.put("userID", userID);
-        walletObj.put("leagueID", leagueID);
-        walletObj.put("wallet" , wallet);
-        
-        MasterWallet.add(walletObj);
-
         try{
         	Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
             String query = "SELECT userID, leagueID FROM Teams";
@@ -124,7 +116,6 @@ public class UserController {
             stmt.setInt(1, userID);
             stmt.setInt(2, leagueID);
             stmt.setString(3, teamName);
-            stmt.setDouble(4, wallet);
             stmt.executeUpdate();
             query = "COMMIT";
             stmt = conn.prepareStatement(query);
@@ -220,7 +211,6 @@ public class UserController {
         responseHeaders.set("Content-Type", "application/json");
 
         Connection conn = null;
-        //ArrayList<String> listdata = new ArrayList<String>();
         JSONArray nameArray = new JSONArray();
         int playerID = 0;
         String position = "";
@@ -234,8 +224,7 @@ public class UserController {
 
         try {
             conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String query = "select playerRankOverall, Player_Ranking.playerID, Player_Ranking.position, playerRankPos, Player_Ranking.name, Player_Ranking.teamCode, salary From Players, "
-            		+ "Player_Ranking where Players.playerID = Player_Ranking.playerID Order by Player_Ranking.playerRankOverall;";
+            String query = "SELECT playerID, position, playerRankPos, playerRankOverall, name, teamCode, salary FROM Player_Ranking, Players WHERE Player_Ranking.playerID = Players.playerID";
             PreparedStatement stmt = null;    //important for safety reasons
             /*String tester = "tester";
              return tester;*/
@@ -265,7 +254,6 @@ public class UserController {
                 obj.put("userID", 0);
 
                 nameArray.put(obj);
-
                 //puts the json array in the EC2 server
             }
             MasterJSON.add(nameArray);

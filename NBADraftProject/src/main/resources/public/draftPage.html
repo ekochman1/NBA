@@ -36,8 +36,8 @@
 
 <script>
 		function draftQuery(){
-		var obj = {};
-		obj.leagueID = sessionStorage.getItem("leagueID");
+			var obj = {};
+			obj.leagueID = sessionStorage.getItem("leagueID");
 			$.ajax({
 				type: 'GET',						//get data from server to the client
 				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/createDraft?leagueID='+obj.leagueID,	//want to get info from here, it's in a JSONObject
@@ -55,8 +55,8 @@
 			});
 			})
 			.fail(function(data) {
-	            alert("Failed to load data.");
-	        });
+	    		alert("Failed to load data.");
+	    	});
 		}
 	</script>
 <script>
