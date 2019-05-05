@@ -61,7 +61,9 @@ function endDraft(){
             player: "",
             type: 'DONE'
         };
-        stompClient.send('/app/draft.sendPick.'+leagueID, {}, JSON.stringify(draftMessage))}
+        stompClient.send('/app/draft.sendPick.'+leagueID, {}, JSON.stringify(draftMessage));
+    }
+}
 
 function sendDraftMessage(event) {
     var messageContent = messageInput.value.trim();
