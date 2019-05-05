@@ -41,8 +41,8 @@ html {
 table {
     border-collapse: collapse;
     font-size: 0.9rem;
-    margin: 10px 20px 20px 0px;
-
+    margin: 10px 20px 20px 10px;
+    position: absolute;
 }
 
 td, th {
@@ -430,13 +430,13 @@ button.accent {
 
 .chat-container {
     width: 550px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 20px;
+    margin-right: 5px;
     background-color: rgba(195, 186, 190, 0.8);
     box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
     margin-top: 30px;
     height: calc(100% - 60px);
-     max-height: 275px;
+    max-height: 275px;
     position: relative;
 }
 
@@ -810,7 +810,7 @@ button.accent {
       }
 
    .chat-container {
-       width: 550px;
+       width: 300px;
        background-color: rgba(195, 186, 190, 0.8);
        box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
        margin-top: 30px;
