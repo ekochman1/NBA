@@ -31,7 +31,7 @@ public class UserController {
     private static HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>> PlayerPicks = new HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>();
     private static HashMap<Integer, Integer> DraftCount = new HashMap<Integer, Integer>();
     private static HashMap<Integer, Integer> UserCount = new HashMap<Integer, Integer>();
-    //private static HashMap<Integer, ArrayList> DraftOrder = new HashMap<>();
+    private static HashMap<Integer, ArrayList> DraftOrder = new HashMap<>();
 
     //same logic behind databases, imagine the wallet system, but you only have 5 dollars and you get charged 3 dollars at the same time, in theory you are capable to handling each one individually
     //but not both
@@ -109,7 +109,7 @@ public class UserController {
         				 }
         			 }  
         			 if(!ctr && !pg && !pf && !sf && !sg) {
-        				 query = "UPDATE Teams(C, PG, PF, SG, SF) VALUES(?, ?, ?, ?, ?) WHERE userID=? AND leagueID=?";
+        				 query = "UPDATE Teams SET C =  VALUES(?, ?, ?, ?, ?) WHERE userID=? AND leagueID=?";
         				 stmt = conn.prepareStatement(query);
         				 stmt.setInt( 1, playerC);
         				 stmt.setInt( 2, playerPG);
@@ -290,10 +290,6 @@ public class UserController {
         	DraftOrder.put(leagueID, new ArrayList(Arrays.asList(userName)));
 		}
         
-        order.add(username);
-        
-        
-        
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
 
@@ -308,7 +304,7 @@ public class UserController {
 			}
 		}
         UserCount.put(leagueID, newUserCount);
-        if(UserCount.get(leagueID)==0) {
+        if(UserCount.get(leagueID)<=0) {
         	Collections.shuffle(DraftOrder.get(leagueID));
         	obj.put("message", "Draft starting soon!");
         	obj.put("order", DraftOrder.get(leagueID));

@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="draft.css">
 </head>
-<body onload="javascript:document.getElementById('draftTable').classList.toggle('hide2'); javascript:connect(); javascript:setTimeout(checkIfReady, 2000);">
+<body onload="javascript:document.getElementById('draftTable').classList.toggle('hide2'); javascript:connect(); javascript:setTimeout(checkIfReady, 2000); javascript:displayWallet();">
 
 
 <h1>Players</h1>
@@ -152,33 +152,33 @@
 		}
 		
 </script>
+<script>
 function displayWallet(){
-var obj = {};
-obj.leagueID = sessionStorage.getItem("leagueID");
-obj.userID = sessionStorage.getItem("leagueID");
+	var obj = {};
+	obj.leagueID = sessionStorage.getItem("leagueID");
+	obj.userID = sessionStorage.getItem("userID");
 
-$.ajax({
+	$.ajax({
 		type: 'GET',		//get data from server to the client
-		url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/createDraft?leagueID='+obj.leagueID+ ' userID='obj.userID',	//want to get info from here, it's in a JSONObject
-})
-
-.done(function(data) {
-	document.getElementbyID("walletTable").style.display ="block";
-
-var tbody = $('#walletTable tbody'),
-props = ["wallet"];
-$.each(data, function(i,data){
-var tr = $('<tr><td class = "nr">' + '</td><tr>');
-$.each(props, function(i, data)){
-$('<td>').html(data[prop]).appendTo(tr);
-});
-tbody.append(tr);
-});
-		})
-.fail(function(data){
-	alert("wallet failed to load");
-})
-
+		url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/displayWallet?leagueID='+obj.leagueID+'&userID='+obj.userID //want to get info from here, it's in a JSONObject
+	})
+	.done(function(data) {
+		document.getElementById("walletTable").style.display ="block";
+		var tbody = $('#walletTable tbody'),
+		props = ["wallet"];
+		$.each(data, function(i,data){
+			var tr = $('<tr><td class = "nr">' + '</td><tr>');
+			$.each(props, function(i, prop){
+				$('<td>').html(data[prop]).appendTo(tr);
+			});
+			tbody.append(tr);
+		});
+	})
+	.fail(function(data){
+		alert("wallet failed to load");
+	});
+}
+</script>
 </body>
 </html>
 
