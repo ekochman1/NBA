@@ -90,3 +90,7 @@ body {
 .form .register-form {
     display: none;
 }
+
+.form a:hover {
+  text-decoration: underline;
+}
