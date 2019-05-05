@@ -5,6 +5,7 @@ public class DraftMessage {
 	private String pick;
 	private String sender;
 	private int lid;
+	private String name;
 
 	public enum MessageType {
 		CHAT,
@@ -44,5 +45,9 @@ public class DraftMessage {
 	public void setLid(int lid){
 		this.lid = lid;
 	}
+
+	public String getName() { return this.name; }
+
+	public void setName(String name) { this.name = name; }
 }
 

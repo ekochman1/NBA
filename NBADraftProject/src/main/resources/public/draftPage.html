@@ -23,7 +23,27 @@
 	</tbody>
 </table>
 
+<div id="chat-page">
+	<div class="chat-container">
+		<div class="chat-header">
+			<h2>Draft Chat</h2>
+		</div>
+		<div class="connecting">
+			Connecting...
+		</div>
+		<ul id="messageArea">
 
+		</ul>
+		<form id="messageForm" name="messageForm">
+			<div class="form-group">
+				<div class="input-group clearfix">
+					<input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
+					<button type="submit" class="primary">Send</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
 
 
 
@@ -85,8 +105,7 @@
 				{alert(data.message);
 				}
 				else{
-				alert("You drafted: "+ data.name);
-				sendDraft(data.playerRankOverall);
+				sendDraft(data.playerRankOverall, data.name);
 				}
 			})
 			.fail(function(data) {

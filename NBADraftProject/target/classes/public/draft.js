@@ -75,7 +75,7 @@ function onMessageReceived(payload) {
         message.content = message.sender + ' left!';
     } else if (message.type === 'DRAFT'){
         console.log("draft received");
-        document.getElementById(message.pick).delete();
+        document.getElementById(message.pick).remove();
         if (username != message.sender){
             alert(message.sender+" drafted a player");
         }
