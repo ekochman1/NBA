@@ -34,6 +34,7 @@ public class UserController {
     private static HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>> PlayerPicks = new HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>();
     private static HashMap<Integer, Integer> DraftCount = new HashMap<Integer, Integer>();
     private static HashMap<Integer, Integer> UserCount = new HashMap<Integer, Integer>();
+    private static HashMap<Integer, ArrayList> DraftOrder = new HashMap<>();
 
     //same logic behind databases, imagine the wallet system, but you only have 5 dollars and you get charged 3 dollars at the same time, in theory you are capable to handling each one individually
     //but not both
@@ -255,14 +256,24 @@ public class UserController {
     	int leagueID = payloadObj.getInt("leagueID");
         int userID = payloadObj.getInt("userID");
         JSONObject obj = new JSONObject();
-        
-        ArrayList<Integer> order = new ArrayList<Integer>();
-        order.add(userID);
+
+        if (DraftOrder.containsKey(leagueID)){
+        	DraftOrder.get(leagueID).add(userID);
+		}
         
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
 
-        int newUserCount = UserCount.get(leagueID) - 1;
+        int newUserCount = -1;
+        try {
+			newUserCount = UserCount.get(leagueID) - 1;
+		} catch (NullPointerException e){
+        	e.printStackTrace();
+        	for (int id : UserCount.keySet()){
+        		System.out.println(id + " : " + UserCount.get(id));
+        		System.out.println("the id for this league is " + leagueID);
+			}
+		}
         UserCount.put(leagueID, newUserCount);
         if(UserCount.get(leagueID)==0) {
         	Collections.shuffle(order); 
@@ -290,24 +301,22 @@ public class UserController {
         responseHeaders.set("Content-Type", "application/json");
         
         JSONObject responseObj = new JSONObject();
-        
-       
 
         try{
         	Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String query = "SELECT userID, Teams.leagueID, leagueAllocation, numTeams, maxTeam FROM Teams, League WHERE Teams.leagueID = League.leagueID";
+            String query = "SELECT userID, leagueAllocation, numTeams, maxTeam FROM Teams, League WHERE Teams.leagueID = League.leagueID AND League.leagueID = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
            // stmt.setInt(1, userID);
            // stmt.setInt(2, leagueID);
+			stmt.setInt(1, leagueID);
             ResultSet rs = stmt.executeQuery();
-            if(rs.getInt("numTeams")>=rs.getInt("maxTeam")) {
-            	responseObj.put("message", "This league is already full");
-                return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
-            }
             while (rs.next()) {
-                if (rs.getInt("userID") == userID && rs.getInt("leagueID")== leagueID){
-                responseObj.put("message", "You already have a team in this league.");
-                return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
+				if(rs.getInt("numTeams")>=rs.getInt("maxTeam")) {
+					responseObj.put("message", "This league is already full");
+					return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
+				}else if (rs.getInt("userID") == userID){
+                	responseObj.put("message", "You already have a team in this league.");
+                	return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
                 }
                  wallet = rs.getDouble("leagueAllocation");
             }
@@ -374,17 +383,12 @@ public class UserController {
               
               int leagueID = 0;
 
-              query = "SELECT leagueName, leagueID FROM League WHERE leagueName = ?";
+              query = "SELECT leagueID FROM League WHERE leagueName = ?";
               stmt = conn.prepareStatement(query);
               stmt.setString(1, leagueName);
               ResultSet rs = stmt.executeQuery();
               while(rs.next()) {
-            	  if(leagueName.equals(rs.getString("leagueName"))) {
-            		  leagueID = rs.getInt("leagueID");
-            	  }
-            	  else {
-            		  return new ResponseEntity<>("{\"message\":\"issue with pushing to MQSQL\"}", responseHeaders, HttpStatus.BAD_REQUEST);
-            	  }
+              	  leagueID = rs.getInt("leagueID");
               }
               
               int count = maxTeam*14;

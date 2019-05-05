@@ -13,7 +13,7 @@
 
 <div id="table-scroll">
 	<table id="draftTable" display="hide">
-		<CAPTION ALIGN="top">Choose a NBA Player to Draft</CAPTION>
+		<CAPTION ALIGN="top">Choose an NBA Player to Draft</CAPTION>
 		<thead>
 		<tr>
 			<th>  </th><th>Name</th><th>Position</th><th>Team</th><th>Player Rank: Overall</th><th>Player Rank: Position</th><th>Salary</th>
@@ -36,14 +36,6 @@
 		<ul id="messageArea">
 
 		</ul>
-		<!--<form id="messageForm" name="messageForm">
-			<div class="form-group">
-			-<div class="input-group clearfix">
-					<input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
-					<button type="submit" class="primary">Send</button>
-				</div>
-			</div>
-		</form>---->
 	</div>
 </div>
 
@@ -95,8 +87,8 @@
 			})
 			.done(function(data) { 
 				if(data.order!=null){
-				startDraft();
 				alert(data.message);
+				setTimeout(startDraft, 2000);
 				}
 				else{
 				alert(data.message);

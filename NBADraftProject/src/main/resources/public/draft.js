@@ -69,6 +69,8 @@ function startDraft() {
             type: 'START'
         };
         stompClient.send('/app/draft.sendPick.'+leagueID, {}, JSON.stringify(draftMessage));
+    } else {
+        console.log("stompClient failed");
     }
 }
 
@@ -115,8 +117,8 @@ function onMessageReceived(payload) {
         consoleArea.appendChild(messageElement);
         consoleArea.scrollTop = messageArea.scrollHeight;
     } else if (message.type === 'START') {
-        draftQuery()
         alert("The draft is starting!");
+        draftQuery();
     }else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' left!';
