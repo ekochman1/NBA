@@ -76,7 +76,6 @@ caption {
     overflow-y: scroll;
 }
 
-
-#draftTable.hide2 tr > *:nth-child(8) {
+#queryTable.hide2 tr > *:nth-child(4) {
     display: none;
 }
