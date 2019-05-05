@@ -78,3 +78,7 @@ caption {
 #queryTable.hide2 tr > *:nth-child(6) {
     display: none;
 }
+#table-scroll {
+    overflow: auto;
+    overflow-y: scroll;
+}
