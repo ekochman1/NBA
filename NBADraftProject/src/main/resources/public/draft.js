@@ -38,10 +38,8 @@ function onConnectedLeague() {
         JSON.stringify({sender: username, type: 'JOIN'})
     )
 
-    var i;
-    for (i = 0; i < connectingElement.length(); i++){
-        connectingElement[i].classList.add('hidden');
-    }
+    connectingElement[0].classList.add('hidden');
+    connectingElement[1].classList.add('hidden');
 }
 
 function onError(error) {
