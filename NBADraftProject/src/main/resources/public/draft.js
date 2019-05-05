@@ -57,13 +57,12 @@ function sendDraft(playerRankOverall, name) {
 function sendDraftMessage(event) {
     var messageContent = messageInput.value.trim();
     if(messageContent && stompClient) {
-        var draftMessage = {
+        var chatMessage = {
             sender: username,
-            pick: messageInput.value,
-            type: 'CHAT',
-            lid: leagueID
+            content: messageInput.value,
+            type: 'CHAT'
         };
-        stompClient.send('/app/draft.sendMessage.'+leagueID, {}, JSON.stringify(draftMessage));
+        stompClient.send('/app/draft.sendMessage.'+leagueID, {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();
@@ -84,7 +83,11 @@ function onMessageReceived(payload) {
         document.getElementById(message.pick).remove();
         messageElement.classList.add('event-message');
         message.content = message.sender + ' drafted ' + message.player;
+    } else if (message.type === 'DONE') {
+        alert("Draft is completed");
+        window.location = 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/homepage2.html';
     } else {
+    }
         messageElement.classList.add('chat-message');
 
         var avatarElement = document.createElement('i');
@@ -118,3 +121,5 @@ function getAvatarColor(messageSender) {
     var index = Math.abs(hash % colors.length);
     return colors[index];
 }
+
+messageForm.addEventListener('submit', sendDraftMessage, true)

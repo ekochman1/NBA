@@ -11,7 +11,8 @@ public class DraftMessage {
 		CHAT,
 		DRAFT,
 		JOIN,
-		LEAVE
+		LEAVE,
+		DONE
 	}
 
 	public MessageType getType() {

@@ -19,13 +19,13 @@ public class ChatController {
 
     @MessageMapping("/draft.sendMessage.{leagueID}")
 	@SendTo("/draft.{leagueID}")
-    public DraftMessage sendDraftMessage(@DestinationVariable String leagueID, @Payload DraftMessage draftMessage) {
-        return draftMessage;
+    public ChatMessage sendDraftMessage(@Payload ChatMessage ChatMessage) {
+        return ChatMessage;
     }
 
     @MessageMapping("/draft.sendPick.{leagueID}")
     @SendTo("/draft.{leagueID}")
-    public DraftMessage sendDraftPick(@DestinationVariable String leagueID, @Payload DraftMessage draftMessage) {
+    public DraftMessage sendDraftPick(@Payload DraftMessage draftMessage) {
     	return draftMessage;
     }
 

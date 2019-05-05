@@ -2,6 +2,12 @@ var stompClient = null;
 var username = null;
 var leagueID = null;
 
+var chatPage = document.querySelector('#chat-page');
+var messageForm = document.querySelector('#messageForm');
+var messageInput = document.querySelector('#message');
+var messageArea = document.querySelector('#messageArea');
+var connectingElement = document.querySelector('.connecting');
+
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
     '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
@@ -34,12 +40,13 @@ function onError(error) {
     connectingElement.style.color = 'red';
 }
 
-function sendDraft(playerRankOverall) {
+function sendDraft(playerRankOverall, name) {
     var messageContent = playerRankOverall;
     if(messageContent && stompClient) {
         var draftPick = {
             sender: username,
             pick: playerRankOverall,
+            player: name,
             type: 'DRAFT',
             lid: leagueID
         };
@@ -74,11 +81,9 @@ function onMessageReceived(payload) {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' left!';
     } else if (message.type === 'DRAFT'){
-        console.log("draft received");
         document.getElementById(message.pick).remove();
-        if (username != message.sender){
-            alert(message.sender+" drafted a player");
-        }
+        messageElement.classList.add('event-message');
+        message.content = message.sender + ' drafted ' + message.player;
     } else {
         messageElement.classList.add('chat-message');
 
@@ -113,3 +118,5 @@ function getAvatarColor(messageSender) {
     var index = Math.abs(hash % colors.length);
     return colors[index];
 }
+
+messageForm.addEventListener('submit', sendDraftMessage, true)
