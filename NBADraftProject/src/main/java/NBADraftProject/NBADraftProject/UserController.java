@@ -75,34 +75,34 @@ public class UserController {
 			 PreparedStatement stmt = null;
         	 for(int userID: PlayerPicks.get(leagueID).keySet()) {//as it transverses the users, have it transverse for each loop, userID is equal to the current key it is in
         		 for(int playerID: PlayerPicks.get(leagueID).get(userID).keySet()) {
-        			 if(PlayerPicks.get(leagueID).get(userID).get(playerID)=="C") {
+        			 if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("C")) {
         				 //checks what the player's position is
         				 if(ctr) {
         					 ctr = false;
         					 playerC = playerID;
         				 }
         			 }
-        			 else if(PlayerPicks.get(leagueID).get(userID).get(playerID)=="PG") {
+        			 else if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("PG")) {
         				 //checks what the player's position is
         				 if(pg) {
         					 pg = false;
         					 playerPG = playerID;
         				 }
         			 }
-        			 else if(PlayerPicks.get(leagueID).get(userID).get(playerID)=="PF") {
+        			 else if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("PF")) {
         				 //checks what the player's position is
         				 if(pf) {
         					 pf = false;
         					 playerPF = playerID;
         				 }
         			 }
-        			 else if(PlayerPicks.get(leagueID).get(userID).get(playerID)=="SG") {
+        			 else if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("SG")) {
         				 //checks what the player's position is
         				 if(sg) {
         					 sg = false;
         					 playerSG = playerID;
         				 }
-        			 }else if(PlayerPicks.get(leagueID).get(userID).get(playerID)=="SF") {
+        			 }else if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("SF")) {
         				 //checks what the player's position is
         				 if(sf) {
         					 sf = false;
@@ -184,7 +184,7 @@ public class UserController {
         				 else {
         					 if(ctr) {
         						 ctr = false;
-        						 query = "UPDATE Teams(C) VALUES(?) WHERE userID=? AND leagueID=?";
+        						 query = "UPDATE Teams SET C=? WHERE userID=? AND leagueID=?";
             					 stmt = conn.prepareStatement(query);
             					 stmt.setInt( 1, playerID);
             					 stmt.setInt( 2, userID);
@@ -192,7 +192,7 @@ public class UserController {
         					 }
         					 else if(pg) {
         						 pg = false;
-        						 query = "UPDATE Teams(PG) VALUES(?) WHERE userID=? AND leagueID=?";
+        						 query = "UPDATE Teams SET PG=? WHERE userID=? AND leagueID=?";
             					 stmt = conn.prepareStatement(query);
             					 stmt.setInt( 1, playerID);
             					 stmt.setInt( 2, userID);
@@ -200,7 +200,7 @@ public class UserController {
         					 }
         					 else if(pf) {
         						 pf = false;
-        						 query = "UPDATE Teams(PF) VALUES(?) WHERE userID=? AND leagueID=?";
+        						 query = "UPDATE Teams SET PF=? WHERE userID=? AND leagueID=?";
             					 stmt = conn.prepareStatement(query);
             					 stmt.setInt( 1, playerID);
             					 stmt.setInt( 2, userID);
@@ -208,7 +208,7 @@ public class UserController {
         					 }
         					 else if(sg) {
         						 sg = false;
-        						 query = "UPDATE Teams(SG) VALUES(?) WHERE userID=? AND leagueID=?";
+        						 query = "UPDATE Teams SET SG=? WHERE userID=? AND leagueID=?";
             					 stmt = conn.prepareStatement(query);
             					 stmt.setInt( 1, playerID);
             					 stmt.setInt( 2, userID);
@@ -216,7 +216,7 @@ public class UserController {
         					 }
         					 else if(sf) {
         						 sf = false;
-        						 query = "UPDATE Teams(SF) VALUES(?) WHERE userID=? AND leagueID=?";
+        						 query = "UPDATE Teams SET SF=? WHERE userID=? AND leagueID=?";
             					 stmt = conn.prepareStatement(query);
             					 stmt.setInt( 1, playerID);
             					 stmt.setInt( 2, userID);
@@ -237,10 +237,13 @@ public class UserController {
 						 pos = false;
 					 }
         			 
-        			 
-                     stmt.executeUpdate();
-                     stmt = conn.prepareStatement("COMMIT");
-                     stmt.execute();
+        			 try {
+						 stmt.executeUpdate();
+						 stmt = conn.prepareStatement("COMMIT");
+						 stmt.execute();
+					 } catch (NullPointerException e){
+        			 	continue;
+					 }
                      
                     // stmt = conn.prepareStatement(query);
                     // stmt.setInt();
@@ -275,6 +278,7 @@ public class UserController {
         	 return new ResponseEntity<>("{\"message\":\"Finished The Draft\"}", responseHeaders, HttpStatus.OK);
         	 }
          catch(SQLException e){
+         	e.printStackTrace();
         	 return new ResponseEntity<>("{\"message\":\"issue with pushing to MQSQL\"}", responseHeaders, HttpStatus.BAD_REQUEST);
          }
     }
