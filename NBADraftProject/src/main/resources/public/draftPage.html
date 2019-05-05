@@ -34,7 +34,7 @@
 	</tr>
 	</thead>
 	<tbody>
-
+		<tb> </tb>
 	</tbody>
 </table>
 </div>
@@ -112,9 +112,16 @@
 			});
 	}
 </script>
+
 <script>
 		function Click(buttonID){
 			var obj = {};
+			
+			if(){
+			
+			}
+			else{
+			
 			obj.userID=sessionStorage.getItem("userID");
 			obj.leagueID=sessionStorage.getItem("leagueID");
 			obj.playerID=buttonID;
@@ -149,9 +156,10 @@
 			.fail(function(data) {
 	        	alert("Failed to load data.");
 	    	});
-		}
+		}}
 		
 </script>
+
 <script>
 function displayWallet(){
 	var obj = {};
@@ -171,13 +179,14 @@ function displayWallet(){
 			$.each(props, function(i, prop){
 				$('<td>').html(data[prop]).appendTo(tr);
 			});
-			tbody.append(tr);
+			//tbody.replace;
+			tbody.val(tr);
 		});
 	})
 	.fail(function(data){
 		alert("wallet failed to load");
 	});
-}
+} 
 </script>
 </body>
 </html>
