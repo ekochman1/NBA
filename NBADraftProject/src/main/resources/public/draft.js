@@ -47,12 +47,21 @@ function sendDraft(playerRankOverall, name) {
             sender: username,
             pick: playerRankOverall,
             player: name,
-            type: 'DRAFT',
-            lid: leagueID
+            type: 'DRAFT'
         };
         stompClient.send('/app/draft.sendPick.'+leagueID, {}, JSON.stringify(draftPick));
     }
 }
+
+function endDraft(){
+    if (stompClient) {
+        var draftMessage = {
+            sender: username,
+            pick: -1,
+            player: "",
+            type: 'DONE'
+        };
+        stompClient.send('/app/draft.sendPick.'+leagueID, {}, JSON.stringify(draftMessage))}
 
 function sendDraftMessage(event) {
     var messageContent = messageInput.value.trim();

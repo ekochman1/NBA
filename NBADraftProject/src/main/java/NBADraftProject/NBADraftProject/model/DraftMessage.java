@@ -4,7 +4,6 @@ public class DraftMessage {
 	private MessageType type;
 	private String pick;
 	private String sender;
-	private int lid;
 	private String name;
 
 	public enum MessageType {
@@ -37,14 +36,6 @@ public class DraftMessage {
 
 	public void setSender(String sender) {
 		this.sender = sender;
-	}
-
-	public int getLid(){
-		return lid;
-	}
-
-	public void setLid(int lid){
-		this.lid = lid;
 	}
 
 	public String getName() { return this.name; }
