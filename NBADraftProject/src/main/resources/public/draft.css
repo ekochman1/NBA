@@ -306,7 +306,7 @@ html,body {
 
 body {
     margin: 0;
-    padding: 0;
+    padding: 10px 10px 10px 10px;
     font-weight: 400;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 1rem;
@@ -413,11 +413,6 @@ button.accent {
     margin: 0 auto;
     margin-top: -160px;
 }
-
-.username-page-container .username-submit {
-    margin-top: 10px;
-}
-
 
 #chat-page {
     position: relative;
@@ -689,7 +684,7 @@ button.accent {
 
    body {
        margin: 0;
-       padding: 0;
+       padding: 10px 10px 10px 10px;
        font-weight: 400;
        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
        font-size: 1rem;
@@ -812,7 +807,7 @@ button.accent {
    .chat-container {
        width: 300px;
        background-color: rgba(195, 186, 190, 0.8);
-       box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
+       box-shadow: 0 1px 1px rgba(0, 0, 0, 0.27);
        margin-top: 30px;
        max-height: 275px;
        /* position: relative; */
@@ -1061,5 +1056,9 @@ button.accent {
        }
    }
 
-
+element.style {
+    position: absolute;
+    left: 950px;
+    top: 50px;
+}
 
