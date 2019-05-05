@@ -60,6 +60,18 @@ function sendDraft(playerRankOverall, name) {
     }
 }
 
+function startDraft() {
+    if (stompClient) {
+        var draftMessage = {
+            sender: username;
+            pick: -1,
+            player: "",
+            type: 'START'
+        };
+        stompClient.send('/app/draft.sendPick.'+leagueID, {}, JSON.stringify(draftMessage));
+    }
+}
+
 function endDraft(){
     if (stompClient) {
         var draftMessage = {
@@ -102,7 +114,10 @@ function onMessageReceived(payload) {
 
         consoleArea.appendChild(messageElement);
         consoleArea.scrollTop = messageArea.scrollHeight;
-    } else if (message.type === 'LEAVE') {
+    } else if (message.type === 'START') {
+        draftQuery()
+        alert("The draft is starting!");
+    }else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' left!';
         var textElement = document.createElement('p');
@@ -163,3 +178,26 @@ function getAvatarColor(messageSender) {
 }
 
 messageForm.addEventListener('submit', sendDraftMessage, true)
+
+function draftQuery(){
+	var obj = {};
+	obj.leagueID = sessionStorage.getItem("leagueID");
+	$.ajax({
+		type: 'GET',						//get data from server to the client
+		url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/createDraft?leagueID='+obj.leagueID,	//want to get info from here, it's in a JSONObject
+	})
+	.done(function(data) {
+		document.getElementById("draftTable").style.display="block";
+		var tbody = $('#draftTable tbody'), props = ["name", "position", "teamCode", "playerRankOverall", "playerRankPos", "salary", "playerID"];
+	    $.each(data, function(i, data) {
+		    var tr = $('<tr id="'+data["playerRankOverall"]+'"><td class="nr">' + '<button type="button" id="'+data["playerID"]+'" class="use-address" onclick="Click(this.id)">Draft</button>' + '</td></tr>');
+		        $.each(props, function(i, prop) {
+		            $('<td>').html(data[prop]).appendTo(tr);
+		        });
+		    tbody.append(tr);
+	    });
+	})
+	.fail(function(data) {
+	    alert("Failed to load data.");
+    });
+}

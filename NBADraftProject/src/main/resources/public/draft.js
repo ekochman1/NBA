@@ -63,7 +63,7 @@ function sendDraft(playerRankOverall, name) {
 function startDraft() {
     if (stompClient) {
         var draftMessage = {
-            sender: username;
+            sender: username,
             pick: -1,
             player: "",
             type: 'START'
