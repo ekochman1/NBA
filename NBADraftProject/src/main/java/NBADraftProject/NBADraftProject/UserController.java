@@ -34,7 +34,7 @@ public class UserController {
     private static HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>> PlayerPicks = new HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>();
     private static HashMap<Integer, Integer> DraftCount = new HashMap<Integer, Integer>();
     private static HashMap<Integer, Integer> UserCount = new HashMap<Integer, Integer>();
-    private static HashMap<Integer, ArrayList> DraftOrder = new HashMap<>();
+    //private static HashMap<Integer, ArrayList> DraftOrder = new HashMap<>();
 
     //same logic behind databases, imagine the wallet system, but you only have 5 dollars and you get charged 3 dollars at the same time, in theory you are capable to handling each one individually
     //but not both
@@ -46,7 +46,7 @@ public class UserController {
     	 JSONObject payloadObj = new JSONObject(payload);
          int leagueID = payloadObj.getInt("leagueID");
          String query = null;
-         //int userID = payloadObj.getInt("leagueID");
+        //int userID = payloadObj.getInt("userID");
          int playerC = 0;
          int playerPF = 0;
          int playerPG = 0;
@@ -112,99 +112,129 @@ public class UserController {
         				 }
         			 }  
         			 if(!ctr && !pg && !pf && !sf && !sg) {
-        				 query = "INSERT INTO Teams(C, PG, PF, SG, SF) VALUES(?, ?, ?, ?, ?)";
+        				 query = "UPDATE Teams(C, PG, PF, SG, SF) VALUES(?, ?, ?, ?, ?) WHERE userID=? AND leagueID=?";
         				 stmt = conn.prepareStatement(query);
         				 stmt.setInt( 1, playerC);
         				 stmt.setInt( 2, playerPG);
         				 stmt.setInt( 3, playerPF);
         				 stmt.setInt( 4, playerSG);
         				 stmt.setInt( 5, playerSF);
+        				 stmt.setInt( 6, userID);
+        				 stmt.setInt( 7, leagueID);
         			 }
         			 else {
         				 if(sub1) {
         					 sub1 = false;
-        					 query = "INSERT INTO TEAMS(sub1) VALUES(?)";
+        					 query = "UPDATE Teams(sub1) VALUES(?) WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
+        					 stmt.setInt( 2, userID);
+            				 stmt.setInt( 3, leagueID);
         				 }
         				 else if(sub2) {
         					 sub2 = false;
-        					 query = "INSERT INTO TEAMS(sub2) VALUES(?)";
+        					 query = "UPDATE Teams(sub2) VALUES(?) WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
+        					 stmt.setInt( 2, userID);
+            				 stmt.setInt( 3, leagueID);
         				 }
         				 else if(sub3) {
         					 sub3 = false;
-        					 query = "INSERT INTO TEAMS(sub3) VALUES(?)";
+        					 query = "UPDATE Teams(sub3) VALUES(?) WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
+        					 stmt.setInt( 2, userID);
+            				 stmt.setInt( 3, leagueID);
         				 }
         				 else if(sub4) {
         					 sub4 = false;
-        					 query = "INSERT INTO TEAMS(sub4) VALUES(?)";
+        					 query = "UPDATE Teams(sub4) VALUES(?) WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
+        					 stmt.setInt( 2, userID);
+            				 stmt.setInt( 3, leagueID);
         				 }
         				 else if(sub5) {
         					 sub5 = false;
-        					 query = "INSERT INTO TEAMS(sub5) VALUES(?)";
+        					 query = "UPDATE Teams(sub5) VALUES(?) WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
+        					 stmt.setInt( 2, userID);
+            				 stmt.setInt( 3, leagueID);
         				 }
         				 else if(sub6) {
         					 sub6 = false;
-        					 query = "INSERT INTO TEAMS(sub6) VALUES(?)";
+        					 query = "UPDATE Teams(sub6) VALUES(?) WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
+        					 stmt.setInt( 2, userID);
+            				 stmt.setInt( 3, leagueID);
         				 }
         				 else if(sub7) {
         					 sub7 = false;
-        					 query = "INSERT INTO TEAMS(sub7) VALUES(?)";
+        					 query = "UPDATE Teams(sub7) VALUES(?) WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
+        					 stmt.setInt( 2, userID);
+            				 stmt.setInt( 3, leagueID);
         				 }
         				 else if(sub8) {
         					 sub8 = false;
-        					 query = "INSERT INTO TEAMS(sub8) VALUES(?)";
+        					 query = "UPDATE Teams(sub8) VALUES(?) WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
+        					 stmt.setInt( 2, userID);
+            				 stmt.setInt( 3, leagueID);
         				 }
         				 else if(sub9) {
         					 sub9 = false;
-        					 query = "INSERT INTO TEAMS(sub9) VALUES(?)";
+        					 query = "UPDATE Teams(sub9) VALUES(?) WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
+        					 stmt.setInt( 2, userID);
+            				 stmt.setInt( 3, leagueID);
         				 }
         				 else {
         					 if(ctr) {
         						 ctr = false;
-        						 query = "INSERT INTO TEAMS(C) VALUES(?)";
+        						 query = "UPDATE Teams(C) VALUES(?) WHERE userID=? AND leagueID=?";
             					 stmt = conn.prepareStatement(query);
             					 stmt.setInt( 1, playerID);
+            					 stmt.setInt( 2, userID);
+                				 stmt.setInt( 3, leagueID);
         					 }
         					 else if(pg) {
         						 pg = false;
-        						 query = "INSERT INTO TEAMS(PG) VALUES(?)";
+        						 query = "UPDATE Teams(PG) VALUES(?) WHERE userID=? AND leagueID=?";
             					 stmt = conn.prepareStatement(query);
             					 stmt.setInt( 1, playerID);
+            					 stmt.setInt( 2, userID);
+                				 stmt.setInt( 3, leagueID);
         					 }
         					 else if(pf) {
         						 pf = false;
-        						 query = "INSERT INTO TEAMS(PF) VALUES(?)";
+        						 query = "UPDATE Teams(PF) VALUES(?) WHERE userID=? AND leagueID=?";
             					 stmt = conn.prepareStatement(query);
             					 stmt.setInt( 1, playerID);
+            					 stmt.setInt( 2, userID);
+                				 stmt.setInt( 3, leagueID);
         					 }
         					 else if(sg) {
         						 sg = false;
-        						 query = "INSERT INTO TEAMS(SG) VALUES(?)";
+        						 query = "UPDATE Teams(SG) VALUES(?) WHERE userID=? AND leagueID=?";
             					 stmt = conn.prepareStatement(query);
             					 stmt.setInt( 1, playerID);
+            					 stmt.setInt( 2, userID);
+                				 stmt.setInt( 3, leagueID);
         					 }
         					 else if(sf) {
         						 sf = false;
-        						 query = "INSERT INTO TEAMS(SF) VALUES(?)";
+        						 query = "UPDATE Teams(SF) VALUES(?) WHERE userID=? AND leagueID=?";
             					 stmt = conn.prepareStatement(query);
             					 stmt.setInt( 1, playerID);
+            					 stmt.setInt( 2, userID);
+                				 stmt.setInt( 3, leagueID);
         					 }
         				 }
         			 }
@@ -254,12 +284,13 @@ public class UserController {
     public ResponseEntity<String> checkIfReady(@RequestBody String payload, HttpServletRequest request) {
     	JSONObject payloadObj = new JSONObject(payload);
     	int leagueID = payloadObj.getInt("leagueID");
-        int userID = payloadObj.getInt("userID");
+        String username = payloadObj.getString("userName");
         JSONObject obj = new JSONObject();
-
-        if (DraftOrder.containsKey(leagueID)){
-        	DraftOrder.get(leagueID).add(userID);
-		}
+        ArrayList<String> order = new ArrayList<>(); 
+        
+        order.add(username);
+        
+        
         
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
