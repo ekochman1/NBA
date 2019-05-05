@@ -75,7 +75,9 @@ public class UserController {
 			 PreparedStatement stmt = null;
         	 for(int userID: PlayerPicks.get(leagueID).keySet()) {//as it transverses the users, have it transverse for each loop, userID is equal to the current key it is in
         		 for(int playerID: PlayerPicks.get(leagueID).get(userID).keySet()) {
-        			 if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("C")) {
+        			 stmt = conn.prepareStatement("START TRANSACTION");
+        			 stmt.execute();
+        		 	if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("C")) {
         				 //checks what the player's position is
         				 if(ctr) {
         					 ctr = false;
@@ -239,11 +241,13 @@ public class UserController {
         			 
         			 try {
 						 stmt.executeUpdate();
+					 } catch (NullPointerException e){
 						 stmt = conn.prepareStatement("COMMIT");
 						 stmt.execute();
-					 } catch (NullPointerException e){
         			 	continue;
 					 }
+					 stmt = conn.prepareStatement("COMMIT");
+					 stmt.execute();
                      
                     // stmt = conn.prepareStatement(query);
                     // stmt.setInt();
@@ -273,7 +277,15 @@ public class UserController {
                  sub6 = true;
                  sub7 = true;
                  sub8 = true;
-                 sub9 = true;	 
+                 sub9 = true;
+                 stmt = conn.prepareStatement("START TRANSACTION");
+                 stmt.execute();
+                 stmt = conn.prepareStatement("UPDATE Teams SET wallet = ? WHERE userID = ?");
+                 stmt.setDouble(1, MasterWallet.get(leagueID).get(userID));
+                 stmt.setInt(2, userID);
+                 stmt.executeUpdate();
+                 stmt = conn.prepareStatement("COMMIT");
+                 stmt.execute();
         	 }
         	 return new ResponseEntity<>("{\"message\":\"Finished The Draft\"}", responseHeaders, HttpStatus.OK);
         	 }
@@ -425,6 +437,7 @@ public class UserController {
               while(rs.next()) {
               	  leagueID = rs.getInt("leagueID");
               }
+              System.out.println(leagueID);
               
               int count = maxTeam*14;
               
