@@ -83,7 +83,7 @@ function onMessageReceived(payload) {
     } else if (message.type === 'DRAFT'){
         document.getElementById(message.pick).remove();
         messageElement.classList.add('event-message');
-        message.content = message.sender + ' drafted ' + message.name;
+        message.content = message.sender + ' drafted ' + message.player;
     } else {
         messageElement.classList.add('chat-message');
 

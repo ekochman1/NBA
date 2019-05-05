@@ -9,11 +9,11 @@ body {
     position: relative;
     z-index: 1;
     background: rgba(195, 186, 190, 0.8);
-    max-width: 900px;
+    max-width: 1500px;
     margin: 300px 300px 300px 300px;
     margin-top: 50px;
     margin-bottom: 100px;
-    padding:30px 30px 30px 130px;
+    padding:30px 30px 30px 62px;
 
 
 }
