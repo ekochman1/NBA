@@ -10,6 +10,8 @@ Access the http address from Google Chrome:
 
 http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com
 
+# using the application
+
 Register a user, create a league and then start drafting;
 
 The draft will begin when the Maximum amount of users are currently in the same drafting page, 
