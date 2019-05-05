@@ -19,9 +19,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.concurrent.Semaphore;
+import java.util.List;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -32,7 +32,8 @@ public class UserController {
     private static JSONArray MasterJSON = new JSONArray();
     private static HashMap<Integer, HashMap<Integer, Double>> MasterWallet = new HashMap<Integer, HashMap<Integer, Double>>();
     private static HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>> PlayerPicks = new HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>();
-    private static Semaphore walletSemaphore = new Semaphore(1);
+    private static HashMap<Integer, Integer> DraftCount = new HashMap<Integer, Integer>();
+    private static HashMap<Integer, Integer> UserCount = new HashMap<Integer, Integer>();
 
     //same logic behind databases, imagine the wallet system, but you only have 5 dollars and you get charged 3 dollars at the same time, in theory you are capable to handling each one individually
     //but not both
@@ -173,6 +174,38 @@ public class UserController {
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
         				 }
+        				 else {
+        					 if(ctr) {
+        						 ctr = false;
+        						 query = "INSERT INTO TEAMS(C) VALUES(?)";
+            					 stmt = conn.prepareStatement(query);
+            					 stmt.setInt( 1, playerID);
+        					 }
+        					 else if(pg) {
+        						 pg = false;
+        						 query = "INSERT INTO TEAMS(PG) VALUES(?)";
+            					 stmt = conn.prepareStatement(query);
+            					 stmt.setInt( 1, playerID);
+        					 }
+        					 else if(pf) {
+        						 pf = false;
+        						 query = "INSERT INTO TEAMS(PF) VALUES(?)";
+            					 stmt = conn.prepareStatement(query);
+            					 stmt.setInt( 1, playerID);
+        					 }
+        					 else if(sg) {
+        						 sg = false;
+        						 query = "INSERT INTO TEAMS(SG) VALUES(?)";
+            					 stmt = conn.prepareStatement(query);
+            					 stmt.setInt( 1, playerID);
+        					 }
+        					 else if(sf) {
+        						 sf = false;
+        						 query = "INSERT INTO TEAMS(SF) VALUES(?)";
+            					 stmt = conn.prepareStatement(query);
+            					 stmt.setInt( 1, playerID);
+        					 }
+        				 }
         			 }
         			 
         			 
@@ -216,6 +249,35 @@ public class UserController {
          }
     }
 
+    @RequestMapping(value = "/checkIfReady", method = RequestMethod.POST)
+    public ResponseEntity<String> checkIfReady(@RequestBody String payload, HttpServletRequest request) {
+    	JSONObject payloadObj = new JSONObject(payload);
+    	int leagueID = payloadObj.getInt("leagueID");
+        int userID = payloadObj.getInt("userID");
+        JSONObject obj = new JSONObject();
+        
+        ArrayList<Integer> order = new ArrayList<Integer>();
+        order.add(userID);
+        
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+        
+        UserCount.put(leagueID, UserCount.get(leagueID)-1);
+        if(UserCount.get(leagueID)==0) {
+        	Collections.shuffle(order); 
+        	obj.put("message", "Ready");
+        	obj.put("order", order);
+        	return new ResponseEntity<>(obj.toString(), responseHeaders, HttpStatus.OK);
+        }
+        else {
+        	return new ResponseEntity<>("{\"message\":\"Still waiting for: "+UserCount.get(leagueID)+" players\"}", responseHeaders, HttpStatus.OK);
+        }
+    	
+    	
+        
+    }
+    
+    
     @RequestMapping(value = "/createTeam", method = RequestMethod.POST)
     public ResponseEntity<String> createTeam(@RequestBody String payload, HttpServletRequest request) {
         JSONObject payloadObj = new JSONObject(payload);
@@ -232,11 +294,15 @@ public class UserController {
 
         try{
         	Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String query = "SELECT userID, Teams.leagueID, leagueAllocation FROM Teams, League WHERE Teams.leagueID = League.leagueID";
+            String query = "SELECT userID, Teams.leagueID, leagueAllocation, numTeams, maxTeam FROM Teams, League WHERE Teams.leagueID = League.leagueID";
             PreparedStatement stmt = conn.prepareStatement(query);
            // stmt.setInt(1, userID);
            // stmt.setInt(2, leagueID);
             ResultSet rs = stmt.executeQuery();
+            if(rs.getInt("numTeams")>=rs.getInt("maxTeam")) {
+            	responseObj.put("message", "This league is already full");
+                return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
+            }
             while (rs.next()) {
                 if (rs.getInt("userID") == userID && rs.getInt("leagueID")== leagueID){
                 responseObj.put("message", "You already have a team in this league.");
@@ -244,17 +310,10 @@ public class UserController {
                 }
                  wallet = rs.getDouble("leagueAllocation");
             }
-
-            try{
-				walletSemaphore.acquire();
-            	HashMap<Integer, Double> tempMap = MasterWallet.get(leagueID);
-            	tempMap.put(userID, wallet);
-				MasterWallet.put(leagueID, tempMap);
-				walletSemaphore.release();
-			} catch (InterruptedException e){
-            	e.printStackTrace();
-
-			}
+            
+            HashMap<Integer, Double> tempMap = MasterWallet.get(leagueID);
+            tempMap.put(userID, wallet);
+            MasterWallet.put(leagueID, tempMap);
             
             query = "START TRANSACTION";
             stmt = conn.prepareStatement(query);
@@ -290,6 +349,7 @@ public class UserController {
           int maxTeam = payloadObj.getInt("maxTeam");
           Double leagueAllocation = payloadObj.getDouble("leagueAllocation");
           String teamName = payloadObj.getString("teamName");
+                   
           
           HttpHeaders responseHeaders = new HttpHeaders();
           responseHeaders.set("Content-Type", "application/json");
@@ -325,14 +385,20 @@ public class UserController {
             		  return new ResponseEntity<>("{\"message\":\"issue with pushing to MQSQL\"}", responseHeaders, HttpStatus.BAD_REQUEST);
             	  }
               }
+              
+              int count = maxTeam*14;
+              
+              DraftCount.put(leagueID, count);
+              UserCount.put(leagueID, 14);
 
               stmt = conn.prepareStatement(transactionQuery);
               stmt.execute();
-              query = "INSERT INTO Teams(userID, leagueID, teamName) VALUES (?, ?, ?)";
+              query = "INSERT INTO Teams(userID, leagueID, teamName, wallet) VALUES (?, ?, ?, ?)";
               stmt = conn.prepareStatement(query);
               stmt.setInt(1, userID);
               stmt.setInt(2, leagueID);
               stmt.setString(3, teamName);
+              stmt.setDouble(4, leagueAllocation);
               stmt.executeUpdate();
               stmt = conn.prepareStatement("COMMIT");
               stmt.execute();
@@ -343,13 +409,7 @@ public class UserController {
 
 			  HashMap<Integer, Double> tempMap = new HashMap<Integer, Double>();
 			  tempMap.put(userID, leagueAllocation);
-			  try {
-			  	walletSemaphore.acquire();
-			  	MasterWallet.put(leagueID, tempMap);
-			  	walletSemaphore.release();
-			  } catch (InterruptedException e){
-			  	e.printStackTrace();
-			  }
+			  MasterWallet.put(leagueID, tempMap);
 
               return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
           }
@@ -468,11 +528,9 @@ public class UserController {
         responseHeaders.set("Content-Type", "application/json");
 		JSONObject obj = new JSONObject();
         try {
-        	walletSemaphore.acquire();
         	obj.put("wallet", MasterWallet.get(leagueID).get(userID));
-        	walletSemaphore.release();
         	return new ResponseEntity<>(obj.toString(), responseHeaders, HttpStatus.OK);
-		} catch (NullPointerException|InterruptedException e){
+		} catch (NullPointerException e){
         	e.printStackTrace();
 			obj.put("message", "Wallet not Found");
 			return new ResponseEntity<>(obj.toString(), responseHeaders, HttpStatus.OK);
@@ -486,36 +544,24 @@ public class UserController {
         int userID = payloadObj.getInt("userID");
         int leagueID = payloadObj.getInt("leagueID");
         int PlayerID = payloadObj.getInt("playerID");
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set("Content-Type", "application/json");
-		Double wallet;
-        try {
-        	walletSemaphore.acquire();
-			wallet = MasterWallet.get(leagueID).get(userID);
-			walletSemaphore.release();
-		} catch (InterruptedException e){
-        	e.printStackTrace();
-        	return new ResponseEntity<>("\"message\":\"error in retrieving wallet\"", responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		Double wallet = MasterWallet.get(leagueID).get(userID);
         
 		
 		
         JSONObject obj = new JSONObject();
         //JSONObject draftedPlayer = new JSONObject();
+        
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+
+
         for (int i = 0; i < MasterJSON.length(); i++) {
             if (MasterJSON.getJSONObject(i).getInt("playerID") == PlayerID) {
                     	if (MasterJSON.getJSONObject(i).getDouble("salary") > wallet) {
                     		return new ResponseEntity<>("{\"message\":\"You cannot afford to draft this player\"}", responseHeaders, HttpStatus.OK);
                     	}
                     	wallet = wallet - MasterJSON.getJSONObject(i).getDouble("salary");
-                    	try {
-                            walletSemaphore.acquire();
-                            MasterWallet.get(leagueID).put(userID, wallet);
-                            walletSemaphore.release();
-                        } catch (InterruptedException e){
-                    	    e.printStackTrace();
-                    	    return new ResponseEntity<>("{\"message\":\"card declined\"", responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
-                        }
+						MasterWallet.get(leagueID).put(userID, wallet);
 						
 						
 						String position = MasterJSON.getJSONObject(i).getString("position");
@@ -535,6 +581,11 @@ public class UserController {
                     	break;
                     }
         }
+        DraftCount.put(leagueID, DraftCount.get(leagueID)-1);
+        if(DraftCount.get(leagueID)==0) {
+        	obj.put("finish_trigger", leagueID);
+        }
+        
         return new ResponseEntity<>(obj.toString(), responseHeaders, HttpStatus.OK); // MAKE SURE THAT WHEN THIS RETURNS THE OK STATUS, IT BROADCASTS THE NEW JSON OBJECT
     }
 
