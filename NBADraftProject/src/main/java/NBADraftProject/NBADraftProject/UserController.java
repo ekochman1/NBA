@@ -37,54 +37,184 @@ public class UserController {
     //same logic behind databases, imagine the wallet system, but you only have 5 dollars and you get charged 3 dollars at the same time, in theory you are capable to handling each one individually
     //but not both
 
-    /*
+    
     
     @RequestMapping(value = "/finishDraft", method = RequestMethod.POST)
     public ResponseEntity<String> finishDraft(@RequestBody String payload){
     	 JSONObject payloadObj = new JSONObject(payload);
          int leagueID = payloadObj.getInt("leagueID");
+         String query = null;
          //int userID = payloadObj.getInt("leagueID");
-         //boolean ctr = true;
-         //boolean pf = true;
-         //boolean pg = true;
-         //boolean sg = true;
-         //boolean sf = true;
+         int playerC = 0;
+         int playerPF = 0;
+         int playerPG = 0;
+         int playerSG = 0;
+         int playerSF = 0;
          
+         boolean ctr = true;
+         boolean pf = true;
+         boolean pg = true;
+         boolean sg = true;
+         boolean sf = true;
+         
+         boolean sub1 = true;
+         boolean sub2 = true;
+         boolean sub3 = true;
+         boolean sub4 = true;
+         boolean sub5 = true;
+         boolean sub6 = true;
+         boolean sub7 = true;
+         boolean sub8 = true;
+         boolean sub9 = true;
+         
+         HttpHeaders responseHeaders = new HttpHeaders();
+         responseHeaders.set("Content-Type", "application/json");
          
          try {
+        	 Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
+			 PreparedStatement stmt = null;
         	 for(int userID: PlayerPicks.get(leagueID).keySet()) {//as it transverses the users, have it transverse for each loop, userID is equal to the current key it is in
         		 for(int playerID: PlayerPicks.get(leagueID).get(userID).keySet()) {
-        			 Connection conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-                     String transactionQuery = "START TRANSACTION";
-                     PreparedStatement stmt = null;
-                     stmt = conn.prepareStatement(transactionQuery);
-                     stmt.execute();
-                     String query = "INSERT INTO Teams(leagueName, maxTeam, leagueAllocation, leagueCom) VALUES (?, ?, ?, ?)";
-                     
-                     stmt = conn.prepareStatement(query);
-                    // stmt.setInt();
-                    // stmt.setInt();
-                    // stmt.setInt();
-                    // stmt.setInt();
-                     
+        			 if(PlayerPicks.get(leagueID).get(userID).get(playerID)=="C") {
+        				 //checks what the player's position is
+        				 if(ctr) {
+        					 ctr = false;
+        					 playerC = playerID;
+        				 }
+        			 }
+        			 else if(PlayerPicks.get(leagueID).get(userID).get(playerID)=="PG") {
+        				 //checks what the player's position is
+        				 if(pg) {
+        					 pg = false;
+        					 playerPG = playerID;
+        				 }
+        			 }
+        			 else if(PlayerPicks.get(leagueID).get(userID).get(playerID)=="PF") {
+        				 //checks what the player's position is
+        				 if(pf) {
+        					 pf = false;
+        					 playerPF = playerID;
+        				 }
+        			 }
+        			 else if(PlayerPicks.get(leagueID).get(userID).get(playerID)=="SG") {
+        				 //checks what the player's position is
+        				 if(sg) {
+        					 sg = false;
+        					 playerSG = playerID;
+        				 }
+        			 }else if(PlayerPicks.get(leagueID).get(userID).get(playerID)=="SF") {
+        				 //checks what the player's position is
+        				 if(sf) {
+        					 sf = false;
+        					 playerSF = playerID;
+        				 }
+        			 }  
+        			 if(!ctr && !pg && !pf && !sf && !sg) {
+        				 query = "INSERT INTO Teams(C, PG, PF, SG, SF) VALUES(?, ?, ?, ?, ?)";
+        				 stmt = conn.prepareStatement(query);
+        				 stmt.setInt( 1, playerC);
+        				 stmt.setInt( 2, playerPG);
+        				 stmt.setInt( 3, playerPF);
+        				 stmt.setInt( 4, playerSG);
+        				 stmt.setInt( 5, playerSF);
+        			 }
+        			 else {
+        				 if(sub1) {
+        					 sub1 = false;
+        					 query = "INSERT INTO TEAMS(sub1) VALUES(?)";
+        					 stmt = conn.prepareStatement(query);
+        					 stmt.setInt( 1, playerID);
+        				 }
+        				 else if(sub2) {
+        					 sub2 = false;
+        					 query = "INSERT INTO TEAMS(sub2) VALUES(?)";
+        					 stmt = conn.prepareStatement(query);
+        					 stmt.setInt( 1, playerID);
+        				 }
+        				 else if(sub3) {
+        					 sub3 = false;
+        					 query = "INSERT INTO TEAMS(sub3) VALUES(?)";
+        					 stmt = conn.prepareStatement(query);
+        					 stmt.setInt( 1, playerID);
+        				 }
+        				 else if(sub4) {
+        					 sub4 = false;
+        					 query = "INSERT INTO TEAMS(sub4) VALUES(?)";
+        					 stmt = conn.prepareStatement(query);
+        					 stmt.setInt( 1, playerID);
+        				 }
+        				 else if(sub5) {
+        					 sub5 = false;
+        					 query = "INSERT INTO TEAMS(sub5) VALUES(?)";
+        					 stmt = conn.prepareStatement(query);
+        					 stmt.setInt( 1, playerID);
+        				 }
+        				 else if(sub6) {
+        					 sub6 = false;
+        					 query = "INSERT INTO TEAMS(sub6) VALUES(?)";
+        					 stmt = conn.prepareStatement(query);
+        					 stmt.setInt( 1, playerID);
+        				 }
+        				 else if(sub7) {
+        					 sub7 = false;
+        					 query = "INSERT INTO TEAMS(sub7) VALUES(?)";
+        					 stmt = conn.prepareStatement(query);
+        					 stmt.setInt( 1, playerID);
+        				 }
+        				 else if(sub8) {
+        					 sub8 = false;
+        					 query = "INSERT INTO TEAMS(sub8) VALUES(?)";
+        					 stmt = conn.prepareStatement(query);
+        					 stmt.setInt( 1, playerID);
+        				 }
+        				 else if(sub9) {
+        					 sub9 = false;
+        					 query = "INSERT INTO TEAMS(sub9) VALUES(?)";
+        					 stmt = conn.prepareStatement(query);
+        					 stmt.setInt( 1, playerID);
+        				 }
+        			 }
+        			 
+        			 
                      stmt.executeUpdate();
                      stmt = conn.prepareStatement("COMMIT");
                      stmt.execute();
+                     
+                    // stmt = conn.prepareStatement(query);
+                    // stmt.setInt();
+                    // stmt.setInt();
+                    // stmt.setInt();
+                    // stmt.setInt();
                 	 
         		 }
-        		 
+        		 playerC = 0;
+                 playerPF = 0;
+                 playerPG = 0;
+                 playerSG = 0;
+                 playerSF = 0;
+                 
+                 ctr = true;
+                 pf = true;
+                 pg = true;
+                 sg = true;
+                 sf = true;
+                 
+                 sub1 = true;
+                 sub2 = true;
+                 sub3 = true;
+                 sub4 = true;
+                 sub5 = true;
+                 sub6 = true;
+                 sub7 = true;
+                 sub8 = true;
+                 sub9 = true;	 
         	 }
-        	 
-        	 
-        	 
-        	 
-         }
+        	 return new ResponseEntity<>("{\"message\":\"Finished The Draft\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+        	 }
          catch(SQLException e){
-        	 
+        	 return new ResponseEntity<>("{\"message\":\"issue with pushing to MQSQL\"}", responseHeaders, HttpStatus.BAD_REQUEST);
          }
     }
-    
-    */
 
     @RequestMapping(value = "/createTeam", method = RequestMethod.POST)
     public ResponseEntity<String> createTeam(@RequestBody String payload, HttpServletRequest request) {
