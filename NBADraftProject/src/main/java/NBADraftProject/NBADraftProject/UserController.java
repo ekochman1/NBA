@@ -261,8 +261,9 @@ public class UserController {
         
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
-        
-        UserCount.put(leagueID, UserCount.get(leagueID)-1);
+
+        int newUserCount = UserCount.get(leagueID) - 1;
+        UserCount.put(leagueID, newUserCount);
         if(UserCount.get(leagueID)==0) {
         	Collections.shuffle(order); 
         	obj.put("message", "Ready");
@@ -270,7 +271,7 @@ public class UserController {
         	return new ResponseEntity<>(obj.toString(), responseHeaders, HttpStatus.OK);
         }
         else {
-        	return new ResponseEntity<>("{\"message\":\"Still waiting for: "+UserCount.get(leagueID)+" players\"}", responseHeaders, HttpStatus.OK);
+        	return new ResponseEntity<>("{\"message\":\"Still waiting for: "+newUserCount+" players\"}", responseHeaders, HttpStatus.OK);
         }
     	
     	
