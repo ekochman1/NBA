@@ -42,7 +42,7 @@ table {
     border-collapse: collapse;
     font-size: 0.9rem;
     margin: 10px 20px 20px 0px;
-
+    position: absolute;
 }
 
 td, th {
@@ -810,7 +810,7 @@ button.accent {
       }
 
    .chat-container {
-       width: 550px;
+       width: 375px;
        background-color: rgba(195, 186, 190, 0.8);
        box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
        margin-top: 30px;
