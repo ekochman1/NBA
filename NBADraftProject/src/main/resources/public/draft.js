@@ -2,11 +2,14 @@ var stompClient = null;
 var username = null;
 var leagueID = null;
 
-var chatPage = document.querySelector('#chat-page');
-var messageForm = document.querySelector('#messageForm');
+var chatPage = document.querySelector('#chat-page1');
+var consolePage = document.querySelector('#chat-page');
+var messageForm = document.querySelector('#messageForm1');
+var consoleForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector('#message');
-var messageArea = document.querySelector('#messageArea');
-var connectingElement = document.querySelector('.connecting');
+var messageArea = document.querySelector('#messageArea1');
+var consoleArea = document.querySelector('#messageArea');
+var connectingElement = document.querySelectorAll('.connecting');
 
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -28,11 +31,17 @@ function onConnectedLeague() {
     // Subscribe to the league chat
     stompClient.subscribe('/draft.'+leagueID, onMessageReceived);
 
+
     // Tell your username to the server
     stompClient.send('/app/chat.addUser.'+leagueID,
         {},
         JSON.stringify({sender: username, type: 'JOIN'})
     )
+
+    var i;
+    for (i = 0; i < connectingElement.length(); i++){
+        connectingElement[i].classList.add('hidden');
+    }
 }
 
 function onError(error) {
@@ -87,13 +96,36 @@ function onMessageReceived(payload) {
     if(message.type === 'JOIN') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' joined!';
+        var textElement = document.createElement('p');
+        var messageText = document.createTextNode(message.content);
+        textElement.appendChild(messageText);
+
+        messageElement.appendChild(textElement);
+
+        consoleArea.appendChild(messageElement);
+        consoleArea.scrollTop = messageArea.scrollHeight;
     } else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' left!';
+        var textElement = document.createElement('p');
+        var messageText = document.createTextNode(message.content);
+        textElement.appendChild(messageText);
+
+        messageElement.appendChild(textElement);
+        consoleArea.appendChild(messageElement);
+        consoleArea.scrollTop = messageArea.scrollHeight;
     } else if (message.type === 'DRAFT'){
         document.getElementById(message.pick).remove();
         messageElement.classList.add('event-message');
         message.content = message.sender + ' drafted ' + message.player;
+        var textElement = document.createElement('p');
+        var messageText = document.createTextNode(message.content);
+        textElement.appendChild(messageText);
+
+        messageElement.appendChild(textElement);
+
+        consoleArea.appendChild(messageElement);
+        consoleArea.scrollTop = messageArea.scrollHeight;
     } else if (message.type === 'DONE') {
         alert("Draft is completed");
         window.location = 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/homepage2.html';
@@ -111,16 +143,16 @@ function onMessageReceived(payload) {
         var usernameText = document.createTextNode(message.sender);
         usernameElement.appendChild(usernameText);
         messageElement.appendChild(usernameElement);
+
+        var textElement = document.createElement('p');
+        var messageText = document.createTextNode(message.content);
+        textElement.appendChild(messageText);
+
+        messageElement.appendChild(textElement);
+
+        messageArea.appendChild(messageElement);
+        messageArea.scrollTop = messageArea.scrollHeight;
     }
-
-    var textElement = document.createElement('p');
-    var messageText = document.createTextNode(message.content);
-    textElement.appendChild(messageText);
-
-    messageElement.appendChild(textElement);
-
-    messageArea.appendChild(messageElement);
-    messageArea.scrollTop = messageArea.scrollHeight;
 }
 
 function getAvatarColor(messageSender) {

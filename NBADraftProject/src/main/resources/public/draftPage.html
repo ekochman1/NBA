@@ -94,7 +94,7 @@
 				crossDomain: true
 			})
 			.done(function(data) { 
-				if(data.order!=){
+				if(data.order!=null){
 				alert(data.message);
 				}
 				else{
@@ -103,7 +103,7 @@
 			})
 			.fail(function(data) { 
 			alert("Failed to log you in.")
-			})
+			});
 	}
 </script>
 
@@ -153,19 +153,17 @@
 		.done(function(data) {
 				if(data.message != null)
 				{alert(data.message);
-				}
-				else if(data.finish_trigger != null){
-				var key = {};
-				key.leagueID=data.finish_trigger;				
-				$.ajax({
-				type: 'POST',						//get data from server to the client
-				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/draft',	//want to get info from here, it's in a JSONObject
-				data: JSON.stringify(key),
-				contentType: "application/json",
-				crossDomain: true
-			})
-			
-				}
+				} else if(data.finish_trigger != null){ 
+					var key = {}; 
+					key.leagueID=data.finish_trigger;				 
+					$.ajax({ 
+						type: 'POST',						//get data from server to the client 
+						url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/finishDraft',	//want to get info from here, it's in a JSONObject
+						data: JSON.stringify(key), 
+						contentType: "application/json", 
+						crossDomain: true 
+					})
+					.done(function(data){endDraft();});				}
 				else{
 				sendDraft(data.playerRankOverall, data.name);
 				}

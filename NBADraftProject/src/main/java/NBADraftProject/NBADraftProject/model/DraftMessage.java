@@ -4,7 +4,7 @@ public class DraftMessage {
 	private MessageType type;
 	private String pick;
 	private String sender;
-	private String name;
+	private String player;
 
 	public enum MessageType {
 		CHAT,
@@ -38,8 +38,8 @@ public class DraftMessage {
 		this.sender = sender;
 	}
 
-	public String getName() { return this.name; }
+	public String getPlayer() { return this.player; }
 
-	public void setName(String name) { this.name = name; }
+	public void setPlayer(String player) { this.player = player; }
 }
 
