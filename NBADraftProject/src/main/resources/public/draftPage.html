@@ -94,7 +94,7 @@
 				crossDomain: true
 			})
 			.done(function(data) { 
-				if(data.order!=){
+				if(data.order!=null){
 				alert(data.message);
 				}
 				else{
@@ -103,7 +103,7 @@
 			})
 			.fail(function(data) { 
 			alert("Failed to log you in.")
-			})
+			});
 	}
 </script>
 
