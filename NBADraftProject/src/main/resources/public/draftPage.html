@@ -59,6 +59,31 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
+<script> 
+		function checkIfReady(){ 
+		var obj = {} 
+		obj.userID = sessionStorage.getItem("userID"); 
+		obj.leagueID = sessionStorage.getItem("leagueID"); 
+		$.ajax({ 
+				type: 'POST',						//get data from server to the client 
+				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/checkIfReady',	//want to get info from here, it's in a JSONObject 
+				data: JSON.stringify(obj), 
+				contentType: "application/json", 
+				crossDomain: true 
+			}) 
+			.done(function(data) {  
+				if(data.order!=){ 
+				alert(data.message); 
+				} 
+				else{ 
+				alert(data.message); 
+				} 
+			}) 
+			.fail(function(data) {  
+			alert("Failed to log you in.") 
+			}) 
+	} 
+</script> 
 
 <script>
 		function draftQuery(){
@@ -105,7 +130,17 @@
 		.done(function(data) {
 				if(data.message != null)
 				{alert(data.message);
-				}
+				} else if(data.finish_trigger != null){ 
+					var key = {}; 
+					key.leagueID=data.finish_trigger;				 
+					$.ajax({ 
+						type: 'POST',						//get data from server to the client 
+						url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/finishDraft',	//want to get info from here, it's in a JSONObject
+						data: JSON.stringify(key), 
+						contentType: "application/json", 
+						crossDomain: true 
+					})
+					.done(function(data){endDraft();});				}
 				else{
 				sendDraft(data.playerRankOverall, data.name);
 				}

@@ -98,7 +98,6 @@ function onMessageReceived(payload) {
         alert("Draft is completed");
         window.location = 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/homepage2.html';
     } else {
-    }
         messageElement.classList.add('chat-message');
 
         var avatarElement = document.createElement('i');
