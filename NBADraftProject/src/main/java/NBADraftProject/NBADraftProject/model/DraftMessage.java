@@ -11,7 +11,8 @@ public class DraftMessage {
 		DRAFT,
 		JOIN,
 		LEAVE,
-		DONE
+		DONE,
+		START
 	}
 
 	public MessageType getType() {
