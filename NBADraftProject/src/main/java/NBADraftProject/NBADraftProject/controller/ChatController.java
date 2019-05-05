@@ -1,6 +1,8 @@
 package NBADraftProject.NBADraftProject.controller;
 
 import NBADraftProject.NBADraftProject.model.ChatMessage;
+import NBADraftProject.NBADraftProject.model.DraftMessage;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -9,16 +11,16 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class ChatController {
-    @MessageMapping("/{leagueID}/chat.sendMessage")
-    @SendTo("/draft/{leagueID}")
-    public ChatMessage sendDraftMessage(@Payload ChatMessage chatMessage) {
-        return chatMessage;
+    @MessageMapping("/{leagueID}/draft.sendMessage")
+	@SendTo("/draft/{leagueID}")
+    public DraftMessage sendDraftMessage(@DestinationVariable String leagueID, @Payload DraftMessage draftMessage) {
+        return draftMessage;
     }
 
     @MessageMapping("/{leagueID}/draft.sendPick")
     @SendTo("/draft/{leagueID}")
-    public ChatMessage sendDraftPick(@Payload ChatMessage chatMessage) {
-        return chatMessage;
+    public DraftMessage sendDraftPick(@DestinationVariable String leagueID, @Payload DraftMessage draftMessage) {
+    	return draftMessage;
     }
 
     @MessageMapping("/trash/chat.sendMessage")
@@ -30,7 +32,8 @@ public class ChatController {
     @MessageMapping("/{leagueID}/chat.addUser")
     @SendTo("/draft/{leagueID}")
     public ChatMessage addDraftUser(@Payload ChatMessage chatMessage,
-                               SimpMessageHeaderAccessor headerAccessor) {
+                               SimpMessageHeaderAccessor headerAccessor,
+									@DestinationVariable String leagueID) {
         // Add username in web socket session
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
         return chatMessage;

@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Semaphore;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -28,6 +29,7 @@ import org.json.JSONArray;
 public class UserController {
     private static ArrayList<JSONArray> MasterJSON = new ArrayList<>();
     private static HashMap<Integer, HashMap<Integer, Double>> MasterWallet = new HashMap<Integer, HashMap<Integer, Double>>();
+    private static Semaphore walletSemaphore = new Semaphore(1);
 
     //same logic behind databases, imagine the wallet system, but you only have 5 dollars and you get charged 3 dollars at the same time, in theory you are capable to handling each one individually
     //but not both
@@ -106,10 +108,17 @@ public class UserController {
                 }
                  wallet = rs.getDouble("leagueAllocation");
             }
-            
-            HashMap<Integer, Double> tempMap = MasterWallet.get(leagueID);
-            tempMap.put(userID, wallet);
-            MasterWallet.put(leagueID, tempMap);
+
+            try{
+				walletSemaphore.acquire();
+            	HashMap<Integer, Double> tempMap = MasterWallet.get(leagueID);
+            	tempMap.put(userID, wallet);
+				MasterWallet.put(leagueID, tempMap);
+				walletSemaphore.release();
+			} catch (InterruptedException e){
+            	e.printStackTrace();
+
+			}
             
             query = "START TRANSACTION";
             stmt = conn.prepareStatement(query);
@@ -198,7 +207,13 @@ public class UserController {
 
 			  HashMap<Integer, Double> tempMap = new HashMap<Integer, Double>();
 			  tempMap.put(userID, leagueAllocation);
-			  MasterWallet.put(leagueID, tempMap);
+			  try {
+			  	walletSemaphore.acquire();
+			  	MasterWallet.put(leagueID, tempMap);
+			  	walletSemaphore.release();
+			  } catch (InterruptedException e){
+			  	e.printStackTrace();
+			  }
 
               return new ResponseEntity<>(responseObj.toString(), responseHeaders, HttpStatus.OK);
           }
@@ -316,9 +331,11 @@ public class UserController {
         responseHeaders.set("Content-Type", "application/json");
 		JSONObject obj = new JSONObject();
         try {
+        	walletSemaphore.acquire();
         	obj.put("wallet", MasterWallet.get(leagueID).get(userID));
+        	walletSemaphore.release();
         	return new ResponseEntity<>(obj.toString(), responseHeaders, HttpStatus.OK);
-		} catch (NullPointerException e){
+		} catch (NullPointerException|InterruptedException e){
         	e.printStackTrace();
 			obj.put("message", "Wallet not Found");
 			return new ResponseEntity<>(obj.toString(), responseHeaders, HttpStatus.OK);
@@ -332,13 +349,19 @@ public class UserController {
         int userID = payloadObj.getInt("userID");
         int leagueID = payloadObj.getInt("leagueID");
         int PlayerID = payloadObj.getInt("playerID");
-		Double wallet = MasterWallet.get(leagueID).get(userID);
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "application/json");
+		Double wallet;
+        try {
+        	walletSemaphore.acquire();
+			wallet = MasterWallet.get(leagueID).get(userID);
+			walletSemaphore.release();
+		} catch (InterruptedException e){
+        	e.printStackTrace();
+        	return new ResponseEntity<>("\"message\":\"error in retrieving wallet\"", responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
         
         JSONObject obj = new JSONObject();
-        
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Content-Type", "application/json");
-
 
         for (int i = 0; i < MasterJSON.size(); i++) {
             if (MasterJSON.get(i).getJSONObject(0).getInt("leagueID") == leagueID) {
@@ -348,7 +371,13 @@ public class UserController {
                     		return new ResponseEntity<>("{\"message\":\"You cannot afford to draft this player\"}", responseHeaders, HttpStatus.OK);
                     	}
                     	wallet = wallet - MasterJSON.get(i).getJSONObject(j).getDouble("salary");
-						MasterWallet.get(leagueID).put(userID, wallet);
+                    	try {
+                    		walletSemaphore.acquire();
+							MasterWallet.get(leagueID).put(userID, wallet);
+							walletSemaphore.release();
+						} catch (InterruptedException e){
+                    		e.printStackTrace();
+						}
 
                     	MasterJSON.get(i).getJSONObject(j).put("userID",userID);
                     	MasterJSON.get(i).getJSONObject(j).put("taken",true);
