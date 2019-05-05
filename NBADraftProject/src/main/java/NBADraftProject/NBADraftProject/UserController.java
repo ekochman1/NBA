@@ -18,10 +18,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -254,11 +251,13 @@ public class UserController {
     public ResponseEntity<String> checkIfReady(@RequestBody String payload, HttpServletRequest request) {
     	JSONObject payloadObj = new JSONObject(payload);
     	int leagueID = payloadObj.getInt("leagueID");
-        int userID = payloadObj.getInt("userID");
+        String userName = payloadObj.getString("username");
         JSONObject obj = new JSONObject();
 
         if (DraftOrder.containsKey(leagueID)){
-        	DraftOrder.get(leagueID).add(userID);
+        	DraftOrder.get(leagueID).add(userName);
+		} else {
+        	DraftOrder.put(leagueID, new ArrayList(Arrays.asList(userName)));
 		}
         
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -276,9 +275,9 @@ public class UserController {
 		}
         UserCount.put(leagueID, newUserCount);
         if(UserCount.get(leagueID)==0) {
-        	Collections.shuffle(order); 
-        	obj.put("message", "Ready");
-        	obj.put("order", order);
+        	Collections.shuffle(DraftOrder.get(leagueID));
+        	obj.put("message", "Draft starting soon!");
+        	obj.put("order", DraftOrder.get(leagueID));
         	return new ResponseEntity<>(obj.toString(), responseHeaders, HttpStatus.OK);
         }
         else {
@@ -587,7 +586,8 @@ public class UserController {
                     }
         }
         DraftCount.put(leagueID, DraftCount.get(leagueID)-1);
-        if(DraftCount.get(leagueID)==0) {
+        if(DraftCount.get(leagueID)<=0) {
+        	System.out.println("draft completed");
         	obj.put("finish_trigger", leagueID);
         }
         

@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="draft.css">
 </head>
-<body onload="javascript:document.getElementById('draftTable').classList.toggle('hide2'); javascript:connect(); javascript:checkIfReady()">
+<body onload="javascript:document.getElementById('draftTable').classList.toggle('hide2'); javascript:connect(); javascript:setTimeout(checkIfReady, 2000);">
 
 
 <h1>Players</h1>
@@ -76,7 +76,7 @@
 <script>
 		function checkIfReady(){
 		var obj = {}
-		obj.userID = sessionStorage.getItem("userID");
+		obj.username = sessionStorage.getItem("username");
 		obj.leagueID = sessionStorage.getItem("leagueID");
 		$.ajax({
 				type: 'POST',						//get data from server to the client
@@ -87,8 +87,7 @@
 			})
 			.done(function(data) { 
 				if(data.order!=null){
-				alert(data.message);
-				setTimeout(startDraft, 2000);
+				startDraft(data.order);
 				}
 				else{
 				alert(data.message);
@@ -117,12 +116,12 @@
 				if(data.message != null)
 				{alert(data.message);
 				} else if(data.finish_trigger != null){ 
-					var key = {}; 
-					key.leagueID=data.finish_trigger;				 
+					var league = {};
+					league.leagueID = data.finish_trigger;
 					$.ajax({ 
 						type: 'POST',						//get data from server to the client 
 						url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/finishDraft',	//want to get info from here, it's in a JSONObject
-						data: JSON.stringify(key), 
+						data: JSON.stringify(league),
 						contentType: "application/json", 
 						crossDomain: true 
 					})
