@@ -96,8 +96,8 @@ function onMessageReceived(payload) {
 
         messageElement.appendChild(textElement);
 
-        messageArea.appendChild(messageElement);
-        messageArea.scrollTop = messageArea.scrollHeight;
+        consoleArea.appendChild(messageElement);
+        consoleArea.scrollTop = messageArea.scrollHeight;
     } else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' left!';
@@ -106,8 +106,8 @@ function onMessageReceived(payload) {
         textElement.appendChild(messageText);
 
         messageElement.appendChild(textElement);
-        messageArea.appendChild(messageElement);
-        messageArea.scrollTop = messageArea.scrollHeight;
+        consoleArea.appendChild(messageElement);
+        consoleArea.scrollTop = messageArea.scrollHeight;
     } else if (message.type === 'DRAFT'){
         document.getElementById(message.pick).remove();
         messageElement.classList.add('event-message');
@@ -118,8 +118,8 @@ function onMessageReceived(payload) {
 
         messageElement.appendChild(textElement);
 
-        messageArea1.appendChild(messageElement);
-        messageArea1.scrollTop = messageArea.scrollHeight;
+        consoleArea.appendChild(messageElement);
+        consoleArea.scrollTop = messageArea.scrollHeight;
     } else if (message.type === 'DONE') {
         alert("Draft is completed");
         window.location = 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/homepage2.html';
