@@ -105,4 +105,44 @@ public class ReserveController {
         }
         return new ResponseEntity<>(nameArray.toString(), responseHeaders, HttpStatus.OK);
     }
+
+    @RequestMapping(value="/getInjuries", method = RequestMethod.GET)
+    public ResponseEntity<String> getInjuries(HttpServletRequest request){
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+        Connection conn = null;
+        JSONArray nameArray = new JSONArray();
+        String injury= "";
+        String name = "";
+        String notes = "";
+
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
+            String query = "select name, injury, notes from Injuries";
+            PreparedStatement stmt = null;	//important for safety reasons
+
+            stmt = conn.prepareStatement(query);
+            //stmt.setSt(1, Integer.parseInt(leagueName));
+            // stmt.setString(1, nameToPull);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {	//while there's something else next in the resultset
+                name = rs.getString("name");
+                injury = rs.getString("injury");
+                notes  = rs.getString("notes");
+
+                JSONObject obj = new JSONObject();
+                obj.put("name", name);
+                obj.put("injury", injury);
+                obj.put("notes", notes);
+
+                nameArray.put(obj);
+            }
+        } catch (SQLException e ) {
+            e.printStackTrace();
+            return new ResponseEntity<>("An error occurred. Check server for details.", responseHeaders, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(nameArray.toString(), responseHeaders, HttpStatus.OK);
+    }
+
 }
+
