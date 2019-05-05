@@ -107,7 +107,7 @@ public class ReserveController {
     }
 
     @RequestMapping(value="/getInjuries", method = RequestMethod.GET)
-    public ResponseEntity<String> getTeams(HttpServletRequest request){
+    public ResponseEntity<String> getInjuries(HttpServletRequest request){
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
         Connection conn = null;
