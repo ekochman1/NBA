@@ -5,7 +5,7 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/UserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/NBADraftProject-0.0.1.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/NBADraftProject-0.0.1.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/NBADraftProject-0.0.1.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/NBADraftProject-0.0.1.jar.original" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/draft.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/draft.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/NBADraftProject/NBADraftProject/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NBADraftProject/NBADraftProject/UserController.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -45,10 +45,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/public/draftPage.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1037">
+            <state relative-caret-position="-578">
               <caret line="17" column="12" lean-forward="true" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
               <folding>
                 <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -85,11 +85,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/UserController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="588">
-              <caret line="273" column="89" selection-start-line="273" selection-start-column="89" selection-end-line="273" selection-end-column="89" />
+            <state relative-caret-position="469">
+              <caret line="392" column="47" selection-start-line="392" selection-start-column="47" selection-end-line="392" selection-end-column="47" />
               <folding>
                 <element signature="e#955#990#0" expanded="true" />
                 <element signature="e#1099#1152#0" expanded="true" />
@@ -621,10 +621,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/public/draft.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="41" column="49" selection-start-line="41" selection-start-column="49" selection-end-line="41" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/public/draftPage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-578">
+          <caret line="17" column="12" lean-forward="true" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
+          <folding>
+            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/UserController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="588">
-          <caret line="273" column="89" selection-start-line="273" selection-start-column="89" selection-end-line="273" selection-end-column="89" />
+        <state relative-caret-position="469">
+          <caret line="392" column="47" selection-start-line="392" selection-start-column="47" selection-end-line="392" selection-end-column="47" />
           <folding>
             <element signature="e#955#990#0" expanded="true" />
             <element signature="e#1099#1152#0" expanded="true" />
@@ -636,24 +654,6 @@
             <element signature="e#16621#16638#0" expanded="true" />
             <element signature="e#23892#23909#0" expanded="true" />
             <element signature="e#24030#24065#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/public/draft.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="41" column="49" selection-start-line="41" selection-start-column="49" selection-end-line="41" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/public/draftPage.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1037">
-          <caret line="17" column="12" lean-forward="true" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
-          <folding>
-            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -390,7 +390,7 @@ public class UserController {
               int count = maxTeam*14;
               
               DraftCount.put(leagueID, count);
-              UserCount.put(leagueID, 14);
+              UserCount.put(leagueID, maxTeam);
 
               stmt = conn.prepareStatement(transactionQuery);
               stmt.execute();
