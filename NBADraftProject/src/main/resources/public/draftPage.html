@@ -1,29 +1,51 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
-	<title>Available Leagues</title>
+	<title>League Draft</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="draft.css">
 </head>
-<body onload="javascript:draftQuery(); javascript:document.getElementById('draftTable').classList.toggle('hide2');">
+<body onload="javascript:draftQuery(); javascript:document.getElementById('draftTable').classList.toggle('hide2'); javascript:connect()">
 
 
 <h1>Players</h1>
 
-<div id="table-scroll">
-<table id="draftTable" display="hide">
-	<CAPTION ALIGN="top">Choose a NBA Player to Draft</CAPTION>
-	<thead>
-	<tr>
-		<th>  </th><th>Name</th><th>Position</th><th>Team</th><th>Player Rank: Overall</th><th>Player Rank: Position</th><th>Salary</th>
-	</tr>
-	</thead>
-	<tbody>
 
-	</tbody>
-</table>
+<div id="table-scroll">
+	<table id="draftTable" display="hide">
+		<CAPTION ALIGN="top">Choose a NBA Player to Draft</CAPTION>
+		<thead>
+		<tr>
+			<th>  </th><th>Name</th><th>Position</th><th>Team</th><th>Player Rank: Overall</th><th>Player Rank: Position</th><th>Salary</th>
+		</tr>
+		</thead>
+		<tbody>
+
+		</tbody>
+	</table>
 </div>
 
+<div id="chat-page">
+	<div class="chat-container">
+		<div class="chat-header">
+			<h2>Draft Chat</h2>
+		</div>
+		<div class="connecting">
+			Connecting...
+		</div>
+		<ul id="messageArea">
+
+		</ul>
+		<form id="messageForm" name="messageForm">
+			<div class="form-group">
+				<div class="input-group clearfix">
+					<input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
+					<button type="submit" class="primary">Send</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
 
 
 
@@ -33,6 +55,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.0.min.js"></script>
+<script src="/draft.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
 
 <script>
@@ -82,9 +107,7 @@
 				{alert(data.message);
 				}
 				else{
-				alert("You drafted: "+ data.name);
-				var row = document.getElementById(data.playerRankOverall)
-				$(row).remove();
+				sendDraft(data.playerRankOverall, data.name);
 				}
 			})
 			.fail(function(data) {
@@ -92,7 +115,7 @@
 	    	});
 		}
 		
-	</script>
+</script>
 
 
 </body>

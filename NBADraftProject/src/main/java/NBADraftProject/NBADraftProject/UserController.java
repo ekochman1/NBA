@@ -209,7 +209,7 @@ public class UserController {
                  sub8 = true;
                  sub9 = true;	 
         	 }
-        	 return new ResponseEntity<>("{\"message\":\"Finished The Draft\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+        	 return new ResponseEntity<>("{\"message\":\"Finished The Draft\"}", responseHeaders, HttpStatus.OK);
         	 }
          catch(SQLException e){
         	 return new ResponseEntity<>("{\"message\":\"issue with pushing to MQSQL\"}", responseHeaders, HttpStatus.BAD_REQUEST);

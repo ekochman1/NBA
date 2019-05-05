@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f5ecc464-0dad-498d-b0fd-81edd10c48cf" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/draft.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/draft.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/NBADraftProject-0.0.1.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/NBADraftProject-0.0.1.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/NBADraftProject-0.0.1.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/NBADraftProject-0.0.1.jar.original" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/NBADraftProject/NBADraftProject/model/DraftMessage$MessageType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NBADraftProject/NBADraftProject/model/DraftMessage$MessageType.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/NBADraftProject/NBADraftProject/model/DraftMessage.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NBADraftProject/NBADraftProject/model/DraftMessage.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/draft.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/draft.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/draftPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/draftPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/homepagestyle2.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/homepagestyle2.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/draftPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/draftPage.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -41,8 +34,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/public/draftPage.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="491">
-              <caret line="107" column="59" selection-start-line="107" selection-start-column="59" selection-end-line="107" selection-end-column="59" />
+            <state relative-caret-position="442">
+              <caret line="26" selection-start-line="26" selection-end-line="26" />
             </state>
           </provider>
         </entry>
@@ -56,11 +49,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/public/draft.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="599">
-              <caret line="85" column="72" selection-start-line="85" selection-start-column="72" selection-end-line="85" selection-end-column="72" />
+            <state relative-caret-position="1105">
+              <caret line="65" column="49" lean-forward="true" selection-start-line="65" selection-start-column="49" selection-end-line="65" selection-end-column="49" />
             </state>
           </provider>
         </entry>
@@ -74,11 +67,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/UserController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2703">
-              <caret line="346" column="31" selection-start-line="346" selection-start-column="31" selection-end-line="346" selection-end-column="31" />
+            <state relative-caret-position="-5185">
+              <caret line="211" column="111" selection-start-line="211" selection-start-column="111" selection-end-line="211" selection-end-column="111" />
               <folding>
                 <element signature="e#968#1003#0" expanded="true" />
                 <element signature="e#1112#1165#0" expanded="true" />
@@ -134,13 +127,13 @@
         <option value="$PROJECT_DIR$/src/main/resources/public/teams.css" />
         <option value="$PROJECT_DIR$/src/main/resources/public/TeamPage.html" />
         <option value="$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/model/ChatMessage.java" />
-        <option value="$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/UserController.java" />
         <option value="$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/controller/ChatController.java" />
         <option value="$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/webconfig/WebSocketConfig.java" />
         <option value="$PROJECT_DIR$/src/main/resources/static/index.html" />
-        <option value="$PROJECT_DIR$/src/main/resources/public/draftPage.html" />
         <option value="$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/model/DraftMessage.java" />
         <option value="$PROJECT_DIR$/src/main/resources/public/draft.js" />
+        <option value="$PROJECT_DIR$/src/main/resources/public/draftPage.html" />
+        <option value="$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/UserController.java" />
       </list>
     </option>
   </component>
@@ -571,22 +564,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/UserController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2703">
-          <caret line="346" column="31" selection-start-line="346" selection-start-column="31" selection-end-line="346" selection-end-column="31" />
-          <folding>
-            <element signature="e#968#1003#0" expanded="true" />
-            <element signature="e#1112#1165#0" expanded="true" />
-            <element signature="e#6224#6225#0" expanded="true" />
-            <element signature="e#6289#6290#0" expanded="true" />
-            <element signature="e#9252#9269#0" expanded="true" />
-            <element signature="e#17173#17190#0" expanded="true" />
-            <element signature="e#17311#17346#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/model/ChatMessage.java">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -608,13 +585,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/model/DraftMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/static/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="527">
@@ -624,15 +594,38 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/public/draftPage.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="491">
-          <caret line="107" column="59" selection-start-line="107" selection-start-column="59" selection-end-line="107" selection-end-column="59" />
+        <state relative-caret-position="442">
+          <caret line="26" selection-start-line="26" selection-end-line="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/public/draft.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="599">
-          <caret line="85" column="72" selection-start-line="85" selection-start-column="72" selection-end-line="85" selection-end-column="72" />
+        <state relative-caret-position="1105">
+          <caret line="65" column="49" lean-forward="true" selection-start-line="65" selection-start-column="49" selection-end-line="65" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/model/DraftMessage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/UserController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-5185">
+          <caret line="211" column="111" selection-start-line="211" selection-start-column="111" selection-end-line="211" selection-end-column="111" />
+          <folding>
+            <element signature="e#968#1003#0" expanded="true" />
+            <element signature="e#1112#1165#0" expanded="true" />
+            <element signature="e#6224#6225#0" expanded="true" />
+            <element signature="e#6289#6290#0" expanded="true" />
+            <element signature="e#9252#9269#0" expanded="true" />
+            <element signature="e#17173#17190#0" expanded="true" />
+            <element signature="e#17311#17346#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
