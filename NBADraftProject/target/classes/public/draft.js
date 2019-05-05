@@ -9,7 +9,7 @@ var consoleForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector('#message');
 var messageArea = document.querySelector('#messageArea1');
 var consoleArea = document.querySelector('#messageArea');
-var connectingElement = document.querySelector('.connecting');
+var connectingElement = document.querySelectorAll('.connecting');
 
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -31,11 +31,15 @@ function onConnectedLeague() {
     // Subscribe to the league chat
     stompClient.subscribe('/draft.'+leagueID, onMessageReceived);
 
+
     // Tell your username to the server
     stompClient.send('/app/chat.addUser.'+leagueID,
         {},
         JSON.stringify({sender: username, type: 'JOIN'})
     )
+
+    connectingElement[0].classList.add('hidden');
+    connectingElement[1].classList.add('hidden');
 }
 
 function onError(error) {
