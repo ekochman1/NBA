@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="draft.css">
 </head>
-<body onload="javascript:draftQuery(); javascript:document.getElementById('draftTable').classList.toggle('hide2'); javascript:connect()">
+<body onload="javascript:draftQuery(); javascript:document.getElementById('draftTable').classList.toggle('hide2'); javascript:connect(); javascript:checkIfReady()">
 
 
 <h1>Players</h1>
@@ -25,7 +25,29 @@
 	</table>
 </div>
 
-<div id="chat-page">
+<div id="chat-page" style="position:absolute; left: 800px; top:50px;">
+	<div class="chat-container">
+		<div class="chat-header">
+			<h2>Draft Console</h2>
+		</div>
+		<div class="connecting">
+			 Connecting Draft...
+		</div>
+		<ul id="messageArea">
+
+		</ul>
+		<form id="messageForm" name="messageForm">
+			<div class="form-group">
+				<!--<div class="input-group clearfix">
+					<input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
+					<button type="submit" class="primary">Send</button>
+				</div>---->
+			</div>
+		</form>
+	</div>
+</div>
+
+<div id="chat-page1" style="position:absolute; left: 800px; top:390px;">
 	<div class="chat-container">
 		<div class="chat-header">
 			<h2>Draft Chat</h2>
@@ -33,10 +55,10 @@
 		<div class="connecting">
 			Connecting...
 		</div>
-		<ul id="messageArea">
+		<ul id="messageArea1">
 
 		</ul>
-		<form id="messageForm" name="messageForm">
+		<form id="messageForm1" name="messageForm1">
 			<div class="form-group">
 				<div class="input-group clearfix">
 					<input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
@@ -59,31 +81,32 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
-<script> 
-		function checkIfReady(){ 
-		var obj = {} 
-		obj.userID = sessionStorage.getItem("userID"); 
-		obj.leagueID = sessionStorage.getItem("leagueID"); 
-		$.ajax({ 
-				type: 'POST',						//get data from server to the client 
-				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/checkIfReady',	//want to get info from here, it's in a JSONObject 
-				data: JSON.stringify(obj), 
-				contentType: "application/json", 
-				crossDomain: true 
-			}) 
-			.done(function(data) {  
-				if(data.order!=){ 
-				alert(data.message); 
-				} 
-				else{ 
-				alert(data.message); 
-				} 
-			}) 
-			.fail(function(data) {  
-			alert("Failed to log you in.") 
-			}) 
-	} 
-</script> 
+<script>
+		function checkIfReady(){
+		var obj = {}
+		obj.userID = sessionStorage.getItem("userID");
+		obj.leagueID = sessionStorage.getItem("leagueID");
+		$.ajax({
+				type: 'POST',						//get data from server to the client
+				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/checkIfReady',	//want to get info from here, it's in a JSONObject
+				data: JSON.stringify(obj),
+				contentType: "application/json",
+				crossDomain: true
+			})
+			.done(function(data) { 
+				if(data.order!=){
+				alert(data.message);
+				}
+				else{
+				alert(data.message);
+				}
+			})
+			.fail(function(data) { 
+			alert("Failed to log you in.")
+			})
+	}
+</script>
+
 
 <script>
 		function draftQuery(){
