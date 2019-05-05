@@ -11,7 +11,7 @@ function connect() {
     username = sessionStorage.getItem('username');
     leagueID = sessionStorage.getItem('leagueID').toString();
     if(username) {
-        var socket = new SockJS('/dr');
+        var socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, onConnectedLeague, onError);
@@ -20,10 +20,10 @@ function connect() {
 
 function onConnectedLeague() {
     // Subscribe to the league chat
-    stompClient.subscribe('/draft/'+leagueID, onMessageReceived);
+    stompClient.subscribe('/draft.'+leagueID, onMessageReceived);
 
     // Tell your username to the server
-    stompClient.send('/app/'+leagueID+'/chat.addUser',
+    stompClient.send('/app/chat.addUser.'+leagueID,
         {},
         JSON.stringify({sender: username, type: 'JOIN'})
     )
@@ -43,7 +43,7 @@ function sendDraft(playerRankOverall) {
             type: 'DRAFT',
             lid: leagueID
         };
-        stompClient.send('/app/'+leagueID+'/draft.sendPick', {}, JSON.stringify(draftPick));
+        stompClient.send('/app/draft.sendPick.'+leagueID, {}, JSON.stringify(draftPick));
     }
 }
 
@@ -56,7 +56,7 @@ function sendDraftMessage(event) {
             type: 'CHAT',
             lid: leagueID
         };
-        stompClient.send('/app/'+leagueID+'/draft.sendMessage', {}, JSON.stringify(draftMessage));
+        stompClient.send('/app/draft.sendMessage.'+leagueID, {}, JSON.stringify(draftMessage));
         messageInput.value = '';
     }
     event.preventDefault();
@@ -75,7 +75,7 @@ function onMessageReceived(payload) {
         message.content = message.sender + ' left!';
     } else if (message.type === 'DRAFT'){
         console.log("draft received");
-        document.getElementById(message.pick).delete();
+        document.getElementById(message.pick).remove();
         if (username != message.sender){
             alert(message.sender+" drafted a player");
         }

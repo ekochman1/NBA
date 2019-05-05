@@ -198,12 +198,11 @@ public class UserController {
 
               stmt = conn.prepareStatement(transactionQuery);
               stmt.execute();
-              query = "INSERT INTO Teams(userID, leagueID, teamName, wallet) VALUES (?, ?, ?, ?)";
+              query = "INSERT INTO Teams(userID, leagueID, teamName) VALUES (?, ?, ?)";
               stmt = conn.prepareStatement(query);
               stmt.setInt(1, userID);
               stmt.setInt(2, leagueID);
               stmt.setString(3, teamName);
-              stmt.setDouble(4, leagueAllocation);
               stmt.executeUpdate();
               stmt = conn.prepareStatement("COMMIT");
               stmt.execute();
@@ -373,18 +372,20 @@ public class UserController {
 		
         JSONObject obj = new JSONObject();
         //JSONObject draftedPlayer = new JSONObject();
-        
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Content-Type", "application/json");
-
-
         for (int i = 0; i < MasterJSON.length(); i++) {
             if (MasterJSON.getJSONObject(i).getInt("playerID") == PlayerID) {
                     	if (MasterJSON.getJSONObject(i).getDouble("salary") > wallet) {
                     		return new ResponseEntity<>("{\"message\":\"You cannot afford to draft this player\"}", responseHeaders, HttpStatus.OK);
                     	}
                     	wallet = wallet - MasterJSON.getJSONObject(i).getDouble("salary");
-						MasterWallet.get(leagueID).put(userID, wallet);
+                    	try {
+                            walletSemaphore.acquire();
+                            MasterWallet.get(leagueID).put(userID, wallet);
+                            walletSemaphore.release();
+                        } catch (InterruptedException e){
+                    	    e.printStackTrace();
+                    	    return new ResponseEntity<>("{\"message\":\"card declined\"", responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+                        }
 						
 						
 						String position = MasterJSON.getJSONObject(i).getString("position");

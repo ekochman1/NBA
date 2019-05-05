@@ -2,23 +2,29 @@ package NBADraftProject.NBADraftProject.controller;
 
 import NBADraftProject.NBADraftProject.model.ChatMessage;
 import NBADraftProject.NBADraftProject.model.DraftMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class ChatController {
-    @MessageMapping("/{leagueID}/draft.sendMessage")
-	@SendTo("/draft/{leagueID}")
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+
+    @MessageMapping("/draft.sendMessage.{leagueID}")
+	@SendTo("/draft.{leagueID}")
     public DraftMessage sendDraftMessage(@DestinationVariable String leagueID, @Payload DraftMessage draftMessage) {
         return draftMessage;
     }
 
-    @MessageMapping("/{leagueID}/draft.sendPick")
-    @SendTo("/draft/{leagueID}")
+    @MessageMapping("/draft.sendPick.{leagueID}")
+    @SendTo("/draft.{leagueID}")
     public DraftMessage sendDraftPick(@DestinationVariable String leagueID, @Payload DraftMessage draftMessage) {
     	return draftMessage;
     }
@@ -29,12 +35,12 @@ public class ChatController {
         return chatMessage;
     }
 
-    @MessageMapping("/{leagueID}/chat.addUser")
-    @SendTo("/draft/{leagueID}")
+    @MessageMapping("/chat.addUser.{leagueID}")
+    @SendTo("/draft.{leagueID}")
     public ChatMessage addDraftUser(@Payload ChatMessage chatMessage,
-                               SimpMessageHeaderAccessor headerAccessor,
-									@DestinationVariable String leagueID) {
+                                    SimpMessageHeaderAccessor headerAccessor) {
         // Add username in web socket session
+
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
         return chatMessage;
     }
