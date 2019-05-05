@@ -55,6 +55,7 @@ public class UserController {
          boolean pg = true;
          boolean sg = true;
          boolean sf = true;
+         boolean pos = true;
          
          boolean sub1 = true;
          boolean sub2 = true;
@@ -107,22 +108,10 @@ public class UserController {
         					 sf = false;
         					 playerSF = playerID;
         				 }
-        			 }  
-        			 if(!ctr && !pg && !pf && !sf && !sg) {
-        				 query = "UPDATE Teams SET C =  VALUES(?, ?, ?, ?, ?) WHERE userID=? AND leagueID=?";
-        				 stmt = conn.prepareStatement(query);
-        				 stmt.setInt( 1, playerC);
-        				 stmt.setInt( 2, playerPG);
-        				 stmt.setInt( 3, playerPF);
-        				 stmt.setInt( 4, playerSG);
-        				 stmt.setInt( 5, playerSF);
-        				 stmt.setInt( 6, userID);
-        				 stmt.setInt( 7, leagueID);
-        			 }
-        			 else {
+        			 } else {
         				 if(sub1) {
         					 sub1 = false;
-        					 query = "UPDATE Teams(sub1) VALUES(?) WHERE userID=? AND leagueID=?";
+        					 query = "UPDATE Teams SET sub1=? WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
         					 stmt.setInt( 2, userID);
@@ -130,7 +119,7 @@ public class UserController {
         				 }
         				 else if(sub2) {
         					 sub2 = false;
-        					 query = "UPDATE Teams(sub2) VALUES(?) WHERE userID=? AND leagueID=?";
+        					 query = "UPDATE Teams SET sub2=? WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
         					 stmt.setInt( 2, userID);
@@ -138,7 +127,7 @@ public class UserController {
         				 }
         				 else if(sub3) {
         					 sub3 = false;
-        					 query = "UPDATE Teams(sub3) VALUES(?) WHERE userID=? AND leagueID=?";
+        					 query = "UPDATE Teams SET sub3=? WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
         					 stmt.setInt( 2, userID);
@@ -146,7 +135,7 @@ public class UserController {
         				 }
         				 else if(sub4) {
         					 sub4 = false;
-        					 query = "UPDATE Teams(sub4) VALUES(?) WHERE userID=? AND leagueID=?";
+        					 query = "UPDATE Teams SET sub4=? WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
         					 stmt.setInt( 2, userID);
@@ -154,7 +143,7 @@ public class UserController {
         				 }
         				 else if(sub5) {
         					 sub5 = false;
-        					 query = "UPDATE Teams(sub5) VALUES(?) WHERE userID=? AND leagueID=?";
+        					 query = "UPDATE Teams SET sub5=? WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
         					 stmt.setInt( 2, userID);
@@ -162,7 +151,7 @@ public class UserController {
         				 }
         				 else if(sub6) {
         					 sub6 = false;
-        					 query = "UPDATE Teams(sub6) VALUES(?) WHERE userID=? AND leagueID=?";
+        					 query = "UPDATE Teams SET sub6=? WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
         					 stmt.setInt( 2, userID);
@@ -170,7 +159,7 @@ public class UserController {
         				 }
         				 else if(sub7) {
         					 sub7 = false;
-        					 query = "UPDATE Teams(sub7) VALUES(?) WHERE userID=? AND leagueID=?";
+        					 query = "UPDATE Teams SET sub7=? WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
         					 stmt.setInt( 2, userID);
@@ -178,7 +167,7 @@ public class UserController {
         				 }
         				 else if(sub8) {
         					 sub8 = false;
-        					 query = "UPDATE Teams(sub8) VALUES(?) WHERE userID=? AND leagueID=?";
+        					 query = "UPDATE Teams SET sub8=? WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
         					 stmt.setInt( 2, userID);
@@ -186,7 +175,7 @@ public class UserController {
         				 }
         				 else if(sub9) {
         					 sub9 = false;
-        					 query = "UPDATE Teams(sub9) VALUES(?) WHERE userID=? AND leagueID=?";
+        					 query = "UPDATE Teams SET sub9=? WHERE userID=? AND leagueID=?";
         					 stmt = conn.prepareStatement(query);
         					 stmt.setInt( 1, playerID);
         					 stmt.setInt( 2, userID);
@@ -235,6 +224,18 @@ public class UserController {
         					 }
         				 }
         			 }
+					 if(!ctr && !pg && !pf && !sf && !sg && pos) {
+						 query = "UPDATE Teams SET C = ?, PG = ?, PF = ?, SG = ?, SF = ? WHERE userID=? AND leagueID=?";
+						 stmt = conn.prepareStatement(query);
+						 stmt.setInt( 1, playerC);
+						 stmt.setInt( 2, playerPG);
+						 stmt.setInt( 3, playerPF);
+						 stmt.setInt( 4, playerSG);
+						 stmt.setInt( 5, playerSF);
+						 stmt.setInt( 6, userID);
+						 stmt.setInt( 7, leagueID);
+						 pos = false;
+					 }
         			 
         			 
                      stmt.executeUpdate();
@@ -259,6 +260,7 @@ public class UserController {
                  pg = true;
                  sg = true;
                  sf = true;
+                 pos = true;
                  
                  sub1 = true;
                  sub2 = true;
