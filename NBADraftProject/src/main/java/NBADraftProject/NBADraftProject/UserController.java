@@ -75,6 +75,7 @@ public class UserController {
 			 PreparedStatement stmt = null;
         	 for(int userID: PlayerPicks.get(leagueID).keySet()) {//as it transverses the users, have it transverse for each loop, userID is equal to the current key it is in
         		 for(int playerID: PlayerPicks.get(leagueID).get(userID).keySet()) {
+        		 	System.out.println(playerID);
         			 stmt = conn.prepareStatement("START TRANSACTION");
         			 stmt.execute();
         		 	if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("C")) {
@@ -287,12 +288,11 @@ public class UserController {
                  stmt = conn.prepareStatement("COMMIT");
                  stmt.execute();
         	 }
-        	 return new ResponseEntity<>("{\"message\":\"Finished The Draft\"}", responseHeaders, HttpStatus.OK);
-        	 }
-         catch(SQLException e){
+         } catch(SQLException e){
          	e.printStackTrace();
         	 return new ResponseEntity<>("{\"message\":\"issue with pushing to MQSQL\"}", responseHeaders, HttpStatus.BAD_REQUEST);
          }
+		return new ResponseEntity<>("{\"message\":\"Finished The Draft\"}", responseHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/checkIfReady", method = RequestMethod.POST)
