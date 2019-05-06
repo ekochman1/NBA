@@ -1066,7 +1066,7 @@ margin: -80px 10px 10px 1200px;
 }
 
 
-table#draftTable tbody{
+table#draftTable {
     height: 500px;
     overflow-y: auto;
     overflow-x: hidden;
