@@ -16,6 +16,26 @@ and enter "java -jar NBADraftProject-0.0.1.jar" into the terminal to run the ser
 Access the http address from Google Chrome:
 http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com
 
+# running the application through console
+
+1. navigate in terminal to the directory with the pom.xml file
+
+2. run mvn package 
+
+3. in fileViewer go to the target folder of the project
+
+4. copy the NBADraftProject-0.0.1.jar file to the ec-2 server via an SSH protocol
+
+5. connect to ec-2 terminal
+
+6. type java -jar NBADraftProject-0.0.1.jar
+
+7. run the command
+
+8. Finally, go to your browser (preferably Google Chrome) and enter the ec-2 url----> http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com     
+
+*NOTE* you don't have to run your own ec-2 instance. The URL provided should sufice because it should be optimized to run
+
 # using the application
 
 Register a user, this user can be logged in again once you have registered them.
@@ -35,3 +55,6 @@ You can now start your draft, click on players you want to draft, turns are enab
 There is a league specific chat client in the draft window, and also a console log that shows the events of the draft. These are League Specific.
 
 upon each user drafting 14 players(5 for their starting lineup and 9 for subs), the draft will automatically end and insert all of your picks into your table within a SQL server. Thus Concluding the live draft.
+
+*you cannot leave the draft once you start*
+
