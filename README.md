@@ -58,3 +58,8 @@ upon each user drafting 14 players(5 for their starting lineup and 9 for subs), 
 
 *you cannot leave the draft once you start*
 
+To check the database and see your team:
+here is the database URL:
+nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy
+UN: root 
+PW: Ethaneddie123
