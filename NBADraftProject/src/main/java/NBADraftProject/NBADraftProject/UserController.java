@@ -286,7 +286,7 @@ public class UserController {
     public ResponseEntity<String> checkIfReady(@RequestBody String payload, HttpServletRequest request) {
     	JSONObject payloadObj = new JSONObject(payload);
     	int leagueID = payloadObj.getInt("leagueID");
-        String userName = payloadObj.getString("username");
+        String userName = payloadObj.getString("userName");
         JSONObject obj = new JSONObject();
 
         if (DraftOrder.containsKey(leagueID)){
