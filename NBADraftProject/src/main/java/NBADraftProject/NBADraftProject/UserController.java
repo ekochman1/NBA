@@ -336,11 +336,14 @@ public class UserController {
 	@RequestMapping(value = "/seeFinished", method = RequestMethod.GET)
 	public ResponseEntity<String> seeFinished(HttpServletRequest request){
 		int leagueID = Integer.parseInt(request.getParameter("leagueID"));
-
-		boolean finished = FinishedLeague.get(leagueID);
-
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "application/json");
+
+		if (!FinishedLeague.containsKey(leagueID)){
+			return new ResponseEntity<>("{\"message\":\"Draft is ready\"}", responseHeaders, HttpStatus.OK);
+		}
+		boolean finished = FinishedLeague.get(leagueID);
+
 		if(!finished) {
 			return new ResponseEntity<>("{\"message\":\"Draft is ready\"}", responseHeaders, HttpStatus.OK);
 		}	else {

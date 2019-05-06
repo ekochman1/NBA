@@ -67,14 +67,16 @@
 				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/seeFinished?leagueID='+buttonID,
 			})
 			.done(function(data){
-			if(data.message != null){
-			sessionStorage.setItem("leagueID", buttonID);
-			location.replace("http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/draftPage.html");}
-		})
+				if(data.message != null){
+					sessionStorage.setItem("leagueID", buttonID);
+					location.replace("http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/draftPage.html");
+				} else {
+					alert(data.error);
+				}
+			})
 			.fail(function(data) {
 	            alert("Failed to Check Status of League");
 	        });
-		
 		}
 	</script>
 
