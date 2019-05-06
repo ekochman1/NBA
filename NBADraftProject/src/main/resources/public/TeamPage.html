@@ -48,7 +48,7 @@
 			var tbody = $('#teamTable tbody'),
 			  props = ["teamName", "leagueName" , "leagueID"];
 			$.each(data, function(i, data) {
-			  var tr = $('<tr><td class="nr">' + '<button type="button" id="'+data["leagueID"]+ ' class="use-address1" onclick="Click2(this.id)">Look at team</button></td>' + '<td><button type="button" id="'+data["leagueID"]+'" class="use-address" onclick="Click(this.id)">Go to Draft</button>' + '</td></tr>');
+			  var tr = $('<tr><td class="nr">' + '<button type="button" id="'+data["leagueID"]+'" class="use-address1" onclick="Click2(this.id)">Look at team</button>' + '<button type="button" id="'+data["leagueID"]+'" class="use-address" onclick="Click(this.id)">Go to Draft</button>' + '</td></tr>');
 			  $.each(props, function(i, prop) {
 			    $('<td>').html(data[prop]).appendTo(tr);
 			  });

@@ -5,15 +5,15 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="draft.css">
 </head>
-<body onload="javascript:document.getElementById('draftTable').classList.toggle('hide2'); javascript:connect(); javascript:checkIfReady()">
+<body onload="javascript:document.getElementById('draftTable').classList.toggle('hide2'); javascript:connect(); javascript:setTimeout(checkIfReady, 2000); javascript:displayWallet();">
 
 
 <h1>Players</h1>
 
 
-<div id="table-scroll">
+
 	<table id="draftTable" display="hide">
-		<CAPTION ALIGN="top">Choose a NBA Player to Draft</CAPTION>
+		<CAPTION id = "wallet" ALIGN="top">Choose an NBA Player to Draft</CAPTION>
 		<thead>
 		<tr>
 			<th>  </th><th>Name</th><th>Position</th><th>Team</th><th>Player Rank: Overall</th><th>Player Rank: Position</th><th>Salary</th>
@@ -23,9 +23,22 @@
 
 		</tbody>
 	</table>
-</div>
 
-<div id="chat-page" style="position:absolute; left: 1080px; top:50px;">
+
+<table id="walletTable">
+	<CAPTION ALIGN="top">Wallet</CAPTION>
+	<thead>
+	<tr>
+
+	</tr>
+	</thead>
+	<tbody id="walletbody" style = "color: LimeGreen">
+		<tb> </tb>
+	</tbody>
+</table>
+
+
+<div id="chat-page" style="position:absolute; left: 1080px; top:149px;">
 	<div class="chat-container">
 		<div class="chat-header">
 			<h2>Draft Console</h2>
@@ -36,18 +49,10 @@
 		<ul id="messageArea">
 
 		</ul>
-		<!--<form id="messageForm" name="messageForm">
-			<div class="form-group">
-			-<div class="input-group clearfix">
-					<input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
-					<button type="submit" class="primary">Send</button>
-				</div>
-			</div>
-		</form>---->
 	</div>
 </div>
 
-<div id="chat-page1" style="position:absolute; left: 1080px; top:390px;">
+<div id="chat-page1" style="position:absolute; left: 1080px; top:490px;">
 	<div class="chat-container">
 		<div class="chat-header">
 			<h2>Draft Chat</h2>
@@ -84,7 +89,7 @@
 <script>
 		function checkIfReady(){
 		var obj = {}
-		obj.userID = sessionStorage.getItem("userID");
+		obj.userName = sessionStorage.getItem("userName");
 		obj.leagueID = sessionStorage.getItem("leagueID");
 		$.ajax({
 				type: 'POST',						//get data from server to the client
@@ -95,8 +100,7 @@
 			})
 			.done(function(data) { 
 				if(data.order!=null){
-				startDraft();
-				alert(data.message);
+				startDraft(data.order);
 				}
 				else{
 				alert(data.message);
@@ -107,11 +111,13 @@
 			});
 	}
 </script>
+
 <script>
 		function Click(buttonID){
 			var obj = {};
 			obj.userID=sessionStorage.getItem("userID");
 			obj.leagueID=sessionStorage.getItem("leagueID");
+			obj.userName=sessionStorage.getItem("userName");
 			obj.playerID=buttonID;
 
 			$.ajax({
@@ -121,32 +127,69 @@
 				contentType: "application/json",
 				crossDomain: true
 			})
-		.done(function(data) {
-				if(data.message != null)
-				{alert(data.message);
-				} else if(data.finish_trigger != null){ 
-					var key = {}; 
-					key.leagueID=data.finish_trigger;				 
-					$.ajax({ 
-						type: 'POST',						//get data from server to the client 
-						url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/finishDraft',	//want to get info from here, it's in a JSONObject
-						data: JSON.stringify(key), 
-						contentType: "application/json", 
-						crossDomain: true 
-					})
-					.done(function(data){endDraft();});				}
-				else{
-				sendDraft(data.playerRankOverall, data.name);
-				}
+			.done(function(data) {
+					displayWallet();
+					if(data.message != null){
+						alert(data.message);
+					} else if(data.finish_trigger != null){
+						var league = {};
+						league.leagueID = data.finish_trigger;
+						$.ajax({
+							type: 'POST',						//get data from server to the client
+							url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/finishDraft',	//want to get info from here, it's in a JSONObject
+							data: JSON.stringify(league),
+							contentType: "application/json",
+							crossDomain: true
+						})
+						.done(function(data){
+							var obj1 = {};
+							obj1.leagueID=sessionStorage.getItem("leagueID");
+							$.ajax({
+							type: 'POST',						//get data from server to the client
+							url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/setFinished',	//want to get info from here, it's in a JSONObject
+							data: JSON.stringify(obj1),
+							contentType: "application/json",
+							crossDomain: true
+						})
+						.done(function(data){
+						endDraft();
+						})
+						.fail(function(data) {
+							alert("Fail to Conclude Draft");
+							});
+						});
+					}
+					else{
+						sendDraft(data.playerRankOverall, data.name);
+					}
 			})
 			.fail(function(data) {
-	        	alert("Failed to load data.");
-	    	});
+				alert("Failed to load data.");
+			});
 		}
 		
 </script>
 
+<script>
+function displayWallet(){
+	var obj = {};
+	obj.leagueID = sessionStorage.getItem("leagueID");
+	obj.userID = sessionStorage.getItem("userID");
 
+	$.ajax({
+		type: 'GET',		//get data from server to the client
+		url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/displayWallet?leagueID='+obj.leagueID+'&userID='+obj.userID //want to get info from here, it's in a JSONObject
+	})
+	.done(function(data) {
+		document.getElementById("walletTable").style.display ="block";
+		var tbody = $('#walletbody');
+		tbody.text("$ " + data.wallet);
+	})
+	.fail(function(data){
+		alert("wallet failed to load");
+	});
+} 
+</script>
 </body>
 </html>
 

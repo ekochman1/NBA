@@ -301,7 +301,6 @@ body {
 
 html,body {
     height: 100%;
-    overflow: hidden;
 }
 
 body {
@@ -549,7 +548,7 @@ button.accent {
     position: absolute;
     width: 42px;
     height: 42px;
-    overflow: hidden;
+    overflow: auto;
     left: 10px;
     display: inline-block;
     vertical-align: middle;
@@ -679,7 +678,6 @@ button.accent {
 
    html,body {
        height: 100%;
-       overflow: hidden;
    }
 
    body {
@@ -859,7 +857,7 @@ button.accent {
        position: absolute;
        width: 42px;
        height: 42px;
-       overflow: hidden;
+       overflow: auto;
        left: 10px;
        display: inline-block;
        vertical-align: middle;
@@ -1062,3 +1060,14 @@ element.style {
     top: 50px;
 }
 
+table#walletTable {
+margin: -80px 10px 10px 1200px;
+  background-color: rgba(195, 186, 190, 0.8);
+}
+
+
+table#draftTable tbody{
+    height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

@@ -143,7 +143,7 @@
 						})
 						.done(function(data){
 							var obj1 = {};
-							obj1=sessionStorage.getItem("leagueID");
+							obj1.leagueID=sessionStorage.getItem("leagueID");
 							$.ajax({
 							type: 'POST',						//get data from server to the client
 							url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/setFinished',	//want to get info from here, it's in a JSONObject

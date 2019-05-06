@@ -150,12 +150,21 @@ public class ReserveController {
         Connection conn = null;
         int leagueID = Integer.parseInt(request.getParameter("leagueID"));
         int userID = Integer.parseInt(request.getParameter("userID"));
+        String teamName = "";
         int C = 0, PG = 0, PF = 0, SG = 0, SF = 0, sub1 = 0, sub2 = 0, sub3 = 0, sub4 = 0, sub5 = 0, sub6 = 0, sub7 = 0, sub8 = 0, sub9 = 0;
         JSONArray fullTeam = new JSONArray();
         JSONObject obj = new JSONObject();
         try {
             conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
-            String query = "select name, position From Teams, Players where Players.playerID = Teams.C and teamName=? "+ 
+            String query = "SELECT teamName FROM Teams WHERE userID = ? AND leagueID = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, userID);
+            stmt.setInt(2, leagueID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+            	teamName = rs.getString("teamName");
+			}
+            query = "select name, position From Teams, Players where Players.playerID = Teams.C and teamName=? "+
             		"union " + 
             		"select name, position From Teams, Players where Players.playerID = Teams.PG and teamName=? " + 
             		"union " + 
@@ -170,7 +179,7 @@ public class ReserveController {
             		"select name, position From Teams, Players where Players.playerID = Teams.sub2 and teamName=? " + 
             		"union " + 
             		"select name, position From Teams, Players where Players.playerID = Teams.sub3 and teamName=? " + 
-            		"Uuion " + 
+            		"union " +
             		"select name, position From Teams, Players where Players.playerID = Teams.sub4 and teamName=? " + 
             		"union " + 
             		"select name, position From Teams, Players where Players.playerID = Teams.sub5 and teamName=? " + 
@@ -183,9 +192,12 @@ public class ReserveController {
             		"union " + 
             		"select name, position From Teams, Players where Players.playerID = Teams.sub9 and teamName=?";
             		
-            PreparedStatement stmt = null;	//important for safety reasons
+            	//important for safety reasons
             stmt = conn.prepareStatement(query);
-            ResultSet rs = stmt.executeQuery();
+            for (int i = 1; i < 15; i++){
+            	stmt.setString(i, teamName);
+			}
+            rs = stmt.executeQuery();
             while(rs.next()) {
             	obj.put("name",rs.getString("name"));
             	obj.put("position",rs.getString("position"));

@@ -17,7 +17,7 @@ var colors = [
 ];
 
 function connect() {
-    username = sessionStorage.getItem('username');
+    username = sessionStorage.getItem('userName');
     leagueID = sessionStorage.getItem('leagueID').toString();
     if(username) {
         var socket = new SockJS('/ws');
@@ -60,15 +60,18 @@ function sendDraft(playerRankOverall, name) {
     }
 }
 
-function startDraft() {
-    if (stompClient) {
+function startDraft(order) {
+    var turns = JSON.stringify(order);
+    if (turns && stompClient) {
         var draftMessage = {
-            sender: username;
+            sender: username,
             pick: -1,
-            player: "",
+            player: turns,
             type: 'START'
         };
         stompClient.send('/app/draft.sendPick.'+leagueID, {}, JSON.stringify(draftMessage));
+    } else {
+        console.log("stompClient failed");
     }
 }
 
@@ -115,8 +118,14 @@ function onMessageReceived(payload) {
         consoleArea.appendChild(messageElement);
         consoleArea.scrollTop = messageArea.scrollHeight;
     } else if (message.type === 'START') {
-        draftQuery()
         alert("The draft is starting!");
+        draftQuery();
+        var order = JSON.parse(message.player);
+        var nextUser = order.shift();
+        alert(nextUser + ", your turn to draft.");
+        order.push(nextUser);
+        sessionStorage.setItem("order", JSON.stringify(order));
+
     }else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' left!';
@@ -131,6 +140,11 @@ function onMessageReceived(payload) {
         document.getElementById(message.pick).remove();
         messageElement.classList.add('event-message');
         message.content = message.sender + ' drafted ' + message.player;
+        var order = JSON.parse(sessionStorage.getItem("order"));
+        var nextUser = order.shift();
+        alert(nextUser + ", your turn to draft.");
+        order.push(nextUser);
+        sessionStorage.setItem("order", JSON.stringify(order));
         var textElement = document.createElement('p');
         var messageText = document.createTextNode(message.content);
         textElement.appendChild(messageText);
