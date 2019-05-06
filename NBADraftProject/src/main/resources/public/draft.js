@@ -17,7 +17,7 @@ var colors = [
 ];
 
 function connect() {
-    username = sessionStorage.getItem('username');
+    username = sessionStorage.getItem('userName');
     leagueID = sessionStorage.getItem('leagueID').toString();
     if(username) {
         var socket = new SockJS('/ws');
