@@ -11,7 +11,7 @@
 <h1>Players</h1>
 
 
-<div id="table-scroll">
+
 	<table id="draftTable" display="hide">
 		<CAPTION id = "wallet" ALIGN="top">Choose an NBA Player to Draft</CAPTION>
 		<thead>
@@ -23,21 +23,20 @@
 
 		</tbody>
 	</table>
-</div>
 
-<div>
-<table id="walletTable">
+
+<table id="walletTable" style = color: green>
 	<CAPTION ALIGN="top">Wallet</CAPTION>
 	<thead>
 	<tr>
-		<th>Sum</th>
+
 	</tr>
 	</thead>
 	<tbody id="walletbody">
 		<tb> </tb>
 	</tbody>
 </table>
-</div>
+
 
 <div id="chat-page" style="position:absolute; left: 1080px; top:149px;">
 	<div class="chat-container">
@@ -169,7 +168,7 @@ function displayWallet(){
 	.done(function(data) {
 		document.getElementById("walletTable").style.display ="block";
 		var tbody = $('#walletbody');
-		tbody.text(data.wallet);
+		tbody.text("$ " + data.wallet);
 	})
 	.fail(function(data){
 		alert("wallet failed to load");
