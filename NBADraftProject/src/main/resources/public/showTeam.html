@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+	<title>Your Drafted Team</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="injury.css">
+</head>
+<body onload="javascript:teamQuery(); javascript:document.getElementById('teamTable').classList.toggle('hide2');">
+
+
+<h1>Your Team</h1>
+
+<div id="table-scroll">
+
+<table id="queryTable" display="hide">
+	<CAPTION ALIGN="top">Look at Your Draft</CAPTION>
+	<thead>
+	<tr>
+		<th>  </th><th>Name</th><th>Position</th><th>Player Overall Rank</th>
+	</tr>
+	</thead>
+	<tbody>
+
+	</tbody>
+</table>
+</div>
+
+
+
+
+<!--  new search bar for room number search  -->
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+
+
+
+<script>
+		function teamQuery(){
+			var obj = {};
+			$.ajax({
+				type: 'GET',						//get data from server to the client
+				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/showTeam?leagueID='+sessionStorage.getItem("leagueID")+'&userID='+sessionStorage.getItem("userID")
+			})
+			.done(function(data) {
+			document.getElementById("teamTable").style.display="block";
+			var tbody = $('#teamTable tbody'),
+			  props = ["name", "position"];
+			$.each(data, function(i, data) {
+			  var tr = $('<tr><td class="nr">' + '</td></tr>');
+			  $.each(props, function(i, prop) {
+			    $('<td>').html(data[prop]).appendTo(tr);
+			  });
+			  tbody.append(tr);
+			});
+			})
+			.fail(function(data) {
+	            alert("Failed to load data.");
+	        });
+		}
+	</script>
+
+</body>
+</html>
+
