@@ -43,12 +43,6 @@ public class UserController {
     	 JSONObject payloadObj = new JSONObject(payload);
          int leagueID = payloadObj.getInt("leagueID");
          String query = null;
-        //int userID = payloadObj.getInt("userID");
-         int playerC = 0;
-         int playerPF = 0;
-         int playerPG = 0;
-         int playerSG = 0;
-         int playerSF = 0;
          
          boolean ctr = true;
          boolean pf = true;
@@ -75,42 +69,51 @@ public class UserController {
 			 PreparedStatement stmt = null;
         	 for(int userID: PlayerPicks.get(leagueID).keySet()) {//as it transverses the users, have it transverse for each loop, userID is equal to the current key it is in
         		 for(int playerID: PlayerPicks.get(leagueID).get(userID).keySet()) {
-        		 	System.out.println(playerID);
         			 stmt = conn.prepareStatement("START TRANSACTION");
         			 stmt.execute();
-        		 	if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("C")) {
+        		 	if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("C") && ctr) {
         				 //checks what the player's position is
-        				 if(ctr) {
-        					 ctr = false;
-        					 playerC = playerID;
-        				 }
+						ctr = false;
+						query = "UPDATE Teams SET C = ? WHERE userID = ? AND leagueID = ?";
+						stmt = conn.prepareStatement(query);
+						stmt.setInt( 1, playerID);
+						stmt.setInt( 2, userID);
+						stmt.setInt( 3, leagueID);
         			 }
-        			 else if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("PG")) {
+        			 else if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("PG") && pg) {
         				 //checks what the player's position is
-        				 if(pg) {
-        					 pg = false;
-        					 playerPG = playerID;
-        				 }
+						pg = false;
+						query = "UPDATE Teams SET PG = ? WHERE userID = ? AND leagueID = ?";
+						stmt = conn.prepareStatement(query);
+						stmt.setInt( 1, playerID);
+						stmt.setInt( 2, userID);
+						stmt.setInt( 3, leagueID);
         			 }
-        			 else if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("PF")) {
+        			 else if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("PF") && pf) {
         				 //checks what the player's position is
-        				 if(pf) {
-        					 pf = false;
-        					 playerPF = playerID;
-        				 }
+        				 pf = false;
+						query = "UPDATE Teams SET PF = ? WHERE userID = ? AND leagueID = ?";
+						stmt = conn.prepareStatement(query);
+						stmt.setInt( 1, playerID);
+						stmt.setInt( 2, userID);
+						stmt.setInt( 3, leagueID);
         			 }
-        			 else if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("SG")) {
+        			 else if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("SG") && sg) {
         				 //checks what the player's position is
-        				 if(sg) {
-        					 sg = false;
-        					 playerSG = playerID;
-        				 }
-        			 }else if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("SF")) {
+						 sg = false;
+						query = "UPDATE Teams SET SG = ? WHERE userID = ? AND leagueID = ?";
+						stmt = conn.prepareStatement(query);
+						stmt.setInt( 1, playerID);
+						stmt.setInt( 2, userID);
+						stmt.setInt( 3, leagueID);
+        			 }else if(PlayerPicks.get(leagueID).get(userID).get(playerID).equals("SF") && sf) {
         				 //checks what the player's position is
-        				 if(sf) {
-        					 sf = false;
-        					 playerSF = playerID;
-        				 }
+						 sf = false;
+						query = "UPDATE Teams SET SF = ? WHERE userID = ? AND leagueID = ?";
+						stmt = conn.prepareStatement(query);
+						stmt.setInt( 1, playerID);
+						stmt.setInt( 2, userID);
+						stmt.setInt( 3, leagueID);
         			 } else {
         				 if(sub1) {
         					 sub1 = false;
@@ -227,18 +230,6 @@ public class UserController {
         					 }
         				 }
         			 }
-					 if(!ctr && !pg && !pf && !sf && !sg && pos) {
-						 query = "UPDATE Teams SET C = ?, PG = ?, PF = ?, SG = ?, SF = ? WHERE userID=? AND leagueID=?";
-						 stmt = conn.prepareStatement(query);
-						 stmt.setInt( 1, playerC);
-						 stmt.setInt( 2, playerPG);
-						 stmt.setInt( 3, playerPF);
-						 stmt.setInt( 4, playerSG);
-						 stmt.setInt( 5, playerSF);
-						 stmt.setInt( 6, userID);
-						 stmt.setInt( 7, leagueID);
-						 pos = false;
-					 }
         			 
         			 try {
 						 stmt.executeUpdate();
@@ -257,18 +248,11 @@ public class UserController {
                     // stmt.setInt();
                 	 
         		 }
-        		 playerC = 0;
-                 playerPF = 0;
-                 playerPG = 0;
-                 playerSG = 0;
-                 playerSF = 0;
-                 
                  ctr = true;
                  pf = true;
                  pg = true;
                  sg = true;
                  sf = true;
-                 pos = true;
                  
                  sub1 = true;
                  sub2 = true;
@@ -281,18 +265,20 @@ public class UserController {
                  sub9 = true;
                  stmt = conn.prepareStatement("START TRANSACTION");
                  stmt.execute();
-                 stmt = conn.prepareStatement("UPDATE Teams SET wallet = ? WHERE userID = ?");
+                 stmt = conn.prepareStatement("UPDATE Teams SET wallet = ? WHERE userID = ? AND leagueID = ?");
                  stmt.setDouble(1, MasterWallet.get(leagueID).get(userID));
                  stmt.setInt(2, userID);
+				 stmt.setInt(3, leagueID);
                  stmt.executeUpdate();
                  stmt = conn.prepareStatement("COMMIT");
                  stmt.execute();
         	 }
-         } catch(SQLException e){
+        	 return new ResponseEntity<>("{\"message\":\"Finished The Draft\"}", responseHeaders, HttpStatus.OK);
+         }
+         catch(SQLException e){
          	e.printStackTrace();
         	 return new ResponseEntity<>("{\"message\":\"issue with pushing to MQSQL\"}", responseHeaders, HttpStatus.BAD_REQUEST);
          }
-		return new ResponseEntity<>("{\"message\":\"Finished The Draft\"}", responseHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/checkIfReady", method = RequestMethod.POST)
@@ -618,14 +604,22 @@ public class UserController {
 						
 						
 						String position = MasterJSON.getJSONObject(i).getString("position");
-						
-						HashMap<Integer, String> tempMap = new HashMap<Integer, String>();
-						tempMap.put(PlayerID, position);
-						
-						HashMap<Integer, HashMap<Integer, String>> tempMap2 = new HashMap<Integer, HashMap<Integer, String>>();
-						tempMap2.put(userID, tempMap);
-						
-						PlayerPicks.put(leagueID, tempMap2);
+						if (!PlayerPicks.containsKey(leagueID)) {
+							HashMap<Integer, String> tempMap = new HashMap<Integer, String>();
+							tempMap.put(PlayerID, position);
+
+							HashMap<Integer, HashMap<Integer, String>> tempMap2 = new HashMap<Integer, HashMap<Integer, String>>();
+							tempMap2.put(userID, tempMap);
+
+							PlayerPicks.put(leagueID, tempMap2);
+						} else if (!PlayerPicks.get(leagueID).containsKey(userID)){
+							HashMap<Integer, HashMap<Integer, String>> league = PlayerPicks.get(leagueID);
+							HashMap<Integer, String> tempMap = new HashMap<>();
+							tempMap.put(PlayerID, position);
+							league.put(userID, tempMap);
+						} else {
+							PlayerPicks.get(leagueID).get(userID).put(PlayerID, position);
+						}
 						
 						
 						
