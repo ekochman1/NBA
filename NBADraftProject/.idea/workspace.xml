@@ -2,31 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f5ecc464-0dad-498d-b0fd-81edd10c48cf" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/ReserveController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/ReserveController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/public/TeamPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/TeamPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/draftPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/draftPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/showTeam.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/showTeam.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/NBADraftProject-0.0.1.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/NBADraftProject-0.0.1.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/NBADraftProject-0.0.1.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/NBADraftProject-0.0.1.jar.original" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/NBADraftProject/NBADraftProject/ReserveController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NBADraftProject/NBADraftProject/ReserveController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/NBADraftProject/NBADraftProject/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NBADraftProject/NBADraftProject/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/NBADraftProject/NBADraftProject/controller/WebSocketEventListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/NBADraftProject/NBADraftProject/controller/WebSocketEventListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/private/Zion_Williamson_s_best_plays_from_rousing_debut_for_Duke.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/LoginWorkspace.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/LoginWorkspace.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/TeamPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/TeamPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/create.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/create.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/draft.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/draft.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/draft.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/draft.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/draftPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/draftPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/homepage.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/homepage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/homepage2.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/homepage2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/homepagestyle.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/homepagestyle.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/league.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/league.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/queryPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/queryPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/public/teams.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/public/teams.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/css/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/css/main.css" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -53,19 +29,19 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/resources/public/TeamPage.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="171">
-              <caret line="50" column="97" selection-start-line="50" selection-start-column="97" selection-end-line="50" selection-end-column="97" />
+              <caret line="50" column="49" selection-start-line="50" selection-start-column="49" selection-end-line="50" selection-end-column="49" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/public/showTeam.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-237">
+            <state relative-caret-position="273">
               <caret line="18" column="18" lean-forward="true" selection-start-line="18" selection-start-column="18" selection-end-line="18" selection-end-column="18" />
             </state>
           </provider>
@@ -170,9 +146,9 @@
         <option value="$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/UserController.java" />
         <option value="$PROJECT_DIR$/src/main/resources/public/draft.js" />
         <option value="$PROJECT_DIR$/src/main/resources/public/draftPage.html" />
-        <option value="$PROJECT_DIR$/src/main/resources/public/TeamPage.html" />
         <option value="$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/ReserveController.java" />
         <option value="$PROJECT_DIR$/src/main/resources/public/showTeam.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/public/TeamPage.html" />
       </list>
     </option>
   </component>
@@ -645,13 +621,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/public/TeamPage.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="50" column="97" selection-start-line="50" selection-start-column="97" selection-end-line="50" selection-end-column="97" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/NBADraftProject/NBADraftProject/ReserveController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="358">
@@ -664,8 +633,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/public/showTeam.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-237">
+        <state relative-caret-position="273">
           <caret line="18" column="18" lean-forward="true" selection-start-line="18" selection-start-column="18" selection-end-line="18" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/public/TeamPage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="50" column="49" selection-start-line="50" selection-start-column="49" selection-end-line="50" selection-end-column="49" />
         </state>
       </provider>
     </entry>
