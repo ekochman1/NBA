@@ -25,7 +25,7 @@
 	</table>
 
 
-<table id="walletTable" style = "color: LimeGreen;">
+<table id="walletTable" style = color: green>
 	<CAPTION ALIGN="top">Wallet</CAPTION>
 	<thead>
 	<tr>
@@ -117,8 +117,8 @@
 			var obj = {};
 			obj.userID=sessionStorage.getItem("userID");
 			obj.leagueID=sessionStorage.getItem("leagueID");
-			obj.playerID=buttonID;
 			obj.userName=sessionStorage.getItem("userName");
+			obj.playerID=buttonID;
 
 			$.ajax({
 				type: 'POST',						//get data from server to the client
@@ -142,7 +142,21 @@
 							crossDomain: true
 						})
 						.done(function(data){
-							endDraft();
+							var obj1 = {};
+							obj1=sessionStorage.getItem("leagueID");
+							$.ajax({
+							type: 'POST',						//get data from server to the client
+							url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/setFinished',	//want to get info from here, it's in a JSONObject
+							data: JSON.stringify(obj1),
+							contentType: "application/json",
+							crossDomain: true
+						})
+						.done(function(data){
+						endDraft();
+						})
+						.fail(function(data) {
+							alert("Fail to Conclude Draft");
+							});
 						});
 					}
 					else{
