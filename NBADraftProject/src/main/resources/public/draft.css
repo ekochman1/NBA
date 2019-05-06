@@ -1064,3 +1064,13 @@ table#walletTable {
 margin: -80px 10px 10px 1200px;
   background-color: rgba(195, 186, 190, 0.8);
 }
+
+thead, tbody {
+ display: block;
+}
+
+tbody {
+    height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
