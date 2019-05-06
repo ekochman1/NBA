@@ -1065,8 +1065,9 @@ margin: -80px 10px 10px 1200px;
   background-color: rgba(195, 186, 190, 0.8);
 }
 
-table#draftTable {
-    height: 100px;
+
+table#draftTable tbody{
+    height: 500px;
     overflow-y: auto;
     overflow-x: hidden;
 }

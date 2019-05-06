@@ -143,6 +143,61 @@ public class ReserveController {
         }
         return new ResponseEntity<>(nameArray.toString(), responseHeaders, HttpStatus.OK);
     }
+    @RequestMapping(value="/showTeam", method = RequestMethod.GET)
+    public ResponseEntity<String> showTeam(HttpServletRequest request){
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+        Connection conn = null;
+        int leagueID = Integer.parseInt(request.getParameter("leagueID"));
+        int userID = Integer.parseInt(request.getParameter("userID"));
+        int C = 0, PG = 0, PF = 0, SG = 0, SF = 0, sub1 = 0, sub2 = 0, sub3 = 0, sub4 = 0, sub5 = 0, sub6 = 0, sub7 = 0, sub8 = 0, sub9 = 0;
+        JSONArray fullTeam = new JSONArray();
+        JSONObject obj = new JSONObject();
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://nbafantasydb.cxa7g8pzkm2m.us-east-2.rds.amazonaws.com/NBAFantasy", "root", "Ethaneddie123");
+            String query = "select name, position From Teams, Players where Players.playerID = Teams.C and teamName=? "+ 
+            		"union " + 
+            		"select name, position From Teams, Players where Players.playerID = Teams.PG and teamName=? " + 
+            		"union " + 
+            		"select name, position From Teams, Players where Players.playerID = Teams.PF and teamName=? " + 
+            		"union " + 
+            		"select name, position From Teams, Players where Players.playerID = Teams.SG and teamName=? " + 
+            		"union " + 
+            		"select name, position From Teams, Players where Players.playerID = Teams.SF and teamName=? " + 
+            		"union " + 
+            		"select name, position From Teams, Players where Players.playerID = Teams.sub1 and teamName=?" + 
+            		"union " + 
+            		"select name, position From Teams, Players where Players.playerID = Teams.sub2 and teamName=? " + 
+            		"union " + 
+            		"select name, position From Teams, Players where Players.playerID = Teams.sub3 and teamName=? " + 
+            		"Uuion " + 
+            		"select name, position From Teams, Players where Players.playerID = Teams.sub4 and teamName=? " + 
+            		"union " + 
+            		"select name, position From Teams, Players where Players.playerID = Teams.sub5 and teamName=? " + 
+            		"union " + 
+            		"select name, position From Teams, Players where Players.playerID = Teams.sub6 and teamName=? " + 
+            		"union " + 
+            		"select name, position From Teams, Players where Players.playerID = Teams.sub7 and teamName=? " + 
+            		"union " + 
+            		"select name, position From Teams, Players where Players.playerID = Teams.sub8 and teamName=? " + 
+            		"union " + 
+            		"select name, position From Teams, Players where Players.playerID = Teams.sub9 and teamName=?";
+            		
+            PreparedStatement stmt = null;	//important for safety reasons
+            stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+            	obj.put("name",rs.getString("name"));
+            	obj.put("position",rs.getString("position"));
+            	fullTeam.put(obj);
+            }
+            }
+         catch (SQLException e ) {
+            e.printStackTrace();
+            return new ResponseEntity<>("An error occurred. Check server for details.", responseHeaders, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(obj.toString(), responseHeaders, HttpStatus.OK);
+    }
 
 }
 
