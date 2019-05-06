@@ -1,5 +1,8 @@
 # NBA Fantasy App
-this is a NBA fantasy app that will allow you to get access to all infomation about teams and players within the NBA and be able to create and join Fantasy Leagues.
+this is a NBA fantasy app that will allow you to get access to all infomation about teams and players within the NBA and be able to create, join Fantasy Leagues and draft within them.
+
+By Eddie Kochman, Jacob Curley, Ethan Chen
+
 # Currently Work in Progress
 We are still working on this, all features are not yet complete
 
