@@ -583,15 +583,17 @@ public class UserController {
         int userID = payloadObj.getInt("userID");
         int leagueID = payloadObj.getInt("leagueID");
         int PlayerID = payloadObj.getInt("playerID");
+        String userName = payloadObj.getString("userName");
 		Double wallet = MasterWallet.get(leagueID).get(userID);
-        
-		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "application/json");
+
+		if (!DraftOrder.get(leagueID).get(0).equals(userName)){
+			return new ResponseEntity<>("{\"message\":\"It's not your turn!\"", responseHeaders, HttpStatus.OK);
+		}
 		
         JSONObject obj = new JSONObject();
         //JSONObject draftedPlayer = new JSONObject();
-        
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Content-Type", "application/json");
 
 
         for (int i = 0; i < MasterJSON.length(); i++) {
@@ -628,6 +630,8 @@ public class UserController {
                     	break;
                     }
         }
+
+        DraftOrder.get(leagueID).add(DraftOrder.get(leagueID).remove(0));
         DraftCount.put(leagueID, DraftCount.get(leagueID)-1);
         if(DraftCount.get(leagueID)<=0) {
         	System.out.println("draft completed");

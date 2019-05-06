@@ -118,6 +118,7 @@
 			obj.userID=sessionStorage.getItem("userID");
 			obj.leagueID=sessionStorage.getItem("leagueID");
 			obj.playerID=buttonID;
+			obj.userName=sessionStorage.getItem("userName");
 
 			$.ajax({
 				type: 'POST',						//get data from server to the client

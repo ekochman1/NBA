@@ -74,7 +74,7 @@
         })
         .done(function(data) {
 			sessionStorage.setItem("userID", data.userID);
-			sessionStorage.setItem("username", data.username);
+			sessionStorage.setItem("userName", data.username);
             console.log(obj.username + " " + JSON.stringify(data));
 			location.replace("http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/homepage2.html");
 		
