@@ -62,8 +62,19 @@
 	</script>
 <script>
 		function Click(buttonID){
+			$.ajax({
+				type: 'GET',						//get data from server to the client
+				url: 'http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/seeFinished?leagueID='+buttonID,
+			})
+			.done(function(data){
+			if(data.message != null){
 			sessionStorage.setItem("leagueID", buttonID);
-			location.replace("http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/draftPage.html");
+			location.replace("http://ec2-54-215-176-11.us-west-1.compute.amazonaws.com/draftPage.html");}
+		})
+			.fail(function(data) {
+	            alert("Failed to Check Status of League");
+	        });
+		
 		}
 	</script>
 

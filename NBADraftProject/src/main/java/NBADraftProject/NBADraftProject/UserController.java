@@ -32,6 +32,7 @@ public class UserController {
     private static HashMap<Integer, Integer> DraftCount = new HashMap<Integer, Integer>();
     private static HashMap<Integer, Integer> UserCount = new HashMap<Integer, Integer>();
     private static HashMap<Integer, ArrayList> DraftOrder = new HashMap<>();
+    private static HashMap<Integer, Boolean> FinishedLeague = new HashMap<>();
 
     //same logic behind databases, imagine the wallet system, but you only have 5 dollars and you get charged 3 dollars at the same time, in theory you are capable to handling each one individually
     //but not both
@@ -317,11 +318,35 @@ public class UserController {
         else {
         	return new ResponseEntity<>("{\"message\":\"Still waiting for: "+newUserCount+" players\"}", responseHeaders, HttpStatus.OK);
         }
-    	
-    	
-        
     }
-    
+
+	@RequestMapping(value = "/setFinished", method = RequestMethod.POST)
+	public ResponseEntity<String> setFinished(@RequestBody String payload, HttpServletRequest request){
+		JSONObject payloadObj = new JSONObject(payload);
+		int leagueID = payloadObj.getInt("leagueID");
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "application/json");
+
+		FinishedLeague.put(leagueID, true);
+
+		return new ResponseEntity<>("{\"message\":\" Concluded League\"}", responseHeaders, HttpStatus.OK);
+
+	}
+
+	@RequestMapping(value = "/seeFinished", method = RequestMethod.GET)
+	public ResponseEntity<String> seeFinished(HttpServletRequest request){
+		int leagueID = Integer.parseInt(request.getParameter("leagueID"));
+
+		boolean finished = FinishedLeague.get(leagueID);
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "application/json");
+		if(!finished) {
+			return new ResponseEntity<>("{\"message\":\"Draft is ready\"}", responseHeaders, HttpStatus.OK);
+		}	else {
+			return new ResponseEntity<>("{\"error\":\"Draft has Concluded\"}", responseHeaders, HttpStatus.OK);
+		}
+	}
     
     @RequestMapping(value = "/createTeam", method = RequestMethod.POST)
     public ResponseEntity<String> createTeam(@RequestBody String payload, HttpServletRequest request) {
@@ -583,15 +608,17 @@ public class UserController {
         int userID = payloadObj.getInt("userID");
         int leagueID = payloadObj.getInt("leagueID");
         int PlayerID = payloadObj.getInt("playerID");
+        String userName = payloadObj.getString("userName");
 		Double wallet = MasterWallet.get(leagueID).get(userID);
-        
-		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "application/json");
+
+		if (!DraftOrder.get(leagueID).get(0).equals(userName)){
+			return new ResponseEntity<>("{\"message\":\"It's not your turn!\"", responseHeaders, HttpStatus.OK);
+		}
 		
         JSONObject obj = new JSONObject();
         //JSONObject draftedPlayer = new JSONObject();
-        
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Content-Type", "application/json");
 
 
         for (int i = 0; i < MasterJSON.length(); i++) {
@@ -628,6 +655,8 @@ public class UserController {
                     	break;
                     }
         }
+
+        DraftOrder.get(leagueID).add(DraftOrder.get(leagueID).remove(0));
         DraftCount.put(leagueID, DraftCount.get(leagueID)-1);
         if(DraftCount.get(leagueID)<=0) {
         	System.out.println("draft completed");
